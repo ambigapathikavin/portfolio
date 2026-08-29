@@ -6,12 +6,13 @@ import {
   Github, 
   Menu, 
   X, 
-  Sparkles,
-  Mail,
-  ChevronRight,
-  Database
+  Sparkles, 
+  Mail, 
+  ChevronRight, 
+  Database 
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+import { ThemeToggle } from './ThemeToggle';
 
 interface NavbarProps {
   onOpenResume: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
@@ -130,6 +131,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
               <span>Resume</span>
             </button>
 
+            {/* Theme Toggle Button (Light/Dark mode) */}
+            <ThemeToggle />
+
             <div className="flex items-center gap-1 text-[#A3A3A3] border-l border-[#ffffff10] pl-2.5">
               <a
                 href={PERSONAL_INFO.linkedin}
@@ -167,7 +171,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
           </div>
 
           {/* Mobile Menu Toggle Button */}
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex items-center gap-1.5 lg:hidden">
+            <ThemeToggle />
+
             <button
               onClick={onOpenResume}
               className="p-1.5 text-xs font-medium text-[#E0E0E0] bg-[#111111] border border-[#ffffff10] rounded-lg cursor-pointer"

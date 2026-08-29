@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ScrollProgressBar } from './components/ScrollProgressBar';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { QuickStats } from './components/QuickStats';
@@ -80,7 +81,8 @@ export default function App() {
   // If a dedicated project page is active, display the standalone dedicated ProjectPage!
   if (activeProjectId) {
     return (
-      <div className="min-h-screen bg-[#050505] text-[#E0E0E0] selection:bg-cyan-500/30 selection:text-cyan-200 flex flex-col font-sans">
+      <div className="min-h-screen flex flex-col font-sans transition-colors duration-200">
+        <ScrollProgressBar />
         <Navbar onOpenResume={handleOpenResume} />
         
         <ProjectPage
@@ -101,7 +103,10 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-[#E0E0E0] selection:bg-cyan-500/30 selection:text-cyan-200 flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col font-sans transition-colors duration-200">
+      {/* Scroll Depth Progress Bar */}
+      <ScrollProgressBar />
+
       {/* Sticky Top Navigation */}
       <Navbar onOpenResume={handleOpenResume} />
 

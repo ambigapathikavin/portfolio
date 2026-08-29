@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
 import { 
   ArrowRight, 
@@ -11,13 +11,12 @@ import {
   Layers, 
   Cpu, 
   CheckCircle2, 
-  Upload, 
-  Camera, 
   Activity,
   BarChart2,
   GitBranch
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+import { AmbigapathiPortrait } from './AmbigapathiPortrait';
 
 interface HeroProps {
   onOpenResume: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
@@ -26,35 +25,6 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onOpenResume, onOpenContact, onViewWork }) => {
-  // Allow candidate to load/persist custom uploaded photo
-  const [profileImage, setProfileImage] = useState<string | null>(() => {
-    return localStorage.getItem('ambigapathi_profile_avatar') || null;
-  });
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        setProfileImage(result);
-        try {
-          localStorage.setItem('ambigapathi_profile_avatar', result);
-        } catch {
-          // localStorage limit fallback
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleRemovePhoto = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setProfileImage(null);
-    localStorage.removeItem('ambigapathi_profile_avatar');
-  };
-
   return (
     <section id="home" className="relative min-h-[90vh] pt-24 pb-14 lg:pt-32 lg:pb-20 flex items-center bg-[#050505] bg-data-grid overflow-hidden">
       {/* Background radial glow accents */}
@@ -188,87 +158,19 @@ export const Hero: React.FC<HeroProps> = ({ onOpenResume, onOpenContact, onViewW
               <div className="absolute inset-5 rounded-2xl bg-[#111111]/80 backdrop-blur-xl border border-[#ffffff10] shadow-2xl" />
 
               {/* Main Portrait Container - Compact Sleek High Density Frame */}
-              <div className="relative z-10 w-56 h-56 sm:w-64 sm:h-64 rounded-2xl overflow-hidden p-1 bg-[#141414] shadow-2xl border border-cyan-500/30 group">
-                <div className="w-full h-full rounded-[14px] overflow-hidden bg-[#0a0a0a] relative flex flex-col items-center justify-center">
+              <div className="relative z-10 w-60 h-72 sm:w-68 sm:h-80 rounded-2xl overflow-hidden p-1 bg-[#141414] shadow-2xl border border-cyan-500/30 group">
+                <div className="w-full h-full rounded-[14px] overflow-hidden bg-[#07090e] relative flex flex-col items-center justify-center">
                   
-                  {profileImage ? (
-                    <div className="w-full h-full relative group">
-                      <img
-                        src={profileImage}
-                        alt="Ambigapathi V - Professional Profile Photograph"
-                        className="w-full h-full object-cover object-top"
-                      />
-                      {/* Photo management overlay on hover */}
-                      <div className="absolute inset-0 bg-black/70 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-3">
-                        <span className="text-[10px] font-mono text-cyan-300">Ambigapathi V Profile Photo</span>
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => fileInputRef.current?.click()}
-                            className="px-2 py-1 rounded bg-cyan-500 hover:bg-cyan-400 text-black text-[10px] font-mono font-bold cursor-pointer"
-                          >
-                            Change Photo
-                          </button>
-                          <button
-                            onClick={handleRemovePhoto}
-                            className="px-2 py-1 rounded bg-[#222] hover:bg-red-500/30 hover:text-red-300 text-[10px] font-mono text-[#aaa] cursor-pointer"
-                          >
-                            Reset
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    /* High-End Technical Portrait Representation with Monogram & Vector Nodes */
-                    <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center relative bg-gradient-to-b from-[#121212] to-[#080808]">
-                      
-                      {/* Technical Blueprint Nodes behind avatar */}
-                      <svg className="absolute inset-0 w-full h-full opacity-15 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-                        <line x1="20%" y1="20%" x2="80%" y2="80%" stroke="#06b6d4" strokeWidth="1" strokeDasharray="3 3" />
-                        <line x1="80%" y1="20%" x2="20%" y2="80%" stroke="#8b5cf6" strokeWidth="1" strokeDasharray="3 3" />
-                        <circle cx="50%" cy="50%" r="30" stroke="#0ea5e9" strokeWidth="1" fill="none" />
-                        <circle cx="20%" cy="20%" r="2.5" fill="#06b6d4" />
-                        <circle cx="80%" cy="80%" r="2.5" fill="#8b5cf6" />
-                      </svg>
-
-                      <div className="w-16 h-16 rounded-xl bg-[#161616] border border-cyan-400/30 flex items-center justify-center text-xl font-bold font-mono text-cyan-300 mb-2 shadow-inner shadow-cyan-500/10">
-                        AV
-                      </div>
-
-                      <h2 className="text-sm font-bold text-white mb-0.5 tracking-tight">Ambigapathi V</h2>
-                      <p className="text-[10px] text-cyan-400 font-mono mb-2">Salem, Tamil Nadu, India</p>
-                      
-                      <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#1c1c1c] border border-[#ffffff10] text-[9px] text-[#A3A3A3] font-mono mb-2">
-                        <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
-                        <span>Verified Profile</span>
-                      </div>
-
-                      {/* Photo upload trigger */}
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        className="flex items-center gap-1 px-2.5 py-1 rounded bg-[#1a1a1a] hover:bg-[#252525] border border-cyan-500/30 text-[10px] font-mono text-cyan-300 transition-colors cursor-pointer"
-                        title="Upload/Select your personal photograph file"
-                      >
-                        <Camera className="w-3 h-3" />
-                        <span>Upload Photo</span>
-                      </button>
-                    </div>
-                  )}
-
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
+                  {/* High-Fidelity Studio Portrait Representation */}
+                  <AmbigapathiPortrait className="w-full h-full" />
 
                   {/* Corner Accent Tech Badges */}
-                  <div className="absolute top-2 left-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#050505]/90 backdrop-blur-md border border-cyan-500/30 text-[8px] font-mono text-cyan-300 pointer-events-none">
-                    <span className="w-1 h-1 rounded-full bg-emerald-400" />
-                    <span>MLOps Ready</span>
+                  <div className="absolute top-2 left-2 z-30 flex items-center gap-1 px-2 py-0.5 rounded bg-[#050505]/90 backdrop-blur-md border border-cyan-500/30 text-[8px] font-mono text-cyan-300 pointer-events-none shadow-md">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>MLOps Active</span>
                   </div>
 
-                  <div className="absolute bottom-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#050505]/90 backdrop-blur-md border border-violet-500/30 text-[8px] font-mono text-violet-300 pointer-events-none">
+                  <div className="absolute top-2 right-2 z-30 flex items-center gap-1 px-2 py-0.5 rounded bg-[#050505]/90 backdrop-blur-md border border-violet-500/30 text-[8px] font-mono text-violet-300 pointer-events-none shadow-md">
                     <BrainCircuit className="w-2.5 h-2.5 text-violet-400" />
                     <span>BERT NLP</span>
                   </div>
