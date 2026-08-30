@@ -249,6 +249,73 @@ body:not(.dark) .bg-\[\#080808\] {
   border-color: #99f6e4 !important;
 }
 
+/* Light Theme Badges & Pill Controls (Cyan, Emerald, Violet, Amber, Rose) */
+body:not(.dark) [class*="bg-cyan-950"],
+body:not(.dark) [class*="bg-cyan-900"] {
+  background-color: #ecfeff !important;
+  border-color: #a5f3fc !important;
+  color: #0e7490 !important;
+}
+
+body:not(.dark) [class*="bg-emerald-950"],
+body:not(.dark) [class*="bg-emerald-900"] {
+  background-color: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+  color: #047857 !important;
+}
+
+body:not(.dark) [class*="bg-violet-950"],
+body:not(.dark) [class*="bg-violet-900"] {
+  background-color: #f5f3ff !important;
+  border-color: #ddd6fe !important;
+  color: #6d28d9 !important;
+}
+
+body:not(.dark) [class*="bg-amber-950"],
+body:not(.dark) [class*="bg-amber-900"] {
+  background-color: #fffbeb !important;
+  border-color: #fde68a !important;
+  color: #b45309 !important;
+}
+
+body:not(.dark) [class*="bg-rose-950"],
+body:not(.dark) [class*="bg-red-950"] {
+  background-color: #fff1f2 !important;
+  border-color: #fecdd3 !important;
+  color: #be123c !important;
+}
+
+body:not(.dark) [class*="bg-sky-950"] {
+  background-color: #f0f9ff !important;
+  border-color: #bae6fd !important;
+  color: #0369a1 !important;
+}
+
+/* Deliverables & Body Text in Light Mode */
+body:not(.dark) .text-\[\#C0C0C0\],
+body:not(.dark) .text-\[\#CCCCCC\],
+body:not(.dark) .text-\[\#D0D0D0\],
+body:not(.dark) .text-\[\#D4D4D4\],
+body:not(.dark) .text-\[\#E5E5E5\] {
+  color: #334155 !important;
+}
+
+body:not(.dark) .text-\[\#A0A0A0\],
+body:not(.dark) .text-\[\#999\],
+body:not(.dark) .text-\[\#888\],
+body:not(.dark) .text-\[\#777\] {
+  color: #475569 !important;
+}
+
+/* Timeline Vertical Line & Nodes in Light Mode */
+body:not(.dark) .before\:bg-\[\#ffffff15\]::before {
+  background-color: #cbd5e1 !important;
+}
+body:not(.dark) .bg-\[\#050505\].border-cyan-400 {
+  background-color: #ffffff !important;
+  border-color: #06b6d4 !important;
+}
+
 /* Typography Adaptations: High Contrast Headings & Titles */
 body:not(.dark) h1,
 body:not(.dark) h2,

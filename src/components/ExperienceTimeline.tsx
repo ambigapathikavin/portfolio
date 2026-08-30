@@ -61,12 +61,12 @@ export const ExperienceTimeline: React.FC = () => {
                       </span>
                       {exp.isCurrent && (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[9px] font-mono font-semibold">
-                          <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                           Current Role
                         </span>
                       )}
                       {exp.project && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-[10px] font-mono">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-[10px] font-mono font-medium">
                           Project: {exp.project}
                         </span>
                       )}
