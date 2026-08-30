@@ -1,4 +1,5 @@
 import React from 'react';
+import portfolioImage from '../data/portfolio.png';
 
 interface PortraitProps {
   className?: string;
@@ -14,7 +15,7 @@ export const AmbigapathiPortrait: React.FC<PortraitProps> = ({
       className={`relative flex items-center justify-center select-none ${className}`}
     >
       <img
-        src="src/data/portfolio.png"
+        src={portfolioImage}
         alt="Ambigapathi V"
         className="w-full h-full object-cover rounded-xl"
         draggable={false}
