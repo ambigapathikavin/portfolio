@@ -56,16 +56,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
             </a>
 
             <a
-              href={PERSONAL_INFO.resumeAppUrl || 'https://linked-to-my-resume.lovable.app/'}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1 text-[#888] hover:text-violet-400 transition-colors"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Online CV</span>
-            </a>
-
-            <a
               href={PERSONAL_INFO.github}
               target="_blank"
               rel="noreferrer"

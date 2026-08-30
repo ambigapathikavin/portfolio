@@ -19,6 +19,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { DATA_ANALYST_RESUME, DATA_SCIENTIST_RESUME, PERSONAL_INFO } from '../data/portfolioData';
+import { downloadResumePdf } from '../utils/resumePdf';
 
 interface ResumeModalProps {
   isOpen: boolean;
@@ -215,28 +216,20 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
                 title="Copy Active Resume as Text"
               >
                 {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3 text-[#888]" />}
-                <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy'}</span>
+                <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy Text'}</span>
               </button>
 
               <button
-                onClick={handlePrint}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded bg-[#181818] hover:bg-[#252525] text-[11px] font-mono text-[#C0C0C0] transition-colors cursor-pointer"
-                title="Print or Save as PDF via Browser"
-              >
-                <Printer className="w-3 h-3 text-[#888]" />
-                <span className="hidden sm:inline">Print / PDF</span>
-              </button>
-
-              <button
-                onClick={handleDownload}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded text-[11px] font-mono font-semibold text-black transition-colors shadow-sm cursor-pointer ${
+                onClick={() => downloadResumePdf(selectedRole)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-[11px] font-mono font-bold text-black transition-all shadow-md cursor-pointer active:scale-95 ${
                   selectedRole === 'DATA_ANALYST' 
-                    ? 'bg-cyan-400 hover:bg-cyan-300' 
-                    : 'bg-violet-400 hover:bg-violet-300'
+                    ? 'bg-cyan-400 hover:bg-cyan-300 shadow-cyan-500/20' 
+                    : 'bg-violet-400 hover:bg-violet-300 shadow-violet-500/20'
                 }`}
+                title={`Download ${selectedRole === 'DATA_ANALYST' ? 'Data Analyst' : 'Data Scientist'} Resume as PDF`}
               >
-                <Download className="w-3 h-3" />
-                <span>Download ({selectedRole === 'DATA_ANALYST' ? 'DA' : 'DS'})</span>
+                <Download className="w-3.5 h-3.5" />
+                <span>Download PDF ({selectedRole === 'DATA_ANALYST' ? 'Analyst' : 'Scientist'})</span>
               </button>
 
               <button
@@ -257,10 +250,10 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
           }`}>
             <span className="flex items-center gap-2">
               <Sparkles className="w-3.5 h-3.5" />
-              Showing tailored <strong>{selectedRole === 'DATA_ANALYST' ? 'Data Analyst' : 'Data Scientist & ML Engineer'}</strong> Curriculum Vitae
+              Showing tailored <strong>{selectedRole === 'DATA_ANALYST' ? 'Data Analyst' : 'Data Scientist & ML Engineer'}</strong> Resume
             </span>
             <span className="text-[10px] text-[#888] hidden sm:inline">
-              Matches your official PDF submission
+              Downloadable as a clean, formatted PDF
             </span>
           </div>
 
@@ -306,16 +299,14 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
                     <span>LinkedIn</span>
                   </a>
                 )}
-                {currentResume.portfolio && (
-                  <a 
-                    href={currentResume.portfolio} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-violet-400 hover:text-violet-300 transition-colors"
-                  >
-                    <span>Online Resume</span>
-                  </a>
-                )}
+                <a 
+                  href={PERSONAL_INFO.github} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  <span>GitHub</span>
+                </a>
               </div>
             </div>
 

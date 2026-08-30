@@ -267,25 +267,16 @@ export const ContactSection: React.FC = () => {
                     href={PERSONAL_INFO.linkedin}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 min-w-[110px] flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#181818] hover:bg-[#252525] text-xs font-semibold text-[#E0E0E0] border border-[#ffffff0a] hover:border-cyan-500/40 transition-all font-mono"
+                    className="flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#181818] hover:bg-[#252525] text-xs font-semibold text-[#E0E0E0] border border-[#ffffff0a] hover:border-cyan-500/40 transition-all font-mono"
                   >
                     <Linkedin className="w-3.5 h-3.5 text-cyan-400" />
                     <span>LinkedIn</span>
                   </a>
                   <a
-                    href={PERSONAL_INFO.resumeAppUrl || 'https://linked-to-my-resume.lovable.app/'}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex-1 min-w-[130px] flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#181818] hover:bg-violet-950/40 text-xs font-semibold text-[#E0E0E0] border border-[#ffffff0a] hover:border-violet-500/40 transition-all font-mono"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-violet-400" />
-                    <span>Online Resume</span>
-                  </a>
-                  <a
                     href={PERSONAL_INFO.github}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 min-w-[90px] flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#181818] hover:bg-[#252525] text-xs font-semibold text-[#E0E0E0] border border-[#ffffff0a] hover:border-cyan-500/40 transition-all font-mono"
+                    className="flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#181818] hover:bg-[#252525] text-xs font-semibold text-[#E0E0E0] border border-[#ffffff0a] hover:border-cyan-500/40 transition-all font-mono"
                   >
                     <Github className="w-3.5 h-3.5 text-cyan-400" />
                     <span>GitHub</span>

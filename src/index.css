@@ -113,6 +113,136 @@ body:not(.dark) .bg-\[\#252525\] {
   background-color: #f1f5f9 !important;
 }
 
+/* Specific Feature 1: Hiring Manager Lens Container & Switcher */
+body:not(.dark) .bg-\[\#0b1019\]\/90,
+body:not(.dark) .bg-\[\#0b1019\] {
+  background-color: #ffffff !important;
+  border-color: #93c5fd !important;
+  box-shadow: 0 4px 15px -2px rgba(14, 165, 233, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04) !important;
+}
+
+body:not(.dark) .bg-\[\#05080e\],
+body:not(.dark) .bg-\[\#101520\],
+body:not(.dark) .bg-\[\#0d1420\] {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+body:not(.dark) .bg-\[\#05080e\] button.bg-white,
+body:not(.dark) .bg-\[\#101520\] button.bg-white {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15) !important;
+}
+
+body:not(.dark) .bg-\[\#05080e\] button:not(.bg-white):not(.bg-cyan-500):not(.bg-violet-500),
+body:not(.dark) .bg-\[\#101520\] button:not(.bg-white):not(.bg-cyan-500):not(.bg-violet-500) {
+  color: #475569 !important;
+}
+
+body:not(.dark) .bg-\[\#05080e\] button:hover,
+body:not(.dark) .bg-\[\#101520\] button:hover {
+  color: #0f172a !important;
+}
+
+/* Specific Feature 3: Profile Portrait Frame & Badges */
+body:not(.dark) .bg-\[\#0a0f18\]\/95,
+body:not(.dark) .bg-\[\#0a0f18\]\/90,
+body:not(.dark) .bg-\[\#0a0f18\] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1), 0 4px 8px -4px rgba(0, 0, 0, 0.05) !important;
+}
+
+body:not(.dark) .bg-\[\#07090e\],
+body:not(.dark) .bg-\[\#080d16\],
+body:not(.dark) .bg-\[\#05080e\],
+body:not(.dark) .bg-\[\#030509\] {
+  background-color: #f8fafc !important;
+}
+
+body:not(.dark) .bg-\[\#03060b\]\/85 {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
+}
+
+body:not(.dark) .bg-\[\#131d2e\],
+body:not(.dark) .bg-\[\#101726\] {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #0891b2 !important;
+}
+
+body:not(.dark) .from-\[\#1c2838\] {
+  --tw-gradient-from: #e2e8f0 var(--tw-gradient-from-position) !important;
+}
+body:not(.dark) .via-\[\#101722\] {
+  --tw-gradient-stops: #e2e8f0, #ffffff var(--tw-gradient-via-position), #f1f5f9 !important;
+}
+body:not(.dark) .to-\[\#0a0e17\] {
+  --tw-gradient-to: #f1f5f9 var(--tw-gradient-to-position) !important;
+}
+
+body:not(.dark) .text-\[\#8899ac\],
+body:not(.dark) .text-\[\#718096\],
+body:not(.dark) .text-\[\#A0AEC0\] {
+  color: #475569 !important;
+}
+
+/* Light Theme Form Controls */
+body:not(.dark) input,
+body:not(.dark) textarea {
+  color: #0f172a !important;
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+body:not(.dark) input:focus,
+body:not(.dark) textarea:focus {
+  border-color: #06b6d4 !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.15) !important;
+}
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Specific Feature 4: Schedule Intro Call Card & Buttons */
+body:not(.dark) .from-\[\#0c1624\] {
+  --tw-gradient-from: #f0fdfa var(--tw-gradient-from-position) !important;
+}
+body:not(.dark) .via-\[\#09101a\] {
+  --tw-gradient-stops: #f0fdfa, #f8fafc var(--tw-gradient-via-position), #f0f9ff !important;
+}
+body:not(.dark) .to-\[\#060a12\] {
+  --tw-gradient-to: #f0f9ff var(--tw-gradient-to-position) !important;
+}
+
+body:not(.dark) .bg-\[\#141e2e\] {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0891b2 !important;
+}
+body:not(.dark) .bg-\[\#141e2e\]:hover {
+  background-color: #f1f5f9 !important;
+  color: #0e7490 !important;
+}
+
+/* Specific Feature 5: Availability Banner (Full-time, contract & remote) */
+body:not(.dark) .bg-\[\#0a1512\] {
+  background-color: #ecfdf5 !important;
+  border-color: #6ee7b7 !important;
+  box-shadow: 0 1px 3px rgba(16, 185, 129, 0.08) !important;
+}
+body:not(.dark) .bg-\[\#0a1512\] p {
+  color: #065f46 !important;
+  font-weight: 500 !important;
+}
+body:not(.dark) .bg-\[\#0a1512\] .text-cyan-400 {
+  color: #059669 !important;
+}
+
 /* Project Card Key Result Callout Box */
 body:not(.dark) .bg-\[\#080808\] {
   background-color: #f0fdfa !important;
