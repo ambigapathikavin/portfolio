@@ -43,27 +43,32 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-[#E0E0E0] font-sans pb-24 selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="min-h-screen bg-[#050505] text-[#E0E0E0] font-sans pt-16 sm:pt-20 pb-24 selection:bg-cyan-500/30 selection:text-cyan-200">
       
-      {/* Sticky Top Sub-Navigation Header */}
-      <header className="sticky top-0 z-40 bg-[#050505]/95 backdrop-blur-md border-b border-[#ffffff10] px-4 sm:px-6 lg:px-8 py-3">
+      {/* Clean Sticky Sub-Navigation Header docked below main fixed Navbar */}
+      <header className="sticky top-[56px] sm:top-[64px] z-30 bg-[#080808]/95 backdrop-blur-md border-b border-[#ffffff10] px-4 sm:px-6 lg:px-8 py-2.5 shadow-lg shadow-black/70">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
           {/* Back Action & Breadcrumbs */}
           <div className="flex items-center gap-3">
             <button
               onClick={onBack}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#141414] hover:bg-[#202020] border border-[#ffffff15] text-xs font-mono text-white transition-all cursor-pointer group"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-cyan-950/60 hover:bg-cyan-900/80 border border-cyan-500/40 text-xs font-mono text-cyan-300 font-semibold shadow-sm transition-all cursor-pointer group"
             >
               <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-              <span>Back to Portfolio</span>
+              <span>Back to Overview</span>
             </button>
 
-            <div className="hidden md:flex items-center gap-1.5 text-xs font-mono text-[#666]">
+            <div className="hidden md:flex items-center gap-2 text-xs font-mono text-[#666]">
               <span>/</span>
-              <span className="text-[#888]">Projects</span>
+              <button 
+                onClick={onBack}
+                className="text-[#888] hover:text-white transition-colors cursor-pointer"
+              >
+                Projects
+              </button>
               <span>/</span>
-              <span className="text-cyan-400 font-semibold truncate max-w-[200px]">{project.title}</span>
+              <span className="text-cyan-400 font-semibold truncate max-w-[240px]">{project.title}</span>
             </div>
           </div>
 
@@ -540,14 +545,8 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
 
           <div className="flex items-center gap-3">
             <button
-              onClick={onBack}
-              className="px-4 py-2 rounded-lg bg-[#181818] hover:bg-[#222] border border-[#ffffff15] text-xs font-mono text-white transition-all cursor-pointer"
-            >
-              Back to Overview
-            </button>
-            <button
               onClick={() => onSelectProject(nextProject.id)}
-              className="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-cyan-500/10"
+              className="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-cyan-500/10 active:scale-95"
             >
               <span>Explore Next Project</span>
               <ArrowRight className="w-3.5 h-3.5" />

@@ -8,7 +8,11 @@ import {
   BarChart3,
   BrainCircuit,
   Eye,
-  Layers
+  Layers,
+  Target,
+  Zap,
+  Info,
+  CheckCircle2
 } from 'lucide-react';
 import { PROJECTS } from '../data/portfolioData';
 import { Project, ProjectCategory } from '../types';
@@ -170,27 +174,32 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
         </div>
 
         {/* Project Cards Grid with Visual Thumbnails */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <AnimatePresence>
+        <motion.div 
+          layout
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+        >
+          <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, idx) => (
               <motion.div
                 key={project.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                layout
+                initial={{ opacity: 0, y: 32, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.94, y: 15, transition: { duration: 0.2 } }}
+                whileHover={{ y: -6, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
+                whileTap={{ scale: 0.985 }}
                 transition={{ 
-                  duration: 0.35, 
-                  ease: [0.21, 0.47, 0.32, 0.98],
-                  delay: (idx % 6) * 0.05 
+                  duration: 0.45, 
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: (idx % 6) * 0.055 
                 }}
-                className="group flex flex-col justify-between rounded-xl bg-[#0f0f0f] border border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-cyan-950/20 transition-colors duration-200 overflow-hidden"
+                className="group flex flex-col justify-between rounded-xl bg-[#0f0f0f] border border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-cyan-950/20 transition-colors duration-200 relative"
               >
                 <div>
                   {/* Project Visual Thumbnail / Screenshot */}
                   <div 
                     onClick={() => handleProjectClick(project.id)}
-                    className="relative aspect-video w-full overflow-hidden bg-[#181818] cursor-pointer group/img"
+                    className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-[#181818] cursor-pointer group/img"
                   >
                     <img
                       src={project.imageUrl || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80'}
@@ -232,9 +241,77 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                   {/* Card Body */}
                   <div className="p-4 sm:p-5">
                     
-                    {/* Category */}
-                    <div className="text-[10px] font-mono text-cyan-400 mb-1">
-                      {project.category}
+                    {/* Category & KPI Tooltip Trigger Pill */}
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <div className="text-[10px] font-mono text-cyan-400 truncate">
+                        {project.category}
+                      </div>
+
+                      {/* Small Interactive KPI Hover Tooltip Trigger */}
+                      <div className="relative group/tooltip shrink-0">
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-950/50 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-300 text-[9px] font-mono transition-colors cursor-help focus:outline-none"
+                          aria-label="View KPI metrics"
+                        >
+                          <Target className="w-2.5 h-2.5 text-cyan-400 shrink-0" />
+                          <span>KPIs</span>
+                          <Info className="w-2.5 h-2.5 opacity-70 shrink-0" />
+                        </button>
+
+                        {/* Floating Tooltip Card */}
+                        <div className="absolute bottom-full right-0 mb-2.5 w-72 sm:w-80 p-3.5 rounded-xl bg-[#0c1017] border border-cyan-500/40 shadow-2xl shadow-black/90 backdrop-blur-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible group-focus-within/tooltip:opacity-100 group-focus-within/tooltip:visible transition-all duration-200 z-50 pointer-events-none group-hover/tooltip:pointer-events-auto">
+                          
+                          {/* Tooltip Header */}
+                          <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-[#ffffff12]">
+                            <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+                              <Zap className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                              <span>Key Performance Indicators</span>
+                            </div>
+                            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                              Measured Lift
+                            </span>
+                          </div>
+
+                          {/* Quick Metrics Grid in Tooltip */}
+                          {project.metrics && project.metrics.length > 0 && (
+                            <div className="grid grid-cols-2 gap-1.5 mb-2.5">
+                              {project.metrics.slice(0, 4).map((metric, mIdx) => (
+                                <div key={mIdx} className="p-1.5 rounded-lg bg-[#141924] border border-[#ffffff0a]">
+                                  <div className="text-[11px] font-bold font-mono text-cyan-300">{metric.value}</div>
+                                  <div className="text-[8px] text-[#888] font-mono truncate">{metric.label}</div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* KPI Deltas List */}
+                          {project.kpis && project.kpis.length > 0 && (
+                            <div className="space-y-1.5">
+                              <div className="text-[9px] font-mono uppercase tracking-wider text-[#777]">
+                                Benchmarks & Optimization
+                              </div>
+                              {project.kpis.slice(0, 2).map((kpi, kIdx) => (
+                                <div key={kIdx} className="p-1.5 rounded-lg bg-[#10141d] border border-[#ffffff08] text-[10px]">
+                                  <div className="flex items-center justify-between text-white font-medium mb-0.5">
+                                    <span className="truncate pr-1 text-[10px]">{kpi.title}</span>
+                                    <span className="font-mono text-[9px] font-bold px-1 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30 shrink-0">
+                                      {kpi.improvement}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center justify-between text-[9px] font-mono text-[#888]">
+                                    <span>Base: <strong className="text-[#bbb]">{kpi.baseline}</strong></span>
+                                    <span>Achieved: <strong className="text-cyan-300">{kpi.current}</strong></span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Tooltip Arrow Indicator */}
+                          <div className="absolute top-full right-4 -mt-1 border-4 border-transparent border-t-cyan-500/40" />
+                        </div>
+                      </div>
                     </div>
 
                     {/* Title */}
@@ -250,16 +327,41 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                       {project.shortDescription}
                     </p>
 
-                    {/* Key Result Impact Callout */}
-                    <div className="p-2.5 rounded-lg bg-[#080808] border border-cyan-500/20 mb-3 flex items-start gap-2">
+                    {/* Key Result Impact Callout with Interactive Tooltip Hover */}
+                    <div className="relative group/outcome p-2.5 rounded-lg bg-[#080808] hover:bg-[#0c1017] border border-cyan-500/20 hover:border-cyan-500/40 mb-3 flex items-start gap-2 transition-all cursor-help">
                       <TrendingUp className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
-                      <div>
-                        <div className="text-[9px] font-mono text-cyan-400 uppercase font-semibold">
-                          Key Outcome
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <div className="text-[9px] font-mono text-cyan-400 uppercase font-semibold">
+                            Key Outcome & KPI Result
+                          </div>
+                          <span className="text-[8px] font-mono text-[#666] group-hover/outcome:text-cyan-400 transition-colors">
+                            Hover for KPIs ⓘ
+                          </span>
                         </div>
                         <div className="text-xs text-[#E0E0E0] mt-0.5 font-medium leading-snug line-clamp-2">
                           {project.keyResult}
                         </div>
+                      </div>
+
+                      {/* Tooltip on Key Outcome Box Hover */}
+                      <div className="absolute bottom-full left-0 right-0 mb-2 p-3 rounded-xl bg-[#0c1017] border border-cyan-500/40 shadow-2xl shadow-black/90 backdrop-blur-xl opacity-0 invisible group-hover/outcome:opacity-100 group-hover/outcome:visible transition-all duration-200 z-50 pointer-events-none">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-cyan-300 mb-1.5 pb-1 border-b border-[#ffffff10]">
+                          <CheckCircle2 className="w-3 h-3 text-cyan-400 shrink-0" />
+                          <span>Measured Business & Technical Impact</span>
+                        </div>
+                        <p className="text-[11px] text-[#D1D5DB] leading-relaxed mb-2">
+                          {project.keyResult}
+                        </p>
+                        {project.kpis && project.kpis.length > 0 && (
+                          <div className="pt-1.5 border-t border-[#ffffff0a] flex items-center justify-between text-[9px] font-mono text-[#9CA3AF]">
+                            <span>Primary KPI Lift:</span>
+                            <span className="text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/30">
+                              {project.kpis[0].title} ({project.kpis[0].improvement})
+                            </span>
+                          </div>
+                        )}
+                        <div className="absolute top-full left-6 -mt-1 border-4 border-transparent border-t-cyan-500/40" />
                       </div>
                     </div>
 
@@ -308,7 +410,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
               </motion.div>
             ))}
           </AnimatePresence>
-        </div>
+        </motion.div>
 
       </div>
     </section>

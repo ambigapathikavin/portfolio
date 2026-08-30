@@ -21,12 +21,16 @@ interface NavbarProps {
   onOpenResume: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
   roleMode?: 'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST';
   onRoleModeChange?: (mode: 'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
+  onNavigate?: (href: string) => void;
+  isProjectActive?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
   onOpenResume,
   roleMode = 'ALL',
-  onRoleModeChange
+  onRoleModeChange,
+  onNavigate,
+  isProjectActive = false
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -44,6 +48,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   useEffect(() => {
+    if (isProjectActive) {
+      setActiveSection('projects');
+      setIsScrolled(true);
+      return;
+    }
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 40);
 
@@ -62,13 +72,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isProjectActive]);
 
   const handleNavClick = (href: string) => {
     setMobileMenuOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (onNavigate) {
+      onNavigate(href);
+    } else {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -209,18 +223,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Github className="w-3.5 h-3.5" />
               </a>
             </div>
-
-            <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('#contact');
-              }}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-black bg-white hover:bg-slate-200 rounded-full shadow-sm transition-all cursor-pointer whitespace-nowrap shrink-0"
-            >
-              <Mail className="w-3 h-3 shrink-0" />
-              <span>Connect</span>
-            </a>
           </div>
 
           {/* Mobile/Tablet Menu Toggle Button */}

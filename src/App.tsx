@@ -14,6 +14,7 @@ import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { ResumeModal } from './components/ResumeModal';
 import { ProjectPage } from './components/ProjectPage';
+import { initGlobalTactileClicks } from './utils/sound';
 
 export default function App() {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
@@ -29,6 +30,8 @@ export default function App() {
 
   // Sync browser back/forward and hash changes
   useEffect(() => {
+    const cleanupSounds = initGlobalTactileClicks();
+
     const handleHashChange = () => {
       const hash = window.location.hash;
       if (hash.startsWith('#project-')) {
@@ -38,7 +41,10 @@ export default function App() {
       }
     };
     window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      cleanupSounds();
+    };
   }, []);
 
   const handleOpenResume = (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => {
@@ -92,6 +98,8 @@ export default function App() {
           onOpenResume={handleOpenResume}
           roleMode={roleMode}
           onRoleModeChange={setRoleMode}
+          onNavigate={(href) => scrollToSection(href.replace('#', ''))}
+          isProjectActive={true}
         />
         
         <ProjectPage
@@ -121,6 +129,8 @@ export default function App() {
         onOpenResume={handleOpenResume}
         roleMode={roleMode}
         onRoleModeChange={setRoleMode}
+        onNavigate={(href) => scrollToSection(href.replace('#', ''))}
+        isProjectActive={false}
       />
 
       {/* Main Content Sections */}
