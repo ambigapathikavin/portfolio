@@ -90,23 +90,23 @@ export const Navbar: React.FC<NavbarProps> = ({
               e.preventDefault();
               handleNavClick('#home');
             }}
-            className="group flex items-center gap-2.5 focus:outline-none"
+            className="group flex items-center gap-2.5 focus:outline-none shrink-0"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#111111] border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-mono font-bold text-xs tracking-wider shadow-inner group-hover:border-cyan-400 transition-colors">
+            <div className="w-8 h-8 rounded-lg bg-[#111111] border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-mono font-bold text-xs tracking-wider shadow-inner group-hover:border-cyan-400 transition-colors shrink-0">
               AV
             </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-xs tracking-[0.2em] text-white group-hover:text-cyan-300 transition-colors">
+            <div className="flex flex-col whitespace-nowrap">
+              <span className="font-bold text-xs tracking-[0.15em] sm:tracking-[0.2em] text-white group-hover:text-cyan-300 transition-colors whitespace-nowrap">
                 AMBIGAPATHI V
               </span>
-              <span className="text-[9px] text-[#A3A3A3] font-mono tracking-widest uppercase">
+              <span className="text-[9px] text-[#A3A3A3] font-mono tracking-wider sm:tracking-widest uppercase whitespace-nowrap">
                 Data Analyst • ML Engineer
               </span>
             </div>
           </a>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-0.5 bg-[#111111] p-1 rounded-full border border-[#ffffff10] backdrop-blur-md">
+          <nav className="hidden xl:flex items-center gap-0.5 bg-[#111111] p-1 rounded-full border border-[#ffffff10] backdrop-blur-md shrink-0">
             {navLinks.map((link) => {
               const isActive = activeSection === link.href.substring(1);
               return (
@@ -117,7 +117,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     e.preventDefault();
                     handleNavClick(link.href);
                   }}
-                  className={`px-3 py-1 text-[11px] font-mono uppercase tracking-wider rounded-full transition-all duration-200 ${
+                  className={`px-3 py-1 text-[11px] font-mono uppercase tracking-wider rounded-full transition-all duration-200 whitespace-nowrap ${
                     isActive
                       ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 shadow-sm'
                       : 'text-[#A3A3A3] hover:text-white hover:bg-[#1c1c1c]'
@@ -130,15 +130,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Desktop Right Actions */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2 shrink-0">
             {/* 1-Click Recruiter Role Customizer */}
             {onRoleModeChange && (
-              <div className="flex items-center bg-[#101520] p-0.5 rounded-full border border-cyan-500/30 shadow-inner">
+              <div className="flex items-center bg-[#101520] p-0.5 rounded-full border border-cyan-500/30 shadow-inner shrink-0">
                 <button
                   type="button"
                   onClick={() => onRoleModeChange('ALL')}
                   title="Full Dual Profile"
-                  className={`px-2.5 py-1 text-[10px] font-mono rounded-full transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 text-[10px] font-mono rounded-full transition-all cursor-pointer whitespace-nowrap ${
                     roleMode === 'ALL'
                       ? 'bg-white text-black font-bold shadow-sm'
                       : 'text-[#888] hover:text-white'
@@ -150,26 +150,26 @@ export const Navbar: React.FC<NavbarProps> = ({
                   type="button"
                   onClick={() => onRoleModeChange('DATA_ANALYST')}
                   title="Data Analyst Mode (SQL, Power BI, DAX, Storytelling)"
-                  className={`flex items-center gap-1 px-2.5 py-1 text-[10px] font-mono rounded-full transition-all cursor-pointer ${
+                  className={`flex items-center gap-1 px-2.5 py-1 text-[10px] font-mono rounded-full transition-all cursor-pointer whitespace-nowrap ${
                     roleMode === 'DATA_ANALYST'
                       ? 'bg-cyan-500 text-black font-bold shadow-sm'
                       : 'text-cyan-400/80 hover:text-cyan-300'
                   }`}
                 >
-                  <BarChart3 className="w-2.5 h-2.5" />
+                  <BarChart3 className="w-2.5 h-2.5 shrink-0" />
                   <span>Analyst</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => onRoleModeChange('DATA_SCIENTIST')}
                   title="Data Scientist Mode (BERT, NLP, PyTorch, MLOps)"
-                  className={`flex items-center gap-1 px-2.5 py-1 text-[10px] font-mono rounded-full transition-all cursor-pointer ${
+                  className={`flex items-center gap-1 px-2.5 py-1 text-[10px] font-mono rounded-full transition-all cursor-pointer whitespace-nowrap ${
                     roleMode === 'DATA_SCIENTIST'
                       ? 'bg-violet-500 text-white font-bold shadow-sm'
                       : 'text-violet-400/80 hover:text-violet-300'
                   }`}
                 >
-                  <BrainCircuit className="w-2.5 h-2.5" />
+                  <BrainCircuit className="w-2.5 h-2.5 shrink-0" />
                   <span>Scientist</span>
                 </button>
               </div>
@@ -177,17 +177,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => onOpenResume(roleMode === 'ALL' ? undefined : roleMode)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono text-[#E0E0E0] bg-[#111111] hover:bg-[#1a1a1a] border border-[#ffffff10] hover:border-cyan-500/40 rounded-full transition-all shadow-sm group cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono text-[#E0E0E0] bg-[#111111] hover:bg-[#1a1a1a] border border-[#ffffff10] hover:border-cyan-500/40 rounded-full transition-all shadow-sm group cursor-pointer whitespace-nowrap shrink-0"
               title="View & Download Resume"
             >
-              <FileText className="w-3 h-3 text-cyan-400 group-hover:scale-110 transition-transform" />
+              <FileText className="w-3 h-3 text-cyan-400 group-hover:scale-110 transition-transform shrink-0" />
               <span>Resume</span>
             </button>
 
             {/* Theme Toggle Button (Light/Dark mode) */}
             <ThemeToggle />
 
-            <div className="flex items-center gap-1 text-[#A3A3A3] border-l border-[#ffffff10] pl-2.5">
+            <div className="hidden 2xl:flex items-center gap-1 text-[#A3A3A3] border-l border-[#ffffff10] pl-2.5 shrink-0">
               <a
                 href={PERSONAL_INFO.linkedin}
                 target="_blank"
@@ -216,15 +216,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                 e.preventDefault();
                 handleNavClick('#contact');
               }}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-black bg-white hover:bg-slate-200 rounded-full shadow-sm transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-black bg-white hover:bg-slate-200 rounded-full shadow-sm transition-all cursor-pointer whitespace-nowrap shrink-0"
             >
-              <Mail className="w-3 h-3" />
+              <Mail className="w-3 h-3 shrink-0" />
               <span>Connect</span>
             </a>
           </div>
 
-          {/* Mobile Menu Toggle Button */}
-          <div className="flex items-center gap-1.5 lg:hidden">
+          {/* Mobile/Tablet Menu Toggle Button */}
+          <div className="flex items-center gap-1.5 xl:hidden">
             <ThemeToggle />
 
             <button
