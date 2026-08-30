@@ -88,7 +88,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
               className="flex items-center gap-1 text-cyan-400 hover:text-cyan-300 font-semibold transition-colors cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5" />
-              <span>DA Resume</span>
+              <span>Data Analyst Resume</span>
             </button>
 
             <button
@@ -96,7 +96,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
               className="flex items-center gap-1 text-violet-400 hover:text-violet-300 font-semibold transition-colors cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5" />
-              <span>DS Resume</span>
+              <span>Data Scientist Resume</span>
             </button>
           </div>
 

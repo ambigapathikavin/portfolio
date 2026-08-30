@@ -9,7 +9,7 @@ export const PERSONAL_INFO = {
   location: 'Salem, Tamil Nadu, India',
   email: 'ambigapathikavin2@gmail.com',
   phone: '9488936650',
-  github: 'https://github.com',
+  github: 'https://github.com/ambigapathikavin',
   linkedin: 'https://www.linkedin.com/in/ambigapathi-v/',
   resumeAppUrl: 'https://linked-to-my-resume.lovable.app/',
   aboutText: [
@@ -193,32 +193,15 @@ export const EXPERIENCES: ExperienceItem[] = [
     role: 'Machine Learning Engineer',
     period: 'Sep 2024 – Present',
     location: 'Remote',
-    project: 'Kitwe News Aggregator',
+    project: 'Kitwe News Aggregator & Global AI Challenges',
     isCurrent: true,
-    technologies: ['Python', 'BERT', 'NLP', 'Transformers', 'FastAPI', 'MLflow', 'Docker', 'MLOps'],
+    technologies: ['Python', 'BERT', 'NLP', 'Transformers', 'FastAPI', 'MLflow', 'Docker', 'MLOps', 'Pandas', 'EDA'],
     achievements: [
-      'Developed and deployed an AI-powered news classifier using BERT for multi-topic classification.',
-      'Achieved 98% accuracy in multi-topic article categorization across heterogeneous news sources.',
-      'Streamlined data pipelines and preprocessing, reducing training time by 40%.',
-      'Enabled real-time analysis and categorization of 50K+ daily news articles.',
-      'Implemented scalable MLOps workflows with automated retraining triggers and model versioning.',
-      'Reduced model deployment failures by 35% through containerized CI/CD integration.',
-      'Improved classification recall by 20% on under-represented news categories.'
-    ]
-  },
-  {
-    id: 'exp-2',
-    company: 'OMDENA',
-    role: 'Open-Source Data Analytics Contributor',
-    period: 'Mar 2025 – Present',
-    location: 'Remote',
-    isCurrent: true,
-    technologies: ['Python', 'Pandas', 'NumPy', 'EDA', 'Data Cleaning', 'Matplotlib', 'Seaborn'],
-    achievements: [
-      'Collaborated with a global team on real-world data analytics projects and socio-economic datasets.',
-      'Worked extensively with Python, data preprocessing, EDA and data visualization pipelines.',
-      'Contributed to the Kitwe News Aggregator project architecture and data cleaning modules.',
-      'Contributed to the Healthcare Accessibility Analysis – Sudan, uncovering distribution inequalities and healthcare reach.'
+      'Developed and deployed an AI-powered news classifier using BERT for multi-topic classification, achieving 98% accuracy.',
+      'Streamlined data pipelines and preprocessing, reducing training time by 40% and enabling real-time analysis of 50K+ daily news articles.',
+      'Implemented scalable MLOps workflows with automated retraining triggers, model versioning, and containerized deployment.',
+      'Collaborated with international engineering teams on real-world socio-economic and healthcare access analytics initiatives.',
+      'Reduced model deployment failures by 35% through containerized CI/CD integration.'
     ]
   },
   {

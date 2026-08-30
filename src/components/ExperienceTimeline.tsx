@@ -39,9 +39,8 @@ export const ExperienceTimeline: React.FC = () => {
             <motion.div
               key={exp.id}
               initial={{ opacity: 0, x: -15 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.4, delay: idx * 0.08 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.35, delay: idx * 0.08 }}
               className="relative group"
             >
               

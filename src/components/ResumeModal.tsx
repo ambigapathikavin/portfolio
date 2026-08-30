@@ -31,8 +31,16 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({
   onClose,
   initialRole = 'DATA_ANALYST'
 }) => {
-  const [selectedRole, setSelectedRole] = useState<'DATA_ANALYST' | 'DATA_SCIENTIST'>(initialRole);
+  const [selectedRole, setSelectedRole] = useState<'DATA_ANALYST' | 'DATA_SCIENTIST'>(
+    initialRole === 'DATA_SCIENTIST' ? 'DATA_SCIENTIST' : 'DATA_ANALYST'
+  );
   const [copied, setCopied] = useState(false);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setSelectedRole(initialRole === 'DATA_SCIENTIST' ? 'DATA_SCIENTIST' : 'DATA_ANALYST');
+    }
+  }, [isOpen, initialRole]);
 
   if (!isOpen) return null;
 

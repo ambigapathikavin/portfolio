@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, useInView } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import { 
   Newspaper, 
   Database, 
@@ -11,9 +11,6 @@ import {
 import { QUICK_STATS } from '../data/portfolioData';
 
 export const QuickStats: React.FC = () => {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
-
   // Map icon strings to Lucide components
   const getIcon = (iconName: string) => {
     switch (iconName) {
@@ -35,7 +32,7 @@ export const QuickStats: React.FC = () => {
   };
 
   return (
-    <section ref={ref} className="py-8 bg-[#050505] border-y border-[#ffffff10] relative">
+    <section className="py-8 bg-[#050505] border-y border-[#ffffff10] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Subtle section label */}
@@ -57,8 +54,8 @@ export const QuickStats: React.FC = () => {
             <motion.div
               key={stat.id}
               initial={{ opacity: 0, y: 15 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: idx * 0.05 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: idx * 0.04 }}
               className="group p-3 rounded-xl bg-[#111111] hover:bg-[#161616] border border-[#ffffff08] hover:border-cyan-500/40 transition-all duration-200 flex flex-col justify-between"
             >
               <div className="flex items-center justify-between mb-2">

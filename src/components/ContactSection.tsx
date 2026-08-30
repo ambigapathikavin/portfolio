@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Mail, 
   Phone, 
@@ -12,7 +12,9 @@ import {
   Clock, 
   ArrowRight,
   MessageSquare,
-  AlertCircle
+  AlertCircle,
+  Copy,
+  Check
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PERSONAL_INFO } from '../data/portfolioData';
@@ -27,6 +29,19 @@ export const ContactSection: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [copiedEmail, setCopiedEmail] = useState(false);
+
+  const handleCopyEmail = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    navigator.clipboard.writeText(PERSONAL_INFO.email);
+    setCopiedEmail(true);
+    setTimeout(() => {
+      setCopiedEmail(false);
+    }, 2500);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,20 +112,45 @@ export const ContactSection: React.FC = () => {
               </h3>
 
               <div className="space-y-2.5">
-                <a
-                  href={`mailto:${PERSONAL_INFO.email}`}
-                  className="flex items-start gap-3 p-3 rounded-lg bg-[#0a0a0a] border border-[#ffffff08] hover:border-cyan-500/40 hover:bg-[#141414] transition-all group"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-[#181818] border border-[#ffffff0a] flex items-center justify-center text-cyan-400 shrink-0 group-hover:scale-105 transition-transform">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <div className="overflow-hidden">
-                    <div className="text-[10px] font-mono text-[#777]">Email Address</div>
-                    <div className="text-xs font-semibold text-[#E0E0E0] group-hover:text-cyan-300 transition-colors truncate">
-                      {PERSONAL_INFO.email}
+                <div className="flex items-center justify-between p-3 rounded-lg bg-[#0a0a0a] border border-[#ffffff08] hover:border-cyan-500/40 hover:bg-[#141414] transition-all group">
+                  <a
+                    href={`mailto:${PERSONAL_INFO.email}`}
+                    className="flex items-start gap-3 overflow-hidden flex-1 mr-2"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-[#181818] border border-[#ffffff0a] flex items-center justify-center text-cyan-400 shrink-0 group-hover:scale-105 transition-transform">
+                      <Mail className="w-4 h-4" />
                     </div>
-                  </div>
-                </a>
+                    <div className="overflow-hidden">
+                      <div className="text-[10px] font-mono text-[#777]">Email Address</div>
+                      <div className="text-xs font-semibold text-[#E0E0E0] group-hover:text-cyan-300 transition-colors truncate">
+                        {PERSONAL_INFO.email}
+                      </div>
+                    </div>
+                  </a>
+                  
+                  <button
+                    type="button"
+                    onClick={handleCopyEmail}
+                    title="Copy email to clipboard"
+                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-mono transition-all shrink-0 cursor-pointer shadow-sm active:scale-95 ${
+                      copiedEmail
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                        : 'bg-[#181818] hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border border-[#ffffff10] hover:border-cyan-500/40'
+                    }`}
+                  >
+                    {copiedEmail ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="text-[11px] font-semibold">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span className="text-[11px]">Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
 
                 <a
                   href={`tel:${PERSONAL_INFO.phone}`}
@@ -303,6 +343,32 @@ export const ContactSection: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Floating Success Toast Notification for Email Copy */}
+      <AnimatePresence>
+        {copiedEmail && (
+          <motion.div
+            initial={{ opacity: 0, y: 15, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-[#0d131a]/95 border border-cyan-500/50 shadow-2xl backdrop-blur-md"
+          >
+            <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+              <Check className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white font-mono flex items-center gap-1.5">
+                <span>Email Copied to Clipboard</span>
+                <span className="text-[10px] text-emerald-400">✓</span>
+              </div>
+              <div className="text-[11px] text-cyan-300 font-mono">
+                {PERSONAL_INFO.email}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { AmbigapathiPortrait } from './AmbigapathiPortrait';
+import { DataParticleBackground } from './DataParticleBackground';
 
 interface HeroProps {
   onOpenResume: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
@@ -27,6 +28,9 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onOpenResume, onOpenContact, onViewWork }) => {
   return (
     <section id="home" className="relative min-h-[90vh] pt-24 pb-14 lg:pt-32 lg:pb-20 flex items-center bg-[#050505] bg-data-grid overflow-hidden">
+      {/* Interactive Data Science Neural/Particle Background */}
+      <DataParticleBackground />
+
       {/* Background radial glow accents */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-cyan-500/8 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/3 right-10 w-[350px] h-[350px] bg-violet-500/6 rounded-full blur-3xl pointer-events-none" />
@@ -93,7 +97,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenResume, onOpenContact, onViewW
                 title="View & Download Data Analyst Resume"
               >
                 <Download className="w-3.5 h-3.5 text-cyan-400" />
-                <span>DA Resume</span>
+                <span>Data Analyst Resume</span>
               </button>
 
               <button
@@ -102,7 +106,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenResume, onOpenContact, onViewW
                 title="View & Download Data Scientist Resume"
               >
                 <Download className="w-3.5 h-3.5 text-violet-400" />
-                <span>DS Resume</span>
+                <span>Data Scientist Resume</span>
               </button>
 
               <button
@@ -142,80 +146,67 @@ export const Hero: React.FC<HeroProps> = ({ onOpenResume, onOpenContact, onViewW
           </div>
 
           {/* Right Column: Professional Portrait Frame & Data Visual Elements */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end relative">
+          <div className="lg:col-span-5 flex justify-center lg:justify-end relative items-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className="relative w-full max-w-sm sm:max-w-md aspect-square flex items-center justify-center"
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="relative w-full max-w-[290px] sm:max-w-[340px] lg:max-w-[360px] h-[380px] sm:h-[420px] lg:h-[450px] flex items-center justify-center"
             >
               
-              {/* Outer Decorative Tech Rings */}
-              <div className="absolute inset-0 rounded-full border border-cyan-500/15 border-dashed animate-[spin_60s_linear_infinite]" />
-              <div className="absolute -inset-3 rounded-full border border-violet-500/10 animate-[spin_40s_linear_infinite_reverse]" />
-              
-              {/* Data Grid Background Glow */}
-              <div className="absolute inset-5 rounded-2xl bg-[#111111]/80 backdrop-blur-xl border border-[#ffffff10] shadow-2xl" />
+              {/* Outer Decorative Ambient Glow & Orbit Grids */}
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-cyan-500/10 via-transparent to-violet-500/15 blur-2xl pointer-events-none" />
+              <div className="absolute -inset-2 rounded-3xl border border-cyan-500/15 pointer-events-none" />
+              <div className="absolute -inset-6 rounded-full border border-cyan-500/10 border-dashed animate-[spin_80s_linear_infinite] pointer-events-none" />
 
-              {/* Main Portrait Container - Compact Sleek High Density Frame */}
-              <div className="relative z-10 w-60 h-72 sm:w-68 sm:h-80 rounded-2xl overflow-hidden p-1 bg-[#141414] shadow-2xl border border-cyan-500/30 group">
+              {/* Main Portrait Frame - Expanded Generous Scale */}
+              <div className="relative z-10 w-full h-full rounded-2xl overflow-hidden p-1.5 bg-gradient-to-b from-[#1c2838] via-[#101722] to-[#0a0e17] shadow-2xl border border-cyan-500/35 hover:border-cyan-400/60 transition-all duration-300 group">
                 <div className="w-full h-full rounded-[14px] overflow-hidden bg-[#07090e] relative flex flex-col items-center justify-center">
                   
-                  {/* High-Fidelity Studio Portrait Representation */}
+                  {/* High-Fidelity Studio Portrait Representation with Full Fill */}
                   <AmbigapathiPortrait className="w-full h-full" />
-
-                  {/* Corner Accent Tech Badges */}
-                  <div className="absolute top-2 left-2 z-30 flex items-center gap-1 px-2 py-0.5 rounded bg-[#050505]/90 backdrop-blur-md border border-cyan-500/30 text-[8px] font-mono text-cyan-300 pointer-events-none shadow-md">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>MLOps Active</span>
-                  </div>
-
-                  <div className="absolute top-2 right-2 z-30 flex items-center gap-1 px-2 py-0.5 rounded bg-[#050505]/90 backdrop-blur-md border border-violet-500/30 text-[8px] font-mono text-violet-300 pointer-events-none shadow-md">
-                    <BrainCircuit className="w-2.5 h-2.5 text-violet-400" />
-                    <span>BERT NLP</span>
-                  </div>
 
                 </div>
               </div>
 
-              {/* Floating Data Point 1: Top Right */}
+              {/* Floating Analytical Metric 1: Top Right */}
               <motion.div
                 animate={{ y: [-3, 3, -3] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -top-3 -right-2 sm:right-0 z-20 px-3 py-1.5 rounded-lg bg-[#111111] border border-[#ffffff15] shadow-xl flex items-center gap-2"
+                className="absolute -top-3 -right-3 z-30 px-3.5 py-2 rounded-xl bg-[#0a0f18]/95 backdrop-blur-md border border-cyan-500/40 shadow-2xl flex items-center gap-2.5"
               >
-                <div className="w-6 h-6 rounded bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                  <BarChart2 className="w-3.5 h-3.5" />
+                <div className="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300">
+                  <BarChart2 className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[9px] text-[#888] font-mono">Classification</span>
-                  <span className="text-[11px] font-bold text-white font-mono">98% Accuracy</span>
+                  <span className="text-[9px] text-[#8899ac] font-mono uppercase tracking-wider">Classification Precision</span>
+                  <span className="text-xs font-bold text-white font-mono">98.2% Accuracy</span>
                 </div>
               </motion.div>
 
-              {/* Floating Data Point 2: Bottom Left */}
+              {/* Floating Analytical Metric 2: Bottom Left */}
               <motion.div
                 animate={{ y: [3, -3, 3] }}
                 transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -bottom-3 -left-2 sm:left-0 z-20 px-3 py-1.5 rounded-lg bg-[#111111] border border-[#ffffff15] shadow-xl flex items-center gap-2"
+                className="absolute -bottom-3 -left-3 z-30 px-3.5 py-2 rounded-xl bg-[#0a0f18]/95 backdrop-blur-md border border-violet-500/40 shadow-2xl flex items-center gap-2.5"
               >
-                <div className="w-6 h-6 rounded bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-400">
-                  <Database className="w-3.5 h-3.5" />
+                <div className="w-7 h-7 rounded-lg bg-violet-500/20 border border-violet-400/40 flex items-center justify-center text-violet-300">
+                  <Database className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[9px] text-[#888] font-mono">Pipeline Volume</span>
-                  <span className="text-[11px] font-bold text-white font-mono">50K+ Daily Feed</span>
+                  <span className="text-[9px] text-[#8899ac] font-mono uppercase tracking-wider">Daily ETL Pipeline</span>
+                  <span className="text-xs font-bold text-white font-mono">50K+ Rows Ingestion</span>
                 </div>
               </motion.div>
 
-              {/* Floating Data Point 3: Center Left */}
+              {/* Floating Analytical Metric 3: Center Left */}
               <motion.div
                 animate={{ x: [-2, 2, -2] }}
                 transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="hidden sm:flex absolute top-1/2 -left-6 -translate-y-1/2 z-20 px-2.5 py-1 rounded bg-[#111111] border border-[#ffffff15] shadow-lg items-center gap-1.5"
+                className="hidden sm:flex absolute top-1/2 -left-6 -translate-y-1/2 z-30 px-3 py-1.5 rounded-lg bg-[#0a0f18]/95 backdrop-blur-md border border-emerald-500/40 shadow-xl items-center gap-2"
               >
-                <TrendingUp className="w-3 h-3 text-emerald-400" />
-                <span className="text-[10px] font-mono text-emerald-300 font-semibold">-40% Latency</span>
+                <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-[11px] font-mono text-emerald-300 font-bold">-40% Query Latency</span>
               </motion.div>
 
             </motion.div>

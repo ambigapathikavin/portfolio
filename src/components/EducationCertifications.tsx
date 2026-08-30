@@ -43,9 +43,8 @@ export const EducationCertifications: React.FC = () => {
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
                 className="p-5 rounded-xl bg-[#111111] border border-[#ffffff08] hover:border-cyan-500/30 transition-all shadow-sm relative overflow-hidden"
               >
                 <div className="flex items-start justify-between gap-3 mb-3">
@@ -102,8 +101,7 @@ export const EducationCertifications: React.FC = () => {
                 <motion.div
                   key={cert.id}
                   initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: idx * 0.05 }}
                   className="p-4 rounded-xl bg-[#111111] border border-[#ffffff08] hover:border-violet-500/40 transition-all flex flex-col justify-between group shadow-sm cursor-pointer"
                   onClick={() => setSelectedCert(cert)}

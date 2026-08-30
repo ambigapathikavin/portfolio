@@ -123,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
           {/* Desktop Right Actions */}
           <div className="hidden md:flex items-center gap-2.5">
             <button
-              onClick={onOpenResume}
+              onClick={() => onOpenResume()}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono text-[#E0E0E0] bg-[#111111] hover:bg-[#1a1a1a] border border-[#ffffff10] hover:border-cyan-500/40 rounded-full transition-all shadow-sm group cursor-pointer"
               title="View & Download Resume"
             >
@@ -175,7 +175,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
             <ThemeToggle />
 
             <button
-              onClick={onOpenResume}
+              onClick={() => onOpenResume()}
               className="p-1.5 text-xs font-medium text-[#E0E0E0] bg-[#111111] border border-[#ffffff10] rounded-lg cursor-pointer"
               aria-label="View Resume"
             >

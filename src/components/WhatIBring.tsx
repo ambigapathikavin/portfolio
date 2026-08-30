@@ -49,9 +49,8 @@ export const WhatIBring: React.FC = () => {
             <motion.div
               key={item.number}
               initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: idx * 0.08 }}
               className="p-6 rounded-xl bg-[#111111] border border-[#ffffff08] hover:border-cyan-500/40 transition-all duration-200 flex flex-col justify-between shadow-md relative overflow-hidden group"
             >
               <div>

@@ -41,8 +41,10 @@ export default function App() {
   }, []);
 
   const handleOpenResume = (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => {
-    if (role) {
+    if (role === 'DATA_ANALYST' || role === 'DATA_SCIENTIST') {
       setResumeRole(role);
+    } else {
+      setResumeRole('DATA_ANALYST');
     }
     setIsResumeOpen(true);
   };

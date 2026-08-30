@@ -125,14 +125,16 @@ export const Skills: React.FC = () => {
 
         {/* Skill Category Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          {filteredCategories.map((category) => (
+          {filteredCategories.map((category, idx) => (
             <motion.div
-              layout
               key={category.id}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="p-4 rounded-xl bg-[#111111] border border-[#ffffff08] hover:border-cyan-500/35 transition-all flex flex-col justify-between group shadow-sm"
+              transition={{ 
+                duration: 0.3, 
+                delay: (idx % 3) * 0.05 
+              }}
+              className="p-4 rounded-xl bg-[#111111] border border-[#ffffff08] hover:border-cyan-500/35 hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between group shadow-sm"
             >
               <div>
                 {/* Category Header */}
@@ -164,7 +166,7 @@ export const Skills: React.FC = () => {
                       <div
                         key={skill.name}
                         onClick={() => setSelectedSkill(isSelected ? null : skill.name)}
-                        className={`group/skill relative px-2.5 py-1 rounded border text-[10px] font-mono transition-all cursor-pointer ${
+                        className={`group/skill relative px-2.5 py-1 rounded border text-[10px] font-mono transition-all duration-150 cursor-pointer select-none hover:scale-105 active:scale-95 ${
                           isSelected
                             ? 'bg-cyan-500/20 text-cyan-200 border-cyan-400 shadow-sm'
                             : 'bg-[#161616] hover:bg-[#1f1f1f] text-[#C0C0C0] hover:text-white border-[#ffffff0a] hover:border-[#ffffff15]'

@@ -79,14 +79,14 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#111] hover:bg-cyan-500/20 border border-cyan-500/30 text-xs font-mono text-cyan-300 transition-all cursor-pointer shadow-sm"
               >
                 <BarChart3 className="w-3.5 h-3.5" />
-                <span>DA Resume</span>
+                <span>Data Analyst Resume</span>
               </button>
               <button
                 onClick={() => onOpenResumeModal('DATA_SCIENTIST')}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#111] hover:bg-violet-500/20 border border-violet-500/30 text-xs font-mono text-violet-300 transition-all cursor-pointer shadow-sm"
               >
                 <BrainCircuit className="w-3.5 h-3.5" />
-                <span>DS Resume</span>
+                <span>Data Scientist Resume</span>
               </button>
             </div>
           )}
@@ -152,16 +152,20 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
 
         {/* Project Cards Grid with Visual Thumbnails */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence>
             {filteredProjects.map((project, idx) => (
               <motion.div
-                layout
                 key={project.id}
-                initial={{ opacity: 0, scale: 0.97 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.97 }}
-                transition={{ duration: 0.3, delay: idx * 0.03 }}
-                className="group flex flex-col justify-between rounded-xl bg-[#0f0f0f] border border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-cyan-950/20 transition-all duration-200 overflow-hidden"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                transition={{ 
+                  duration: 0.35, 
+                  ease: [0.21, 0.47, 0.32, 0.98],
+                  delay: (idx % 6) * 0.05 
+                }}
+                className="group flex flex-col justify-between rounded-xl bg-[#0f0f0f] border border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-cyan-950/20 transition-colors duration-200 overflow-hidden"
               >
                 <div>
                   {/* Project Visual Thumbnail / Screenshot */}
