@@ -249,6 +249,26 @@ body:not(.dark) .bg-\[\#080808\] {
   border-color: #99f6e4 !important;
 }
 
+body:not(.dark) .bg-\[\#0a0e17\],
+body:not(.dark) .bg-\[\#0d0d0d\],
+body:not(.dark) .bg-\[\#111111\] {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+body:not(.dark) .bg-\[\#0f1420\],
+body:not(.dark) .bg-\[\#151122\] {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+body:not(.dark) .bg-\[\#1a2333\],
+body:not(.dark) .bg-\[\#221c33\] {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+}
+
 /* Light Theme Badges & Pill Controls (Cyan, Emerald, Violet, Amber, Rose) */
 body:not(.dark) [class*="bg-cyan-950"],
 body:not(.dark) [class*="bg-cyan-900"] {

@@ -229,7 +229,7 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
                 title={`Download ${selectedRole === 'DATA_ANALYST' ? 'Data Analyst' : 'Data Scientist'} Resume as PDF`}
               >
                 <Download className="w-3.5 h-3.5" />
-                <span>Download PDF ({selectedRole === 'DATA_ANALYST' ? 'Analyst' : 'Scientist'})</span>
+                <span>Download Active PDF ({selectedRole === 'DATA_ANALYST' ? 'DA' : 'DS'})</span>
               </button>
 
               <button
@@ -240,6 +240,125 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
                 <X className="w-4 h-4" />
               </button>
             </div>
+          </div>
+
+          {/* Prominent Download Hub: Two Distinct Downloadable Files */}
+          <div className="p-3 sm:p-4 bg-[#0a0e17] border-b border-[#ffffff0f] grid grid-cols-1 sm:grid-cols-2 gap-3">
+            
+            {/* Visual Indicator 1: Data Analyst File */}
+            <div 
+              onClick={() => setSelectedRole('DATA_ANALYST')}
+              className={`p-3 rounded-lg border transition-all cursor-pointer relative flex flex-col justify-between gap-2.5 ${
+                selectedRole === 'DATA_ANALYST'
+                  ? 'bg-cyan-950/35 border-cyan-400/60 shadow-md shadow-cyan-950/40 ring-1 ring-cyan-500/30'
+                  : 'bg-[#0f1420] border-[#ffffff0f] hover:border-cyan-500/40 hover:bg-[#131b2b]'
+              }`}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shrink-0 shadow-sm">
+                    <BarChart3 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-bold text-xs text-white">Data Analyst Resume</span>
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                        OFFICIAL PDF
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-[#8899ac] font-mono mt-0.5">
+                      SQL • Tableau • Python • EDA & BI
+                    </p>
+                  </div>
+                </div>
+                {selectedRole === 'DATA_ANALYST' ? (
+                  <span className="text-[9px] font-mono font-semibold text-cyan-300 bg-cyan-950 px-2 py-0.5 rounded-full border border-cyan-500/50 shrink-0 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    Previewing
+                  </span>
+                ) : (
+                  <span className="text-[9px] font-mono text-[#888] bg-[#1a2333] px-1.5 py-0.5 rounded border border-[#ffffff0f] shrink-0">
+                    Click to View
+                  </span>
+                )}
+              </div>
+
+              <div className="pt-2 border-t border-[#ffffff0a] flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5 text-[10px] text-[#8899ac] font-mono truncate">
+                  <FileText className="w-3 h-3 text-cyan-400 shrink-0" />
+                  <span className="truncate">Ambigapathi_Data_Analyst.pdf</span>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    downloadResumePdf('DATA_ANALYST');
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-cyan-400 hover:bg-cyan-300 text-black text-xs font-mono font-bold transition-all shadow-md active:scale-95 cursor-pointer shrink-0"
+                  title="Download Ambigapathi_Data_Analyst.pdf"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download PDF</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Visual Indicator 2: Data Scientist File */}
+            <div 
+              onClick={() => setSelectedRole('DATA_SCIENTIST')}
+              className={`p-3 rounded-lg border transition-all cursor-pointer relative flex flex-col justify-between gap-2.5 ${
+                selectedRole === 'DATA_SCIENTIST'
+                  ? 'bg-violet-950/35 border-violet-400/60 shadow-md shadow-violet-950/40 ring-1 ring-violet-500/30'
+                  : 'bg-[#151122] border-[#ffffff0f] hover:border-violet-500/40 hover:bg-[#1d172f]'
+              }`}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg bg-violet-500/15 border border-violet-400/40 flex items-center justify-center text-violet-300 shrink-0 shadow-sm">
+                    <BrainCircuit className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-bold text-xs text-white">Data Scientist Resume</span>
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-violet-500/20 text-violet-300 border border-violet-500/40">
+                        OFFICIAL PDF
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-[#8899ac] font-mono mt-0.5">
+                      BERT NLP • Scikit-Learn • MLOps
+                    </p>
+                  </div>
+                </div>
+                {selectedRole === 'DATA_SCIENTIST' ? (
+                  <span className="text-[9px] font-mono font-semibold text-violet-300 bg-violet-950 px-2 py-0.5 rounded-full border border-violet-500/50 shrink-0 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                    Previewing
+                  </span>
+                ) : (
+                  <span className="text-[9px] font-mono text-[#888] bg-[#221c33] px-1.5 py-0.5 rounded border border-[#ffffff0f] shrink-0">
+                    Click to View
+                  </span>
+                )}
+              </div>
+
+              <div className="pt-2 border-t border-[#ffffff0a] flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5 text-[10px] text-[#8899ac] font-mono truncate">
+                  <FileText className="w-3 h-3 text-violet-400 shrink-0" />
+                  <span className="truncate">Ambigapathi_Data_Scientist.pdf</span>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    downloadResumePdf('DATA_SCIENTIST');
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-violet-400 hover:bg-violet-300 text-black text-xs font-mono font-bold transition-all shadow-md active:scale-95 cursor-pointer shrink-0"
+                  title="Download Ambigapathi_Data_Scientist.pdf"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download PDF</span>
+                </button>
+              </div>
+            </div>
+
           </div>
 
           {/* Role Indicator Banner */}

@@ -348,17 +348,52 @@ export const generateResumePdfHtml = (role: 'DATA_ANALYST' | 'DATA_SCIENTIST'): 
 
 /**
  * Directly downloads the actual uploaded official PDF resume file.
+ * Uses blob-based trigger with direct anchor fallback for 100% browser & iframe compatibility.
  */
-export const downloadResumePdf = (role: 'DATA_ANALYST' | 'DATA_SCIENTIST') => {
+export const downloadResumePdf = async (role: 'DATA_ANALYST' | 'DATA_SCIENTIST') => {
   const isAnalyst = role === 'DATA_ANALYST';
   const fileName = isAnalyst ? 'Ambigapathi_Data_Analyst.pdf' : 'Ambigapathi_Data_Scientist.pdf';
-  const fileUrl = `/${fileName}`;
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const fileUrl = `${cleanBase}${fileName}`;
 
-  const link = document.createElement('a');
-  link.href = fileUrl;
-  link.setAttribute('download', fileName);
-  link.setAttribute('target', '_blank');
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  try {
+    const response = await fetch(fileUrl, { cache: 'no-cache' });
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status} fetching ${fileUrl}`);
+    }
+    const blob = await response.blob();
+    const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+    const blobUrl = window.URL.createObjectURL(pdfBlob);
+
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = fileName;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+
+    setTimeout(() => {
+      if (document.body.contains(link)) {
+        document.body.removeChild(link);
+      }
+      window.URL.revokeObjectURL(blobUrl);
+    }, 2000);
+  } catch (err) {
+    console.warn('Blob download fallback activated:', err);
+    // Direct link fallback
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = fileName;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      if (document.body.contains(link)) {
+        document.body.removeChild(link);
+      }
+    }, 2000);
+  }
 };
