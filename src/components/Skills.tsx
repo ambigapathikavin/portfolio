@@ -15,7 +15,11 @@ import {
 } from 'lucide-react';
 import { SKILL_CATEGORIES } from '../data/portfolioData';
 
-export const Skills: React.FC = () => {
+interface SkillsProps {
+  roleMode?: 'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST';
+}
+
+export const Skills: React.FC<SkillsProps> = ({ roleMode = 'ALL' }) => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
@@ -37,7 +41,27 @@ export const Skills: React.FC = () => {
     }
   };
 
-  const filteredCategories = SKILL_CATEGORIES.map(category => {
+  // Re-order categories dynamically based on roleMode
+  const orderedBaseCategories = [...SKILL_CATEGORIES].sort((a, b) => {
+    if (roleMode === 'DATA_ANALYST') {
+      const analystIds = ['data-analytics', 'business-intelligence', 'python-data'];
+      const aIdx = analystIds.indexOf(a.id);
+      const bIdx = analystIds.indexOf(b.id);
+      if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+      if (aIdx !== -1) return -1;
+      if (bIdx !== -1) return 1;
+    } else if (roleMode === 'DATA_SCIENTIST') {
+      const scientistIds = ['ml-ai', 'python-data', 'backend-deployment', 'data-analytics'];
+      const aIdx = scientistIds.indexOf(a.id);
+      const bIdx = scientistIds.indexOf(b.id);
+      if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+      if (aIdx !== -1) return -1;
+      if (bIdx !== -1) return 1;
+    }
+    return 0;
+  });
+
+  const filteredCategories = orderedBaseCategories.map(category => {
     let filteredSkills = category.skills;
     if (searchQuery.trim() !== '') {
       filteredSkills = filteredSkills.filter(skill => 

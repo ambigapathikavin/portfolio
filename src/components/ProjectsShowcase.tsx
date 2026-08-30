@@ -25,26 +25,45 @@ const FILTER_OPTIONS: { label: string; value: ProjectCategory }[] = [
 interface ProjectsShowcaseProps {
   onSelectProject?: (projectId: string) => void;
   onOpenResumeModal?: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
+  roleMode?: 'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST';
 }
 
 export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ 
   onSelectProject,
-  onOpenResumeModal
+  onOpenResumeModal,
+  roleMode = 'ALL'
 }) => {
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>('ALL');
-  const [roleFilter, setRoleFilter] = useState<'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST'>('ALL');
+  const [roleFilter, setRoleFilter] = useState<'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST'>(roleMode);
 
-  const filteredProjects = PROJECTS.filter(project => {
-    // Role filter
-    if (roleFilter !== 'ALL') {
-      if (project.roleType && project.roleType !== 'BOTH' && project.roleType !== roleFilter) {
-        return false;
+  // Sync roleFilter with incoming roleMode prop changes
+  React.useEffect(() => {
+    setRoleFilter(roleMode);
+  }, [roleMode]);
+
+  // Re-order and filter projects dynamically
+  const filteredProjects = [...PROJECTS]
+    .sort((a, b) => {
+      if (roleFilter === 'DATA_ANALYST') {
+        if (a.roleType === 'DATA_ANALYST' && b.roleType !== 'DATA_ANALYST') return -1;
+        if (b.roleType === 'DATA_ANALYST' && a.roleType !== 'DATA_ANALYST') return 1;
+      } else if (roleFilter === 'DATA_SCIENTIST') {
+        if (a.roleType === 'DATA_SCIENTIST' && b.roleType !== 'DATA_SCIENTIST') return -1;
+        if (b.roleType === 'DATA_SCIENTIST' && a.roleType !== 'DATA_SCIENTIST') return 1;
       }
-    }
-    // Category filter
-    if (activeFilter === 'ALL') return true;
-    return project.filterCategories.includes(activeFilter);
-  });
+      return 0;
+    })
+    .filter(project => {
+      // Role filter
+      if (roleFilter !== 'ALL') {
+        if (project.roleType && project.roleType !== 'BOTH' && project.roleType !== roleFilter) {
+          return false;
+        }
+      }
+      // Category filter
+      if (activeFilter === 'ALL') return true;
+      return project.filterCategories.includes(activeFilter);
+    });
 
   const handleProjectClick = (projectId: string) => {
     if (onSelectProject) {

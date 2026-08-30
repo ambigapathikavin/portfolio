@@ -13,7 +13,10 @@ import {
   CheckCircle2, 
   Activity,
   BarChart2,
-  GitBranch
+  BarChart3,
+  GitBranch,
+  Filter,
+  Check
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { AmbigapathiPortrait } from './AmbigapathiPortrait';
@@ -23,9 +26,17 @@ interface HeroProps {
   onOpenResume: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
   onOpenContact: () => void;
   onViewWork: () => void;
+  roleMode?: 'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST';
+  onRoleModeChange?: (mode: 'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onOpenResume, onOpenContact, onViewWork }) => {
+export const Hero: React.FC<HeroProps> = ({ 
+  onOpenResume, 
+  onOpenContact, 
+  onViewWork,
+  roleMode = 'ALL',
+  onRoleModeChange
+}) => {
   return (
     <section id="home" className="relative min-h-[90vh] pt-24 pb-14 lg:pt-32 lg:pb-20 flex items-center bg-[#050505] bg-data-grid overflow-hidden">
       {/* Interactive Data Science Neural/Particle Background */}
@@ -46,11 +57,79 @@ export const Hero: React.FC<HeroProps> = ({ onOpenResume, onOpenContact, onViewW
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#111111] border border-[#ffffff15] text-cyan-400 text-[10px] font-mono tracking-[0.2em] shadow-sm mb-5"
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#111111] border border-[#ffffff15] text-cyan-400 text-[10px] font-mono tracking-[0.2em] shadow-sm mb-4"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-              <span>DATA ANALYST • DATA SCIENTIST • ML ENGINEER</span>
+              <span>
+                {roleMode === 'DATA_ANALYST' ? 'DATA ANALYST & BI SPECIALIST' :
+                 roleMode === 'DATA_SCIENTIST' ? 'DATA SCIENTIST & ML ENGINEER' :
+                 'DATA ANALYST • DATA SCIENTIST • ML ENGINEER'}
+              </span>
             </motion.div>
+
+            {/* 1-Click Role Customizer Banner for Hiring Managers */}
+            {onRoleModeChange && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.05 }}
+                className="w-full max-w-xl p-2.5 rounded-xl bg-[#0b1019]/90 border border-cyan-500/30 backdrop-blur-md mb-5 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2.5"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-300 shrink-0">
+                    <Filter className="w-3 h-3" />
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-wider">
+                      Hiring Manager Lens
+                    </div>
+                    <div className="text-[11px] text-[#A0AEC0] font-mono">
+                      {roleMode === 'DATA_ANALYST' ? 'Emphasizing SQL, Power BI, DAX & Storytelling' :
+                       roleMode === 'DATA_SCIENTIST' ? 'Emphasizing Python, BERT, PyTorch & MLOps' :
+                       'Select a role to highlight relevant skills & projects:'}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1 bg-[#05080e] p-1 rounded-lg border border-[#ffffff10] shrink-0 self-start sm:self-auto">
+                  <button
+                    type="button"
+                    onClick={() => onRoleModeChange('ALL')}
+                    className={`px-2.5 py-1 rounded text-[10px] font-mono transition-all cursor-pointer ${
+                      roleMode === 'ALL'
+                        ? 'bg-white text-black font-bold shadow-sm'
+                        : 'text-[#888] hover:text-white'
+                    }`}
+                  >
+                    All
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onRoleModeChange('DATA_ANALYST')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-mono transition-all cursor-pointer ${
+                      roleMode === 'DATA_ANALYST'
+                        ? 'bg-cyan-500 text-black font-bold shadow-sm'
+                        : 'text-cyan-300 hover:bg-cyan-500/10'
+                    }`}
+                  >
+                    <BarChart3 className="w-3 h-3" />
+                    <span>Analyst</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onRoleModeChange('DATA_SCIENTIST')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-mono transition-all cursor-pointer ${
+                      roleMode === 'DATA_SCIENTIST'
+                        ? 'bg-violet-500 text-white font-bold shadow-sm'
+                        : 'text-violet-300 hover:bg-violet-500/10'
+                    }`}
+                  >
+                    <BrainCircuit className="w-3 h-3" />
+                    <span>Scientist</span>
+                  </button>
+                </div>
+              </motion.div>
+            )}
 
             {/* Large Main Heading */}
             <motion.h1
@@ -61,10 +140,41 @@ export const Hero: React.FC<HeroProps> = ({ onOpenResume, onOpenContact, onViewW
             >
               Turning Data Into <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-violet-400">
-                Insights, Predictions
+                {roleMode === 'DATA_ANALYST' ? 'Actionable BI Insights' :
+                 roleMode === 'DATA_SCIENTIST' ? 'Production ML Models' :
+                 'Insights, Predictions'}
               </span> <br />
               & Intelligent Solutions.
             </motion.h1>
+
+            {/* Dynamic Role Highlights Pills */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.12 }}
+              className="flex flex-wrap items-center gap-1.5 mb-5"
+            >
+              {(roleMode === 'DATA_ANALYST' ? [
+                'SQL Window Functions', 'Power BI Dashboards', 'DAX Measures', 'Tableau', 'Business Storytelling', 'KPI Variance Analysis'
+              ] : roleMode === 'DATA_SCIENTIST' ? [
+                'Python', 'BERT NLP', 'PyTorch', 'Machine Learning', 'Feature Engineering', 'Scikit-learn', 'MLOps Pipelines'
+              ] : [
+                'SQL', 'Power BI', 'Tableau', 'Python', 'Machine Learning', 'BERT NLP', 'DAX', 'Business Analytics'
+              ]).map((skill) => (
+                <span
+                  key={skill}
+                  className={`px-2.5 py-1 rounded-full text-xs font-mono transition-all ${
+                    roleMode === 'DATA_ANALYST'
+                      ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 font-semibold'
+                      : roleMode === 'DATA_SCIENTIST'
+                      ? 'bg-violet-500/15 text-violet-300 border border-violet-500/40 font-semibold'
+                      : 'bg-[#111111] text-[#CCCCCC] border border-[#ffffff0a]'
+                  }`}
+                >
+                  {skill}
+                </span>
+              ))}
+            </motion.div>
 
             {/* Short Description */}
             <motion.p
@@ -73,7 +183,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenResume, onOpenContact, onViewW
               transition={{ duration: 0.5, delay: 0.16 }}
               className="text-sm sm:text-base text-[#A3A3A3] leading-relaxed max-w-2xl mb-7"
             >
-              {PERSONAL_INFO.heroDescription}
+              {roleMode === 'DATA_ANALYST'
+                ? 'Data Analyst with hands-on expertise building executive Power BI dashboards, authoring complex SQL window queries & CTEs, and translating raw transactional metrics into bottom-line business strategies.'
+                : roleMode === 'DATA_SCIENTIST'
+                ? 'Data Scientist & ML Engineer specializing in BERT NLP fine-tuning, automated Scikit-learn pipelines, predictive modeling, and scalable PyTorch training workflows deployed on real-world datasets.'
+                : PERSONAL_INFO.heroDescription}
             </motion.p>
 
             {/* Action Buttons */}

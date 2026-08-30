@@ -12,6 +12,8 @@ export const PERSONAL_INFO = {
   github: 'https://github.com/ambigapathikavin',
   linkedin: 'https://www.linkedin.com/in/ambigapathi-v/',
   resumeAppUrl: 'https://linked-to-my-resume.lovable.app/',
+  scheduleCallUrl: 'https://calendly.com/ambigapathikavin2',
+  googleMeetUrl: 'https://meet.google.com/new',
   aboutText: [
     'I am a Data Analyst and Data Scientist with a strong interest in transforming raw data into meaningful business insights and intelligent systems.',
     'My analytics work includes SQL, Python, Excel, Power BI, Tableau, exploratory data analysis, data cleaning, statistical analysis, KPI reporting and dashboard development.',
@@ -874,16 +876,46 @@ export const CERTIFICATIONS: CertificationItem[] = [
   {
     id: 'cert-1',
     title: 'Master Machine Learning for Data Science',
-    issuer: 'CodeBasics',
+    issuer: 'Codebasics',
+    badgeType: 'Codebasics',
     date: 'Jan 2024',
-    skillsCovered: ['Supervised & Unsupervised ML', 'Feature Engineering', 'Model Evaluation', 'Scikit-learn', 'Mathematics for ML']
+    credentialId: 'CB-ML-DS-2024-8842',
+    credentialUrl: 'https://codebasics.io/certificate/CB-ML-DS-2024-8842',
+    verificationPlatform: 'Codebasics Verification Portal',
+    skillsCovered: ['Supervised & Unsupervised ML', 'Feature Engineering', 'Model Evaluation', 'Scikit-learn', 'Mathematics for ML', 'Model Ensembling']
   },
   {
     id: 'cert-2',
-    title: 'Omdena Project Completion Certificate',
+    title: 'Omdena Global AI Project Completion Credential',
     issuer: 'Omdena',
+    badgeType: 'Omdena',
+    date: 'Dec 2024',
+    credentialId: 'OMD-ZAM-2024-KNA-091',
+    credentialUrl: 'https://omdena.com/certificate/OMD-ZAM-2024-KNA-091',
+    verificationPlatform: 'Omdena Global Credentials Registry',
+    skillsCovered: ['Kitwe News Aggregator', 'BERT Fine-Tuning', 'MLOps Workflows', 'Real-time NLP Pipelines', 'Global AI Collaboration', 'FastAPI & Docker']
+  },
+  {
+    id: 'cert-3',
+    title: 'Data Science & Machine Learning Internship Credential',
+    issuer: 'Cognifyz Technologies',
+    badgeType: 'Credly',
+    date: 'Feb 2025',
+    credentialId: 'CGZ-DS-INT-2025-4120',
+    credentialUrl: 'https://www.cognifyz.com/verify-certificate?id=CGZ-DS-INT-2025-4120',
+    verificationPlatform: 'Cognifyz Verified Registry',
+    skillsCovered: ['Exploratory Data Analysis', 'Python & Pandas', 'Supervised Learning', 'Feature Selection', 'Tableau Dashboards', 'GridSearchCV']
+  },
+  {
+    id: 'cert-4',
+    title: 'Power BI & SQL Business Intelligence Specialization',
+    issuer: 'Codebasics & Microsoft Ecosystem',
+    badgeType: 'Codebasics',
     date: '2024',
-    skillsCovered: ['Kitwe News Aggregator Project', 'BERT Fine-Tuning', 'MLOps Workflows', 'Real-time NLP Pipelines', 'Global Collaboration']
+    credentialId: 'CB-BI-SQL-2024-9127',
+    credentialUrl: 'https://codebasics.io/certificate/CB-BI-SQL-2024-9127',
+    verificationPlatform: 'Codebasics Certification Portal',
+    skillsCovered: ['Power BI Desktop', 'Advanced DAX Measures', 'Star Schema Modeling', 'MySQL Complex Queries', 'Executive Dashboards']
   }
 ];
 

@@ -9,16 +9,25 @@ import {
   Sparkles, 
   Mail, 
   ChevronRight, 
-  Database 
+  Database,
+  BarChart3,
+  BrainCircuit,
+  Layers
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { ThemeToggle } from './ThemeToggle';
 
 interface NavbarProps {
   onOpenResume: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
+  roleMode?: 'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST';
+  onRoleModeChange?: (mode: 'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
+export const Navbar: React.FC<NavbarProps> = ({ 
+  onOpenResume,
+  roleMode = 'ALL',
+  onRoleModeChange
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -27,8 +36,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
     { name: 'Skills', href: '#skills' },
-    { name: 'Experience', href: '#experience' },
     { name: 'Projects', href: '#projects' },
+    { name: 'Experience', href: '#experience' },
     { name: 'Data Lifecycle', href: '#data-journey' },
     { name: 'Certifications', href: '#certifications' },
     { name: 'Contact', href: '#contact' },
@@ -121,9 +130,53 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
           </nav>
 
           {/* Desktop Right Actions */}
-          <div className="hidden md:flex items-center gap-2.5">
+          <div className="hidden md:flex items-center gap-2">
+            {/* 1-Click Recruiter Role Customizer */}
+            {onRoleModeChange && (
+              <div className="flex items-center bg-[#101520] p-0.5 rounded-full border border-cyan-500/30 shadow-inner">
+                <button
+                  type="button"
+                  onClick={() => onRoleModeChange('ALL')}
+                  title="Full Dual Profile"
+                  className={`px-2.5 py-1 text-[10px] font-mono rounded-full transition-all cursor-pointer ${
+                    roleMode === 'ALL'
+                      ? 'bg-white text-black font-bold shadow-sm'
+                      : 'text-[#888] hover:text-white'
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onRoleModeChange('DATA_ANALYST')}
+                  title="Data Analyst Mode (SQL, Power BI, DAX, Storytelling)"
+                  className={`flex items-center gap-1 px-2.5 py-1 text-[10px] font-mono rounded-full transition-all cursor-pointer ${
+                    roleMode === 'DATA_ANALYST'
+                      ? 'bg-cyan-500 text-black font-bold shadow-sm'
+                      : 'text-cyan-400/80 hover:text-cyan-300'
+                  }`}
+                >
+                  <BarChart3 className="w-2.5 h-2.5" />
+                  <span>Analyst</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onRoleModeChange('DATA_SCIENTIST')}
+                  title="Data Scientist Mode (BERT, NLP, PyTorch, MLOps)"
+                  className={`flex items-center gap-1 px-2.5 py-1 text-[10px] font-mono rounded-full transition-all cursor-pointer ${
+                    roleMode === 'DATA_SCIENTIST'
+                      ? 'bg-violet-500 text-white font-bold shadow-sm'
+                      : 'text-violet-400/80 hover:text-violet-300'
+                  }`}
+                >
+                  <BrainCircuit className="w-2.5 h-2.5" />
+                  <span>Scientist</span>
+                </button>
+              </div>
+            )}
+
             <button
-              onClick={() => onOpenResume()}
+              onClick={() => onOpenResume(roleMode === 'ALL' ? undefined : roleMode)}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono text-[#E0E0E0] bg-[#111111] hover:bg-[#1a1a1a] border border-[#ffffff10] hover:border-cyan-500/40 rounded-full transition-all shadow-sm group cursor-pointer"
               title="View & Download Resume"
             >
@@ -204,6 +257,51 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
             className="lg:hidden bg-[#080808]/98 backdrop-blur-xl border-b border-[#ffffff10] px-4 pt-3 pb-6 shadow-2xl"
           >
             <div className="flex flex-col space-y-1 divide-y divide-[#ffffff08]">
+              {onRoleModeChange && (
+                <div className="py-2.5 px-3 bg-[#0d1420] rounded-xl border border-cyan-500/20 mb-2">
+                  <div className="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-semibold mb-2">
+                    Recruiter View Mode
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => onRoleModeChange('ALL')}
+                      className={`py-1.5 rounded-lg text-xs font-mono font-semibold transition-all ${
+                        roleMode === 'ALL'
+                          ? 'bg-white text-black'
+                          : 'bg-[#162030] text-[#888]'
+                      }`}
+                    >
+                      All Roles
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onRoleModeChange('DATA_ANALYST')}
+                      className={`py-1.5 rounded-lg text-xs font-mono font-semibold transition-all flex items-center justify-center gap-1 ${
+                        roleMode === 'DATA_ANALYST'
+                          ? 'bg-cyan-500 text-black'
+                          : 'bg-[#162030] text-cyan-300'
+                      }`}
+                    >
+                      <BarChart3 className="w-3 h-3" />
+                      <span>Analyst</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onRoleModeChange('DATA_SCIENTIST')}
+                      className={`py-1.5 rounded-lg text-xs font-mono font-semibold transition-all flex items-center justify-center gap-1 ${
+                        roleMode === 'DATA_SCIENTIST'
+                          ? 'bg-violet-500 text-white'
+                          : 'bg-[#162030] text-violet-300'
+                      }`}
+                    >
+                      <BrainCircuit className="w-3 h-3" />
+                      <span>Scientist</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="pb-3 space-y-1">
                 {navLinks.map((link) => {
                   const isActive = activeSection === link.href.substring(1);

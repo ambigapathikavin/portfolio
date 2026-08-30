@@ -96,8 +96,11 @@ export interface CertificationItem {
   id: string;
   title: string;
   issuer: string;
+  badgeType?: 'Codebasics' | 'Omdena' | 'Google' | 'Coursera' | 'Credly' | 'DeepLearning.AI';
   date: string;
+  credentialId?: string;
   credentialUrl?: string;
+  verificationPlatform?: string;
   skillsCovered: string[];
 }
 

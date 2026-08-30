@@ -14,7 +14,10 @@ import {
   MessageSquare,
   AlertCircle,
   Copy,
-  Check
+  Check,
+  Calendar,
+  Video,
+  ExternalLink
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PERSONAL_INFO } from '../data/portfolioData';
@@ -30,6 +33,7 @@ export const ContactSection: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [copiedScheduleLink, setCopiedScheduleLink] = useState(false);
 
   const handleCopyEmail = (e?: React.MouseEvent) => {
     if (e) {
@@ -40,6 +44,18 @@ export const ContactSection: React.FC = () => {
     setCopiedEmail(true);
     setTimeout(() => {
       setCopiedEmail(false);
+    }, 2500);
+  };
+
+  const handleCopyScheduleLink = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    navigator.clipboard.writeText(PERSONAL_INFO.scheduleCallUrl);
+    setCopiedScheduleLink(true);
+    setTimeout(() => {
+      setCopiedScheduleLink(false);
     }, 2500);
   };
 
@@ -112,6 +128,67 @@ export const ContactSection: React.FC = () => {
               </h3>
 
               <div className="space-y-2.5">
+                {/* Schedule a Call / Interview Feature Box */}
+                <div className="p-3.5 rounded-xl bg-gradient-to-br from-[#0c1624] via-[#09101a] to-[#060a12] border border-cyan-500/30 hover:border-cyan-400/60 transition-all shadow-md group">
+                  <div className="flex items-start justify-between gap-2 mb-2.5">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center text-cyan-300 shrink-0 group-hover:scale-105 transition-transform">
+                        <Calendar className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-semibold flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span>Schedule an Intro Call</span>
+                        </div>
+                        <div className="text-xs font-bold text-white font-mono">
+                          15 / 30 Min Discussion
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleCopyScheduleLink}
+                      title="Copy Calendly booking link"
+                      className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] font-mono transition-all shrink-0 cursor-pointer ${
+                        copiedScheduleLink
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                          : 'bg-[#141e2e] hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+                      }`}
+                    >
+                      {copiedScheduleLink ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                      <span>{copiedScheduleLink ? 'Copied' : 'Copy Link'}</span>
+                    </button>
+                  </div>
+
+                  <p className="text-[11px] text-[#A0AEC0] mb-3 leading-relaxed">
+                    Pick a convenient time directly on my calendar for project discovery, technical interviews, or recruitment calls.
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href={PERSONAL_INFO.scheduleCallUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs font-mono transition-all shadow-sm group/btn"
+                    >
+                      <Calendar className="w-3.5 h-3.5" />
+                      <span>Book on Calendly</span>
+                      <ExternalLink className="w-3 h-3 opacity-70 group-hover/btn:translate-x-0.5 transition-transform" />
+                    </a>
+
+                    <a
+                      href={PERSONAL_INFO.googleMeetUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-[#141e2e] hover:bg-[#1c2a3f] text-cyan-300 hover:text-white border border-cyan-500/30 text-xs font-semibold font-mono transition-all"
+                    >
+                      <Video className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Google Meet</span>
+                    </a>
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-between p-3 rounded-lg bg-[#0a0a0a] border border-[#ffffff08] hover:border-cyan-500/40 hover:bg-[#141414] transition-all group">
                   <a
                     href={`mailto:${PERSONAL_INFO.email}`}

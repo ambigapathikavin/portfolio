@@ -18,6 +18,7 @@ import { ProjectPage } from './components/ProjectPage';
 export default function App() {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [resumeRole, setResumeRole] = useState<'DATA_ANALYST' | 'DATA_SCIENTIST'>('DATA_ANALYST');
+  const [roleMode, setRoleMode] = useState<'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST'>('ALL');
   const [activeProjectId, setActiveProjectId] = useState<string | null>(() => {
     const hash = window.location.hash;
     if (hash.startsWith('#project-')) {
@@ -43,6 +44,8 @@ export default function App() {
   const handleOpenResume = (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => {
     if (role === 'DATA_ANALYST' || role === 'DATA_SCIENTIST') {
       setResumeRole(role);
+    } else if (roleMode === 'DATA_ANALYST' || roleMode === 'DATA_SCIENTIST') {
+      setResumeRole(roleMode);
     } else {
       setResumeRole('DATA_ANALYST');
     }
@@ -85,7 +88,11 @@ export default function App() {
     return (
       <div className="min-h-screen flex flex-col font-sans transition-colors duration-200">
         <ScrollProgressBar />
-        <Navbar onOpenResume={handleOpenResume} />
+        <Navbar 
+          onOpenResume={handleOpenResume}
+          roleMode={roleMode}
+          onRoleModeChange={setRoleMode}
+        />
         
         <ProjectPage
           projectId={activeProjectId}
@@ -110,7 +117,11 @@ export default function App() {
       <ScrollProgressBar />
 
       {/* Sticky Top Navigation */}
-      <Navbar onOpenResume={handleOpenResume} />
+      <Navbar 
+        onOpenResume={handleOpenResume}
+        roleMode={roleMode}
+        onRoleModeChange={setRoleMode}
+      />
 
       {/* Main Content Sections */}
       <main className="flex-1">
@@ -118,6 +129,8 @@ export default function App() {
           onOpenResume={handleOpenResume}
           onOpenContact={() => scrollToSection('contact')}
           onViewWork={() => scrollToSection('projects')}
+          roleMode={roleMode}
+          onRoleModeChange={setRoleMode}
         />
 
         {/* Quick Quantifiable Professional Stats */}
@@ -130,12 +143,13 @@ export default function App() {
         <WhatIBring />
 
         {/* Interactive 5-Category Skills Section */}
-        <Skills />
+        <Skills roleMode={roleMode} />
 
         {/* Featured Projects Showcase with Dedicated Case Study Pages */}
         <ProjectsShowcase 
           onSelectProject={handleSelectProject} 
           onOpenResumeModal={handleOpenResume}
+          roleMode={roleMode}
         />
 
         {/* Interactive 9-Stage Data & AI Lifecycle Journey */}
