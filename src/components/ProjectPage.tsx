@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   ArrowLeft, ArrowRight, ExternalLink, Download, CheckCircle2, TrendingUp, 
   Cpu, Database, Sparkles, Layers, Terminal, FileCode2, LineChart, 
-  Sliders, ShieldCheck, Share2, HelpCircle, Briefcase, Award, BarChart2
+  Sliders, ShieldCheck, Share2, HelpCircle, Briefcase, Award, BarChart2,
+  GitBranch, Play, Code2
 } from 'lucide-react';
 import { Project } from '../types';
 import { PROJECTS } from '../data/portfolioData';
@@ -179,8 +180,34 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                 </div>
               </div>
 
-              {/* Technologies */}
-              <div className="flex flex-wrap items-center gap-1.5">
+              {/* Action Links & Technologies */}
+              <div className="flex flex-wrap items-center gap-2">
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1a1a1a] hover:bg-[#282828] border border-[#ffffff20] text-xs font-mono text-white font-semibold transition-all cursor-pointer shadow-sm hover:border-cyan-500/50"
+                  >
+                    <Code2 className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>GitHub Code</span>
+                    <ExternalLink className="w-3 h-3 text-[#888]" />
+                  </a>
+                )}
+
+                {project.liveDemoUrl && (
+                  <a
+                    href={project.liveDemoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-950/70 to-pink-950/70 hover:from-red-900/80 hover:to-pink-900/80 border border-red-500/40 text-xs font-mono text-red-200 font-bold transition-all cursor-pointer shadow-sm"
+                  >
+                    <Play className="w-3 h-3 text-red-400 fill-red-400" />
+                    <span>Live Streamlit App</span>
+                    <ExternalLink className="w-3 h-3 text-red-300" />
+                  </a>
+                )}
+
                 {project.technology.map(tech => (
                   <span
                     key={tech}

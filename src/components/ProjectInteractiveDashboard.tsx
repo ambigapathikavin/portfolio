@@ -90,6 +90,16 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
   const [creditRevolving, setCreditRevolving] = useState(72);
   const [creditPastDelinq, setCreditPastDelinq] = useState(1);
 
+  // Insurance Premium State
+  const [premAge, setPremAge] = useState(34);
+  const [premHeight, setPremHeight] = useState(172);
+  const [premWeight, setPremWeight] = useState(74);
+  const [premDiabetes, setPremDiabetes] = useState(false);
+  const [premBp, setPremBp] = useState(false);
+  const [premTransplant, setPremTransplant] = useState(false);
+  const [premChronic, setPremChronic] = useState(false);
+  const [premSurgeries, setPremSurgeries] = useState(0);
+
   // E-Commerce State
   const [ecommerceSegment, setEcommerceSegment] = useState<'All' | 'Champions' | 'Loyal' | 'At Risk'>('All');
 
@@ -784,6 +794,198 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                 <div className="text-red-400 text-[10px] mt-0.5">Severe Care Desert (&gt;50km)</div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* DASHBOARD 10: INSURANCE PREMIUM PRICE PREDICTOR */}
+      {project.dashboardType === 'premium' && (
+        <div className="space-y-6">
+          <div className="p-5 rounded-xl bg-[#111111] border border-[#ffffff08] space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#222] pb-3">
+              <div>
+                <div className="text-xs font-bold text-white font-mono flex items-center gap-2">
+                  <Sliders className="w-4 h-4 text-pink-400" />
+                  <span>Real-Time Health Insurance Premium Price Simulator</span>
+                </div>
+                <div className="text-[11px] font-mono text-[#888] mt-0.5">
+                  Trained Random Forest & XGBoost multi-variable risk regression model
+                </div>
+              </div>
+              <span className="px-2.5 py-1 rounded bg-pink-950/60 border border-pink-500/40 text-[10px] font-mono text-pink-300 font-bold">
+                R² = 0.912 | MAPE = 4.8%
+              </span>
+            </div>
+
+            {/* Interactive Inputs Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="text-[10px] font-mono text-[#888] flex justify-between">
+                  <span>Policyholder Age</span>
+                  <span className="text-white font-bold">{premAge} years</span>
+                </label>
+                <input
+                  type="range"
+                  min={18}
+                  max={75}
+                  value={premAge}
+                  onChange={(e) => setPremAge(Number(e.target.value))}
+                  className="w-full mt-1.5 accent-pink-400"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-mono text-[#888] flex justify-between">
+                  <span>Height (cm)</span>
+                  <span className="text-white font-bold">{premHeight} cm</span>
+                </label>
+                <input
+                  type="range"
+                  min={140}
+                  max={210}
+                  value={premHeight}
+                  onChange={(e) => setPremHeight(Number(e.target.value))}
+                  className="w-full mt-1.5 accent-pink-400"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-mono text-[#888] flex justify-between">
+                  <span>Weight (kg)</span>
+                  <span className="text-white font-bold">{premWeight} kg</span>
+                </label>
+                <input
+                  type="range"
+                  min={40}
+                  max={135}
+                  value={premWeight}
+                  onChange={(e) => setPremWeight(Number(e.target.value))}
+                  className="w-full mt-1.5 accent-pink-400"
+                />
+              </div>
+            </div>
+
+            {/* Clinical Factor Toggles */}
+            <div>
+              <div className="text-[10px] font-mono text-[#888] uppercase mb-2">
+                Medical & Clinical Risk Indicators
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+                <button
+                  type="button"
+                  onClick={() => setPremDiabetes(!premDiabetes)}
+                  className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer ${
+                    premDiabetes
+                      ? 'bg-pink-950/60 border-pink-500/60 text-pink-200'
+                      : 'bg-[#181818] border-[#2c2c2c] text-[#777] hover:text-white'
+                  }`}
+                >
+                  <div className="font-bold">Diabetes</div>
+                  <div className="text-[9px] mt-0.5">{premDiabetes ? 'Diagnosed (+₹6.2k)' : 'None'}</div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setPremBp(!premBp)}
+                  className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer ${
+                    premBp
+                      ? 'bg-pink-950/60 border-pink-500/60 text-pink-200'
+                      : 'bg-[#181818] border-[#2c2c2c] text-[#777] hover:text-white'
+                  }`}
+                >
+                  <div className="font-bold">Blood Pressure</div>
+                  <div className="text-[9px] mt-0.5">{premBp ? 'Elevated (+₹4.8k)' : 'Normal'}</div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setPremTransplant(!premTransplant)}
+                  className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer ${
+                    premTransplant
+                      ? 'bg-pink-950/60 border-pink-500/60 text-pink-200'
+                      : 'bg-[#181818] border-[#2c2c2c] text-[#777] hover:text-white'
+                  }`}
+                >
+                  <div className="font-bold">Major Transplant</div>
+                  <div className="text-[9px] mt-0.5">{premTransplant ? 'History (+₹19.5k)' : 'None'}</div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setPremChronic(!premChronic)}
+                  className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer ${
+                    premChronic
+                      ? 'bg-pink-950/60 border-pink-500/60 text-pink-200'
+                      : 'bg-[#181818] border-[#2c2c2c] text-[#777] hover:text-white'
+                  }`}
+                >
+                  <div className="font-bold">Chronic Disease</div>
+                  <div className="text-[9px] mt-0.5">{premChronic ? 'Active (+₹11.0k)' : 'None'}</div>
+                </button>
+              </div>
+            </div>
+
+            {/* Surgeries Selector */}
+            <div>
+              <label className="text-[10px] font-mono text-[#888] flex justify-between mb-1.5">
+                <span>Number of Major Surgeries in History</span>
+                <span className="text-white font-bold">{premSurgeries} Surgeries</span>
+              </label>
+              <div className="flex gap-2">
+                {[0, 1, 2, 3].map((count) => (
+                  <button
+                    key={count}
+                    type="button"
+                    onClick={() => setPremSurgeries(count)}
+                    className={`flex-1 py-1.5 rounded-lg border text-xs font-mono font-bold transition-all cursor-pointer ${
+                      premSurgeries === count
+                        ? 'bg-pink-600 text-white border-pink-500 shadow-sm'
+                        : 'bg-[#181818] text-[#888] border-[#2c2c2c] hover:text-white'
+                    }`}
+                  >
+                    {count} {count === 1 ? 'Surgery' : 'Surgeries'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Prediction Output Display */}
+            {(() => {
+              const heightM = premHeight / 100;
+              const bmiVal = Number((premWeight / (heightM * heightM)).toFixed(1));
+              const estPremium = Math.round(
+                14000 +
+                (premAge - 18) * 380 +
+                (bmiVal > 25 ? (bmiVal - 25) * 850 : 0) +
+                (premDiabetes ? 6200 : 0) +
+                (premBp ? 4800 : 0) +
+                (premTransplant ? 19500 : 0) +
+                (premChronic ? 11000 : 0) +
+                premSurgeries * 5200
+              );
+
+              return (
+                <div className="p-4 rounded-lg bg-[#0a0a0a] border border-pink-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <div className="text-[10px] font-mono text-[#888] uppercase">
+                      Predicted Annual Insurance Premium
+                    </div>
+                    <div className="text-2xl sm:text-3xl font-extrabold font-mono text-pink-300">
+                      ₹{estPremium.toLocaleString('en-IN')} / year
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+                    <span className="px-2.5 py-1 rounded bg-[#161616] border border-[#333] text-[#aaa]">
+                      BMI: <strong className={bmiVal > 30 ? 'text-red-400' : bmiVal > 25 ? 'text-amber-300' : 'text-emerald-400'}>{bmiVal}</strong>
+                    </span>
+                    <span className="px-2.5 py-1 rounded bg-pink-950/50 border border-pink-500/40 text-pink-300">
+                      Random Forest Regressor
+                    </span>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}

@@ -35,6 +35,8 @@ export interface Project {
   keyResult: string;
   imageUrl?: string;
   imageCaption?: string;
+  githubUrl?: string;
+  liveDemoUrl?: string;
   roleType?: 'DATA_ANALYST' | 'DATA_SCIENTIST' | 'BOTH';
   metrics?: { label: string; value: string; subtext?: string }[];
   kpis?: ProjectKPI[];
@@ -48,7 +50,7 @@ export interface Project {
   results: string[];
   learnings: string[];
   accentColor?: string;
-  dashboardType?: 'sales' | 'cricket' | 'hr' | 'news' | 'prescription' | 'churn' | 'credit' | 'ecommerce' | 'healthcare';
+  dashboardType?: 'sales' | 'cricket' | 'hr' | 'news' | 'prescription' | 'churn' | 'credit' | 'ecommerce' | 'healthcare' | 'premium';
   datasetStats?: {
     rows: string;
     features: string;

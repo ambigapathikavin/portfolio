@@ -12,7 +12,10 @@ import {
   Target,
   Zap,
   Info,
-  CheckCircle2
+  CheckCircle2,
+  Code2,
+  Play,
+  ExternalLink
 } from 'lucide-react';
 import { PROJECTS } from '../data/portfolioData';
 import { Project, ProjectCategory } from '../types';
@@ -140,7 +143,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
               }`}
             >
               <BarChart3 className="w-3 h-3" />
-              <span>Data Analyst (4)</span>
+              <span>Data Analyst ({PROJECTS.filter(p => p.roleType === 'DATA_ANALYST' || p.roleType === 'BOTH').length})</span>
             </button>
             <button
               onClick={() => setRoleFilter('DATA_SCIENTIST')}
@@ -151,7 +154,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
               }`}
             >
               <BrainCircuit className="w-3 h-3" />
-              <span>Data Scientist (5)</span>
+              <span>Data Scientist ({PROJECTS.filter(p => p.roleType === 'DATA_SCIENTIST' || p.roleType === 'BOTH').length})</span>
             </button>
           </div>
 
@@ -397,7 +400,40 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                 </div>
 
                 {/* View Project Action Footer */}
-                <div className="p-4 sm:p-5 pt-0">
+                <div className="p-4 sm:p-5 pt-0 space-y-2">
+                  {(project.githubUrl || project.liveDemoUrl) && (
+                    <div className="flex items-center gap-1.5 pt-1">
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex-1 inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg bg-[#141414] hover:bg-[#222] border border-[#ffffff15] text-[10px] font-mono text-[#ccc] hover:text-white transition-all cursor-pointer"
+                          title="View GitHub Repository"
+                        >
+                          <Code2 className="w-3 h-3 text-cyan-400" />
+                          <span>GitHub</span>
+                          <ExternalLink className="w-2.5 h-2.5 opacity-60" />
+                        </a>
+                      )}
+                      {project.liveDemoUrl && (
+                        <a
+                          href={project.liveDemoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex-1 inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg bg-pink-950/40 hover:bg-pink-900/60 border border-pink-500/30 text-[10px] font-mono text-pink-200 font-semibold transition-all cursor-pointer"
+                          title="Open Live Streamlit Application"
+                        >
+                          <Play className="w-2.5 h-2.5 text-pink-400 fill-pink-400" />
+                          <span>Live Demo</span>
+                          <ExternalLink className="w-2.5 h-2.5 opacity-60" />
+                        </a>
+                      )}
+                    </div>
+                  )}
+
                   <button
                     onClick={() => handleProjectClick(project.id)}
                     className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#181818] hover:bg-cyan-500 hover:text-black text-white text-[11px] font-semibold font-mono border border-[#ffffff0a] hover:border-cyan-400 transition-all duration-150 shadow-sm cursor-pointer group/btn"

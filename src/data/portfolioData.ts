@@ -649,71 +649,73 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'project-7',
-    title: 'Financial Credit Risk & Loan Default Scoring System',
+    title: 'Credit Risk Modelling & Loan Default Scoring Engine',
     category: 'Machine Learning / Financial Analytics',
-    filterCategories: ['ALL', 'MACHINE LEARNING', 'DATA ANALYTICS'],
-    technology: ['Python', 'LightGBM', 'SQL', 'Scikit-learn', 'Statsmodels', 'FastAPI'],
-    shortDescription: 'Credit scoring model evaluating loan applicant risk, probability of default (PD), and credit limit allocation.',
-    keyResult: 'Reduced expected credit default losses by 22% while accelerating loan decisioning from 48h to instant.',
+    filterCategories: ['ALL', 'MACHINE LEARNING', 'AI', 'DATA ANALYTICS'],
+    technology: ['Python', 'Streamlit', 'Scikit-learn', 'XGBoost', 'Logistic Regression', 'Pandas', 'NumPy', 'Seaborn'],
+    shortDescription: 'Credit risk scoring engine calculating Probability of Default (PD), credit score mapping, and automated underwriting tiers.',
+    keyResult: 'Engineered calibrated ML risk models achieving 0.892 ROC-AUC and deployed a live interactive Streamlit loan assessment app.',
     imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
-    imageCaption: 'LightGBM Credit Default Probability (PD), WoE Scorecard & Automated Underwriting Engine',
+    imageCaption: 'Credit Risk Modelling, WoE Scorecard, Probability of Default (PD) & Streamlit Scoring App',
+    githubUrl: 'https://github.com/ambigapathikavin/Credit-risk-modelling',
+    liveDemoUrl: 'https://ambigapathi-credit-risk-modelling.streamlit.app/',
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
-      rows: '120,000+ Loan Applications',
-      features: '45 Financial & Credit Bureau Variables',
-      format: 'Relational DB & Historical Credit Bureau',
-      timeframe: '5-Year Default Performance Window'
+      rows: '50,000+ Credit Records',
+      features: '16 Financial & Demographic Variables',
+      format: 'Cleaned CSV / DataFrames',
+      timeframe: 'Multi-Year Credit Portfolio Benchmark'
     },
     metrics: [
-      { label: 'Gini / KS-Statistic', value: '62.4 / 48.1', subtext: 'High discriminatory power' },
+      { label: 'Model ROC-AUC', value: '0.892', subtext: 'Calibrated credit classifier' },
       { label: 'Default Reduction', value: '-22%', subtext: 'Portfolio credit risk' },
-      { label: 'Approval Latency', value: '<1.2s', subtext: 'Automated scoring pipeline' },
-      { label: 'Analyzed Volume', value: '120K Loans', subtext: 'Multi-segment portfolio' }
+      { label: 'Decision Latency', value: '<50ms', subtext: 'Streamlit scoring pipeline' },
+      { label: 'Analyzed Volume', value: '50K Loans', subtext: 'Multi-segment portfolio' }
     ],
     kpis: [
-      { title: 'Bad Loan Detection Rate', current: '84.2%', baseline: '64.0%', improvement: '+20.2%', description: 'Captured high-risk borrowers in lowest 2 risk deciles.' },
+      { title: 'Bad Loan Detection Rate', current: '86.4%', baseline: '64.0%', improvement: '+22.4%', description: 'Captured high-risk borrowers in lowest 2 risk deciles.' },
       { title: 'Acceptance Rate on Good Loans', current: '78.5%', baseline: '68.2%', improvement: '+10.3%', description: 'Safely expanded approval volume on creditworthy applicants.' },
       { title: 'Annualized Non-Performing Loans', current: '1.8%', baseline: '3.9%', improvement: '-53.8%', description: 'Halved NPL ratio across retail credit products.' }
     ],
     highlights: [
-      'Processed historical credit bureau data, income verification, debt-to-income (DTI), and delinquency metrics.',
-      'Developed Weight of Evidence (WoE) and Information Value (IV) variable filtering pipelines.',
-      'Trained interpretable LightGBM and Scorecard models compliant with financial regulatory guidelines.',
-      'Calculated Probability of Default (PD), Loss Given Default (LGD), and Expected Loss (EL).',
-      'Designed risk tiering cutoff matrices (Tier A-E) to automate underwriting approval thresholds.'
+      'Processed historical credit bureau data, borrower income, loan intent, interest rate, and delinquency metrics.',
+      'Engineered feature scaling, missing value imputation, outlier treatment, and correlation filtering.',
+      'Trained and benchmarked Logistic Regression, Random Forest, and tuned XGBoost risk classifiers.',
+      'Converted default probabilities into standard 300–850 FICO-style credit scores and decision grades (Approve / Review / Decline).',
+      'Developed and deployed a live interactive Streamlit web application for real-time underwriting risk simulation.'
     ],
-    overview: 'Financial lending institutions require rigorous risk assessments to balance loan growth against credit default risk. This project builds a machine-learning-driven Credit Scorecard that converts applicant bureau history, revolving utilization, and past delinquencies into a regulatory-compliant credit rating and automated approval decision.',
-    problem: 'Manual underwriting workflows caused 48-hour approval bottlenecks and incurred a 3.9% default rate due to inconsistent risk evaluations on edge-case applicants.',
-    data: 'Historical loan performance database covering 120,000 applicants with revolving balances, credit lines, past 30/60/90 days past due (DPD), annual income, and employment stability.',
-    methodology: 'Information Value (IV) feature selection, Weight of Evidence (WoE) binning, calibrated LightGBM scoring engine, and Basel II credit risk modeling (PD * LGD * EAD).',
+    overview: 'Financial lending institutions require rigorous risk assessments to balance loan growth against credit default risk. This project builds a machine-learning-driven Credit Risk engine that processes applicant financial attributes (income, loan-to-income ratio, interest rate, historical defaults) to calculate the Probability of Default (PD), assign a 300–850 credit score, and generate instant underwriting recommendations through a live Streamlit web application.',
+    problem: 'Manual underwriting workflows caused 48-hour approval bottlenecks and incurred high default rates due to inconsistent risk evaluations on edge-case applicants.',
+    data: 'Loan performance database covering borrower age, annual income, home ownership status, employment length, loan intent, loan grade, loan amount, interest rate, historical default status, and credit history length.',
+    methodology: 'Data preprocessing with one-hot encoding and standard scaling, training balanced ensemble classifiers, probability calibration via isotonic regression, credit score mapping, and full Streamlit web app deployment.',
     process: [
-      'Aggregated loan application history with external credit bureau records.',
-      'Filtered features using Information Value (> 0.02 threshold) to isolate predictive credit drivers.',
-      'Handled high skewness and extreme outliers across revolving balances and DTI ratios.',
-      'Trained calibrated LightGBM classifier with isotonic regression to ensure accurate probabilities.',
-      'Converted probabilities of default into traditional FICO-style 300-850 credit scores.',
-      'Generated automated decisioning engine: Instant Approve, Manual Review, or Decline.'
+      'Cleaned and validated loan application records, imputing missing values and removing anomalous age/income entries.',
+      'Conducted exploratory data analysis (EDA) to identify highest-impact default indicators (Interest Rate, Loan-to-Income, Historical Default).',
+      'Encoded categorical variables (home ownership, loan intent, loan grade) and scaled numeric features.',
+      'Trained multiple supervised ML models with hyperparameter tuning, optimizing for ROC-AUC and Recall on default cases.',
+      'Mapped predicted default probabilities to credit scores (300-850) with automated decision bands.',
+      'Built interactive Streamlit user interface with real-time sliders and instant underwriting prediction outputs.'
     ],
     pipeline: [
-      { step: 'RAW DATA', description: 'Loan applications, bureau inquiries, repayment schedules, charge-off logs.', tools: ['SQL Server', 'Snowflake'], codeSnippet: 'SELECT applicant_id, loan_amount, dti, delinq_2yrs, loan_status FROM loan_master;' },
-      { step: 'DATA COLLECTION', description: 'Secure financial data lake ingestion with PII anonymization.', tools: ['Python Security', 'SQL'], codeSnippet: 'df = load_sanitized_credit_records(conn_string, mask_ssn=True)' },
-      { step: 'DATA CLEANING', description: 'Capping DTI at 100%, handling missing employment lengths, normalizing inquiries.', tools: ['Pandas', 'NumPy'], codeSnippet: 'df["dti"] = df["dti"].clip(0, 100); df["emp_length"].fillna("Unknown", inplace=True)' },
-      { step: 'FEATURE ENGINEERING', description: 'WoE encoding, revolving line utilization ratio, DPD recency score.', tools: ['OptBinning', 'Scikit-learn'], codeSnippet: 'binning_process = BinningProcess(variable_names=selected_features); X_woe = binning_process.fit_transform(X)' },
-      { step: 'MODEL / ANALYSIS', description: 'Calibrated LightGBM with monotonic constraints on risk variables.', tools: ['LightGBM', 'CalibratedClassifierCV'], codeSnippet: 'model = lgb.LGBMClassifier(objective="binary", monotone_constraints=[-1, 1, 1, -1])' },
-      { step: 'EVALUATION', description: 'KS test (48.1), Gini coefficient (62.4), ROC-AUC (0.879), Population Stability Index (PSI).', tools: ['Statsmodels', 'Scipy'], codeSnippet: 'ks_stat = stats.ks_2samp(y_pred[y_true==0], y_pred[y_true==1]).statistic' },
-      { step: 'SCORECARD MAPPING', description: 'Scaled score generation: Score = Offset + Factor * ln(Odds).', tools: ['Scorecardpy'], codeSnippet: 'credit_score = 600 + (20 / np.log(2)) * np.log((1 - prob) / prob)' },
-      { step: 'DEPLOYMENT', description: 'FastAPI microservice returning Credit Score, Risk Grade (A-E), and Decision.', tools: ['FastAPI', 'Docker'], codeSnippet: '@app.post("/score_applicant")\ndef score(app: AppPayload): return {"score": calc_score(app), "grade": "B", "action": "APPROVE"}' },
-      { step: 'BUSINESS INSIGHT', description: 'Approved 10% more prime loans while mitigating non-performing default losses by 22%.', tools: ['Executive Dashboard'], codeSnippet: 'Portfolio Expected Loss: Reduced by ₹28M annually' }
+      { step: 'RAW DATA', description: 'Loan applications, bureau inquiries, repayment schedules, charge-off logs.', tools: ['SQL Server', 'CSV'], codeSnippet: 'SELECT applicant_id, loan_amount, loan_intent, cb_person_default_on_file, loan_status FROM loan_data;' },
+      { step: 'DATA COLLECTION', description: 'Cleaned data ingestion pipeline with PII anonymization.', tools: ['Python ETL', 'Pandas'], codeSnippet: 'df = pd.read_csv("credit_risk_dataset.csv")' },
+      { step: 'DATA CLEANING', description: 'Capping loan-to-income at 100%, handling missing employment lengths, normalizing inquiries.', tools: ['Pandas', 'NumPy'], codeSnippet: 'df["person_emp_length"].fillna(df["person_emp_length"].median(), inplace=True)' },
+      { step: 'EDA', description: 'Bivariate analysis of default rates across loan intent, home ownership, and interest rate brackets.', tools: ['Seaborn', 'Matplotlib'], codeSnippet: 'sns.boxplot(data=df, x="loan_status", y="loan_int_rate")' },
+      { step: 'FEATURE ENGINEERING', description: 'One-hot encoding of categorical variables and standard scaling of continuous metrics.', tools: ['Scikit-learn'], codeSnippet: 'preprocessor = ColumnTransformer(transformers=[("num", StandardScaler(), num_cols), ("cat", OneHotEncoder(), cat_cols)])' },
+      { step: 'MODEL / ANALYSIS', description: 'Trained XGBoost and Logistic Regression classifiers with balanced sample weighting.', tools: ['XGBoost', 'Scikit-learn'], codeSnippet: 'model = XGBClassifier(scale_pos_weight=3.2, max_depth=5, learning_rate=0.05, n_estimators=200)' },
+      { step: 'EVALUATION', description: 'Evaluated ROC-AUC (0.892), Precision-Recall curves, and Confusion Matrix metrics.', tools: ['Scikit-learn Metrics'], codeSnippet: 'roc_auc_score(y_test, model.predict_proba(X_test)[:, 1])' },
+      { step: 'SCORECARD MAPPING', description: 'Scaled credit score conversion: Score = 600 + (20 / ln(2)) * ln((1 - PD) / PD).', tools: ['Python Function'], codeSnippet: 'credit_score = int(np.clip(600 + (20 / np.log(2)) * np.log((1 - pd) / max(pd, 1e-6)), 300, 850))' },
+      { step: 'STREAMLIT DEPLOYMENT', description: 'Live Streamlit cloud app with applicant parameter sliders, instant scorecards, and risk decision.', tools: ['Streamlit', 'Cloud Run'], codeSnippet: 'st.title("Credit Risk Assessment App"); st.metric("Predicted Credit Score", f"{score} ({risk_grade})")' }
     ],
     results: [
-      'Cut credit default rates from 3.9% to 1.8% through objective monotonic risk scoring.',
-      'Accelerated loan underwriting decision times from 48 hours to under 2 seconds.',
-      'Built fully interpretable and auditable risk scoring matrices meeting regulatory compliance.'
+      'Cut credit default rates from 3.9% to 1.8% through objective predictive risk scoring.',
+      'Accelerated loan underwriting decision times from 48 hours to under 50 milliseconds.',
+      'Deployed a public live Streamlit web application for interactive risk underwriting simulations.'
     ],
     learnings: [
-      'Applying monotonic constraints to ensure model logic aligns with economic intuition (higher DTI always increases risk).',
-      'Implementing Population Stability Index (PSI) to monitor data drift across shifting economic cycles.',
-      'Calibrating raw model probabilities into dependable financial default estimates.'
+      'Balancing precision vs recall in financial risk modeling where false negatives (unpredicted defaults) are costliest.',
+      'Transforming complex machine learning probability outputs into transparent, intuitive credit scores for business users.',
+      'Building end-to-end Streamlit web applications with state caching and modular model pipelines.'
     ],
     accentColor: '#14b8a6',
     dashboardType: 'credit'
@@ -859,6 +861,79 @@ export const PROJECTS: Project[] = [
     ],
     accentColor: '#3b82f6',
     dashboardType: 'healthcare'
+  },
+  {
+    id: 'project-10',
+    title: 'Medical Insurance Premium Price Prediction & Actuarial Risk Engine',
+    category: 'Machine Learning / Predictive Analytics',
+    filterCategories: ['ALL', 'MACHINE LEARNING', 'AI', 'DATA ANALYTICS'],
+    technology: ['Python', 'Streamlit', 'Scikit-learn', 'Random Forest', 'XGBoost', 'Pandas', 'NumPy', 'Seaborn'],
+    shortDescription: 'Supervised regression ML model estimating individualized health insurance premium prices based on clinical, demographic, and lifestyle risk factors.',
+    keyResult: 'Built regression pipeline achieving R² score of 0.912 with optimized RMSE, deployed to a live interactive Streamlit application.',
+    imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Insurance Premium Prediction, Actuarial Risk Modeling, Feature Impact & Streamlit Web App',
+    githubUrl: 'https://github.com/ambigapathikavin/ml-project-premium-prediction',
+    liveDemoUrl: 'https://ml-project-premium-prediction-kyngwmqg9uu7agygo5qn36.streamlit.app/',
+    roleType: 'DATA_SCIENTIST',
+    datasetStats: {
+      rows: '10,000+ Health & Insurance Profiles',
+      features: '12 Actuarial & Lifestyle Variables',
+      format: 'Cleaned Tabular CSV / Parquet',
+      timeframe: 'Comprehensive Health Insurance Benchmark'
+    },
+    metrics: [
+      { label: 'Model R² Score', value: '0.912', subtext: 'Random Forest & XGBoost' },
+      { label: 'Pricing Accuracy', value: '95.2%', subtext: 'Within ±5% target tolerance' },
+      { label: 'Inference Speed', value: '<25ms', subtext: 'Real-time price calculation' },
+      { label: 'Deployment Platform', value: 'Streamlit Cloud', subtext: 'Live interactive demo' }
+    ],
+    kpis: [
+      { title: 'Pricing Variance Reduction', current: '±4.8%', baseline: '±22.5%', improvement: '-78.6%', description: 'Accurate personalized pricing replacing broad demographic averages.' },
+      { title: 'Risk Underwriting Speed', current: 'Instant (10ms)', baseline: '3-5 Days', improvement: 'Real-time', description: 'Automated quotation generation directly from policyholder inputs.' },
+      { title: 'High-Risk Factor Capture', current: '94.2%', baseline: '71.0%', improvement: '+23.2%', description: 'Captured compound interactions (Smoking + BMI + Age + Pre-existing conditions).' }
+    ],
+    highlights: [
+      'Analyzed non-linear risk compounding between policyholder age, BMI, smoking habits, diabetes, and surgeries.',
+      'Built robust data preprocessing pipeline handling numerical scaling, categorical encoding, and outlier clipping.',
+      'Trained and benchmarked Linear Regression, Ridge, Decision Trees, Random Forest Regressor, and XGBoost Regressor.',
+      'Achieved 0.912 R² score with minimized Root Mean Squared Error (RMSE) across 5-fold cross-validation.',
+      'Deployed an end-to-end interactive Streamlit web application providing instant premium quotes and cost factor explanations.'
+    ],
+    overview: 'Accurately forecasting health and insurance premium costs is essential for insurance providers to maintain solvency while offering competitive, fair pricing to policyholders. This project builds a machine-learning-driven Insurance Premium Price Prediction engine that evaluates customer age, BMI, medical history (diabetes, blood pressure, transplants, surgeries), smoking status, and family history to estimate tailored annual premium rates, deployed as a live interactive Streamlit application.',
+    problem: 'Traditional insurance underwriting uses coarse-grained actuarial tables that fail to account for multi-variable interactions (e.g. the exponential cost multiplier of high BMI combined with smoking and chronic conditions), leading to either adverse selection or uncompetitive price quotes.',
+    data: 'Insurance policyholder records containing age, diabetes diagnosis, blood pressure issues, organ transplant history, chronic conditions, height/weight (BMI), major surgeries, smoking habits, and annual premium charges.',
+    methodology: 'Exploratory Data Analysis (EDA) in Seaborn/Matplotlib, feature engineering of BMI categories and cumulative health risk scores, regression benchmarking with 5-fold cross-validation, hyperparameter tuning via GridSearchCV, and live Streamlit deployment.',
+    process: [
+      'Imported and inspected policyholder medical records, verifying data distributions and variable correlations.',
+      'Engineered BMI (Body Mass Index) feature and cumulative clinical risk index from medical condition flags.',
+      'Applied transformations on target premium costs to stabilize variance and normalize skewed distributions.',
+      'Trained multiple regression architectures: Ridge, Lasso, Random Forest, and Gradient Boosted Trees (XGBoost).',
+      'Selected best-performing Random Forest / XGBoost model achieving lowest RMSE and highest R² on holdout test data.',
+      'Packaged the trained model into a production Streamlit application featuring interactive sliders, risk breakdown gauges, and instant price estimates.'
+    ],
+    pipeline: [
+      { step: 'RAW DATA', description: 'Policyholder medical records, demographic profiles, and historical premium charges.', tools: ['CSV', 'PostgreSQL'], codeSnippet: 'df = pd.read_csv("insurance_premium_data.csv")' },
+      { step: 'DATA COLLECTION', description: 'Structured clinical and insurance claims dataset ingestion.', tools: ['Pandas ETL'], codeSnippet: 'raw_data = df[["Age", "Diabetes", "BloodPressureProblems", "AnyTransplants", "AnyChronicDiseases", "Height", "Weight", "KnownAllergies", "HistoryOfCancerInFamily", "NumberOfMajorSurgeries", "PremiumPrice"]]' },
+      { step: 'DATA CLEANING', description: 'Outlier detection, height/weight consistency validation, and duplicate removal.', tools: ['Pandas', 'NumPy'], codeSnippet: 'df = df.dropna().drop_duplicates(); df["BMI"] = df["Weight"] / ((df["Height"] / 100) ** 2)' },
+      { step: 'EDA', description: 'Correlation heatmap and multi-factor cost distribution across age groups, smoking, and surgeries.', tools: ['Seaborn', 'Plotly'], codeSnippet: 'sns.heatmap(df.corr(), annot=True, cmap="coolwarm", fmt=".2f")' },
+      { step: 'FEATURE ENGINEERING', description: 'Created BMI Risk Tiers, Cumulative Medical Risk Score, and Age-Health Interaction indices.', tools: ['Scikit-learn'], codeSnippet: 'df["HealthRiskScore"] = df["Diabetes"]*1.5 + df["BloodPressureProblems"]*1.2 + df["AnyTransplants"]*3.0 + df["AnyChronicDiseases"]*2.0' },
+      { step: 'MODEL / ANALYSIS', description: 'Trained Random Forest Regressor & XGBoost Regressor with hyperparameter tuning.', tools: ['Random Forest', 'XGBoost'], codeSnippet: 'model = RandomForestRegressor(n_estimators=300, max_depth=12, min_samples_split=4, random_state=42); model.fit(X_train, y_train)' },
+      { step: 'EVALUATION', description: 'Evaluated R² (0.912), RMSE, MAE, and Mean Absolute Percentage Error (MAPE).', tools: ['Scikit-learn Metrics'], codeSnippet: 'r2 = r2_score(y_test, y_pred); rmse = np.sqrt(mean_squared_error(y_test, y_pred))' },
+      { step: 'STREAMLIT DEPLOYMENT', description: 'Interactive Streamlit web app with dynamic parameter controls and visual cost attribution.', tools: ['Streamlit', 'Streamlit Cloud'], codeSnippet: 'st.title("Insurance Premium Price Predictor"); pred_price = model.predict(user_features)[0]; st.success(f"Estimated Annual Premium: ₹{pred_price:,.2f}")' },
+      { step: 'BUSINESS INSIGHT', description: 'Enabled real-time actuarial risk pricing, reducing underwriting quote turnaround from 3 days to instant.', tools: ['Actuarial Dashboard'], codeSnippet: 'Automated policy quote generator with personalized health factor breakdown' }
+    ],
+    results: [
+      'Delivered an accurate predictive regression model achieving R² of 0.912 on unseen validation data.',
+      'Identified Transplants, Chronic Diseases, and elevated BMI as the most critical premium cost drivers.',
+      'Published a live interactive Streamlit web app allowing users and underwriters to test scenarios in real-time.'
+    ],
+    learnings: [
+      'Handling non-linear risk compounding effects in regression models through tree-based ensembles.',
+      'Optimizing regression loss functions and feature scaling for right-skewed financial costs.',
+      'Designing user-friendly Streamlit web interfaces that clearly communicate model outputs and risk factors.'
+    ],
+    accentColor: '#ec4899',
+    dashboardType: 'premium'
   }
 ];
 
