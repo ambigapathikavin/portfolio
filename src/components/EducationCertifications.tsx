@@ -160,50 +160,50 @@ export const EducationCertifications: React.FC = () => {
                 <motion.div
                   key={cert.id}
                   variants={itemVariants}
-                  whileHover={{ y: -3, transition: { duration: 0.2 } }}
-                  className="p-4 rounded-xl bg-[#111111] border border-[#ffffff08] hover:border-violet-500/40 transition-all flex flex-col justify-between group shadow-sm cursor-pointer"
+                  whileHover={{ y: -4, scale: 1.015, transition: { duration: 0.2, ease: "easeOut" } }}
+                  className="p-4 sm:p-5 rounded-xl bg-[#111111] border border-[#ffffff0e] hover:border-violet-500/50 hover:bg-[#141414] hover:shadow-[0_8px_24px_rgba(139,92,246,0.12)] transition-all flex flex-col justify-between group shadow-sm cursor-pointer relative"
                   onClick={() => setSelectedCert(cert)}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2.5">
                       <div className="flex items-center gap-1.5">
-                        <div className="w-7 h-7 rounded-lg bg-[#181818] border border-[#ffffff0a] flex items-center justify-center text-violet-400 group-hover:scale-105 transition-transform">
+                        <div className="w-7 h-7 rounded-lg bg-[#181818] border border-[#ffffff0a] flex items-center justify-center text-violet-400 group-hover:scale-110 group-hover:text-violet-300 transition-transform">
                           <Award className="w-3.5 h-3.5" />
                         </div>
                         {cert.badgeType && (
-                          <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-violet-500/10 text-violet-300 border border-violet-500/25">
+                          <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-violet-500/15 text-violet-300 border border-violet-500/30 font-semibold">
                             {cert.badgeType}
                           </span>
                         )}
                       </div>
-                      <span className="text-[10px] font-mono text-[#777] bg-[#161616] px-2 py-0.5 rounded border border-[#ffffff08]">
-                        {cert.date}
+                      <span className="text-[10px] font-mono text-[#888] bg-[#161616] px-2 py-0.5 rounded border border-[#ffffff08]">
+                        Issued {cert.date}
                       </span>
                     </div>
 
-                    <h3 className="text-sm font-bold text-white group-hover:text-violet-300 transition-colors mb-1 leading-snug">
+                    <h3 className="text-sm font-bold text-white group-hover:text-violet-200 transition-colors mb-1.5 leading-snug">
                       {cert.title}
                     </h3>
                     
-                    <div className="text-[10px] font-mono text-cyan-400 mb-2">
-                      Issued by: {cert.issuer}
+                    <div className="text-[11px] font-mono text-cyan-400 font-medium mb-2.5">
+                      {cert.issuer}
                     </div>
 
                     {cert.credentialId && (
-                      <div className="mb-2.5 flex items-center justify-between px-2 py-1 rounded bg-[#0a0a0a] border border-[#ffffff08]">
-                        <span className="text-[9px] font-mono text-[#888] truncate max-w-[160px]">
-                          ID: <span className="text-[#D0D0D0] font-mono">{cert.credentialId}</span>
+                      <div className="mb-3 flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0a0a0a] border border-[#ffffff12]">
+                        <span className="text-[9px] font-mono text-[#999] truncate max-w-[170px]">
+                          Credential ID: <span className="text-white font-mono font-semibold">{cert.credentialId}</span>
                         </span>
                         <button
                           type="button"
                           onClick={(e) => handleCopyId(cert.credentialId!, e)}
                           title="Copy Certificate ID"
-                          className="text-[9px] font-mono text-cyan-400 hover:text-cyan-200 flex items-center gap-1 px-1 py-0.5 rounded hover:bg-cyan-500/10 transition-colors"
+                          className="text-[9px] font-mono text-cyan-400 hover:text-cyan-200 flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-cyan-500/10 transition-colors"
                         >
                           {copiedCertId === cert.credentialId ? (
                             <>
                               <Check className="w-2.5 h-2.5 text-emerald-400" />
-                              <span className="text-emerald-400">Copied</span>
+                              <span className="text-emerald-400 font-semibold">Copied</span>
                             </>
                           ) : (
                             <>
@@ -215,15 +215,15 @@ export const EducationCertifications: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="space-y-1 mb-3">
-                      <div className="text-[9px] font-mono uppercase text-[#666]">
-                        Competencies Verified:
+                    <div className="space-y-1 mb-3.5">
+                      <div className="text-[9px] font-mono uppercase text-[#777]">
+                        Verified Skills:
                       </div>
                       <div className="flex flex-wrap gap-1">
                         {cert.skillsCovered.map(sc => (
                           <span
                             key={sc}
-                            className="px-1.5 py-0.5 rounded bg-[#181818] border border-[#ffffff08] text-[9px] font-mono text-[#A0A0A0]"
+                            className="px-1.5 py-0.5 rounded bg-[#181818] border border-[#ffffff0a] text-[9px] font-mono text-[#b5b5b5]"
                           >
                             {sc}
                           </span>
@@ -232,24 +232,24 @@ export const EducationCertifications: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="pt-2.5 border-t border-[#ffffff08] flex items-center justify-between text-[10px] font-mono text-[#777]">
-                    <span className="flex items-center gap-1 text-emerald-400 font-semibold">
+                  <div className="pt-3 border-t border-[#ffffff0e] flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 font-bold">
                       <ShieldCheck className="w-3.5 h-3.5" />
-                      <span>Verified Credential</span>
+                      <span>Verified</span>
                     </span>
                     
-                    {cert.credentialUrl ? (
+                    {cert.credentialUrl && (
                       <a
                         href={cert.credentialUrl}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-center gap-1 text-cyan-400 hover:text-cyan-200 px-2 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/25 transition-all hover:bg-cyan-500/20"
+                        className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold text-cyan-300 hover:text-white px-3 py-1 rounded-full bg-cyan-950/60 hover:bg-cyan-600 border border-cyan-500/50 hover:border-cyan-400 transition-all shadow-sm group/btn"
+                        title="Show credential in official portal"
                       >
-                        <span>Verify ↗</span>
+                        <span>Show credential</span>
+                        <ExternalLink className="w-3 h-3 text-cyan-300 group-hover/btn:text-white group-hover/btn:translate-x-0.5 transition-transform" />
                       </a>
-                    ) : (
-                      <FileCheck className="w-3.5 h-3.5 text-[#777]" />
                     )}
                   </div>
                 </motion.div>
@@ -349,18 +349,18 @@ export const EducationCertifications: React.FC = () => {
                   <a
                     href={selectedCert.credentialUrl}
                     target="_blank"
-                    rel="noreferrer"
-                    className="flex-1 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs font-mono transition-colors flex items-center justify-center gap-1.5"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-2 px-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs font-mono transition-colors flex items-center justify-center gap-2 shadow-sm"
                   >
-                    <span>Open Verification Portal</span>
+                    <span>Show credential</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 )}
                 <button
                   onClick={() => setSelectedCert(null)}
-                  className="px-4 py-2 rounded-lg bg-[#181818] hover:bg-[#252525] text-white font-semibold text-xs font-mono transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-lg bg-[#181818] hover:bg-[#252525] text-[#ccc] hover:text-white font-semibold text-xs font-mono transition-colors cursor-pointer border border-[#ffffff10]"
                 >
-                  Close View
+                  Close
                 </button>
               </div>
             </motion.div>

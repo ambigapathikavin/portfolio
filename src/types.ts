@@ -98,7 +98,7 @@ export interface CertificationItem {
   id: string;
   title: string;
   issuer: string;
-  badgeType?: 'Codebasics' | 'Omdena' | 'Google' | 'Coursera' | 'Credly' | 'DeepLearning.AI';
+  badgeType?: 'Codebasics' | 'Omdena' | 'Udemy' | 'KRISHAI' | 'Google' | 'Coursera' | 'Credly' | 'DeepLearning.AI' | string;
   date: string;
   credentialId?: string;
   credentialUrl?: string;

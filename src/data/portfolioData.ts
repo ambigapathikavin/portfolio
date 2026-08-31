@@ -950,47 +950,36 @@ export const EDUCATION: EducationItem[] = [
 export const CERTIFICATIONS: CertificationItem[] = [
   {
     id: 'cert-1',
-    title: 'Master Machine Learning for Data Science',
-    issuer: 'Codebasics',
-    badgeType: 'Codebasics',
-    date: 'Jan 2024',
-    credentialId: 'CB-ML-DS-2024-8842',
-    credentialUrl: 'https://codebasics.io/certificate/CB-ML-DS-2024-8842',
-    verificationPlatform: 'Codebasics Verification Portal',
-    skillsCovered: ['Supervised & Unsupervised ML', 'Feature Engineering', 'Model Evaluation', 'Scikit-learn', 'Mathematics for ML', 'Model Ensembling']
+    title: 'Local Chapter Challenge – Local News Aggregator and Analyzer for Kitwe, Zambia',
+    issuer: 'Omdena',
+    badgeType: 'Omdena',
+    date: 'Nov 2024',
+    credentialId: 'LCvovkh',
+    credentialUrl: 'https://confirm.omdena.com/LCvovkh',
+    verificationPlatform: 'Omdena Credential Verification Registry',
+    skillsCovered: ['Local News Aggregator', 'BERT Fine-Tuning', 'NLP Pipelines', 'MLOps Workflows', 'Topic Modeling', 'FastAPI & Docker']
   },
   {
     id: 'cert-2',
-    title: 'Omdena Global AI Project Completion Credential',
-    issuer: 'Omdena',
-    badgeType: 'Omdena',
+    title: 'Complete MLOps Bootcamp With 10+ End To End ML Projects',
+    issuer: 'Krish Naik / KRISHAI Technologies Private Limited',
+    badgeType: 'KRISHAI',
     date: 'Dec 2024',
-    credentialId: 'OMD-ZAM-2024-KNA-091',
-    credentialUrl: 'https://omdena.com/certificate/OMD-ZAM-2024-KNA-091',
-    verificationPlatform: 'Omdena Global Credentials Registry',
-    skillsCovered: ['Kitwe News Aggregator', 'BERT Fine-Tuning', 'MLOps Workflows', 'Real-time NLP Pipelines', 'Global AI Collaboration', 'FastAPI & Docker']
+    credentialId: 'UC-2ea03548-1452-4687-b69b-d386ec440559',
+    credentialUrl: 'https://udemy-certificate.s3.amazonaws.com/image/UC-2ea03548-1452-4687-b69b-d386ec440559.jpg',
+    verificationPlatform: 'Udemy / KRISHAI Certificate Registry',
+    skillsCovered: ['MLOps Pipelines', '10+ End-to-End ML Projects', 'Docker Containerization', 'CI/CD & GitHub Actions', 'MLflow Tracking', 'DVC & Cloud Deployment']
   },
   {
     id: 'cert-3',
-    title: 'Data Science & Machine Learning Internship Credential',
-    issuer: 'Cognifyz Technologies',
-    badgeType: 'Credly',
-    date: 'Feb 2025',
-    credentialId: 'CGZ-DS-INT-2025-4120',
-    credentialUrl: 'https://www.cognifyz.com/verify-certificate?id=CGZ-DS-INT-2025-4120',
-    verificationPlatform: 'Cognifyz Verified Registry',
-    skillsCovered: ['Exploratory Data Analysis', 'Python & Pandas', 'Supervised Learning', 'Feature Selection', 'Tableau Dashboards', 'GridSearchCV']
-  },
-  {
-    id: 'cert-4',
-    title: 'Power BI & SQL Business Intelligence Specialization',
-    issuer: 'Codebasics & Microsoft Ecosystem',
+    title: 'Master Machine Learning for Data Science',
+    issuer: 'Codebasics',
     badgeType: 'Codebasics',
-    date: '2024',
-    credentialId: 'CB-BI-SQL-2024-9127',
-    credentialUrl: 'https://codebasics.io/certificate/CB-BI-SQL-2024-9127',
-    verificationPlatform: 'Codebasics Certification Portal',
-    skillsCovered: ['Power BI Desktop', 'Advanced DAX Measures', 'Star Schema Modeling', 'MySQL Complex Queries', 'Executive Dashboards']
+    date: 'Sep 2024',
+    credentialId: 'CB-69-345598',
+    credentialUrl: 'https://codebasics.io/certificate/CB-69-345598',
+    verificationPlatform: 'Codebasics Verification Portal',
+    skillsCovered: ['Supervised & Unsupervised ML', 'Feature Engineering', 'Model Evaluation', 'Scikit-learn', 'Mathematics for ML', 'Model Optimization']
   }
 ];
 
@@ -1190,8 +1179,9 @@ export const DATA_ANALYST_RESUME = {
     }
   ],
   certifications: [
-    { title: 'Master Machine Learning for Data Science', issuer: 'CodeBasics', date: 'Jan 2024' },
-    { title: 'Omdena Project Completion Certificate - Kitwe News Aggregator Project', issuer: 'Omdena', date: '2024' }
+    { title: 'Master Machine Learning for Data Science', issuer: 'Codebasics', date: 'Sep 2024' },
+    { title: 'Local Chapter Challenge – Local News Aggregator and Analyzer for Kitwe, Zambia', issuer: 'Omdena', date: 'Nov 2024' },
+    { title: 'Complete MLOps Bootcamp With 10+ End To End ML Projects', issuer: 'Krish Naik / KRISHAI Technologies Private Limited', date: 'Dec 2024' }
   ]
 };
 
