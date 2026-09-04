@@ -9,6 +9,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+import { trackExternalLink } from '../utils/analytics';
 
 interface FooterProps {
   onOpenResume: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
@@ -49,6 +50,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
               href={PERSONAL_INFO.linkedin}
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackExternalLink('LinkedIn', PERSONAL_INFO.linkedin)}
               className="flex items-center gap-1 text-[#888] hover:text-cyan-400 transition-colors"
             >
               <Linkedin className="w-3.5 h-3.5" />
@@ -59,6 +61,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
               href={PERSONAL_INFO.github}
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackExternalLink('GitHub', PERSONAL_INFO.github)}
               className="flex items-center gap-1 text-[#888] hover:text-cyan-400 transition-colors"
             >
               <Github className="w-3.5 h-3.5" />
@@ -67,6 +70,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
 
             <a
               href={`mailto:${PERSONAL_INFO.email}`}
+              onClick={() => trackExternalLink('Email', `mailto:${PERSONAL_INFO.email}`)}
               className="flex items-center gap-1 text-[#888] hover:text-cyan-400 transition-colors"
             >
               <Mail className="w-3.5 h-3.5" />
@@ -103,12 +107,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
         </div>
 
         {/* Bottom copyright */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-[#666] font-mono text-center sm:text-left">
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] text-[#666] font-mono text-center sm:text-left">
           <div>
             © 2026 {PERSONAL_INFO.name}. All rights reserved.
           </div>
-          <div>
-            High Density Analytics & ML Architecture.
+          
+          <div className="flex items-center gap-3">
+            <span className="text-[#555]">
+              High Density Analytics & ML Architecture.
+            </span>
           </div>
         </div>
 
@@ -116,3 +123,4 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
     </footer>
   );
 };
+

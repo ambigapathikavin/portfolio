@@ -10,6 +10,7 @@ import { Project } from '../types';
 import { PROJECTS } from '../data/portfolioData';
 import { ProjectInteractiveDashboard } from './ProjectInteractiveDashboard';
 import { PipelineFlowchart } from './PipelineFlowchart';
+import { trackEvent, trackExternalLink } from '../utils/analytics';
 
 const getTechBadgeStyle = (tech: string) => {
   const lower = tech.toLowerCase();
@@ -249,6 +250,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackExternalLink('Project_GitHub', project.githubUrl!)}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1a1a1a] hover:bg-[#282828] border border-[#ffffff20] text-xs font-mono text-white font-semibold transition-all cursor-pointer shadow-sm hover:border-cyan-500/50"
                   >
                     <Code2 className="w-3.5 h-3.5 text-cyan-400" />
@@ -262,6 +264,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                     href={project.liveDemoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackExternalLink('Project_LiveDemo', project.liveDemoUrl!)}
                     className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/85 border border-emerald-500/40 hover:border-emerald-400/60 text-xs font-mono text-emerald-200 hover:text-emerald-100 font-bold transition-all cursor-pointer shadow-[0_0_14px_rgba(16,185,129,0.16)] group/live"
                   >
                     <span className="relative flex h-2 w-2 shrink-0">
@@ -325,7 +328,14 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  trackEvent('switch_project_tab', {
+                    project_id: projectId,
+                    tab_id: tab.id,
+                    tab_label: tab.label
+                  });
+                }}
                 className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-mono whitespace-nowrap transition-all cursor-pointer ${
                   isActive
                     ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold shadow-sm'

@@ -13,6 +13,14 @@ import { EducationCertifications } from './components/EducationCertifications';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { initGlobalTactileClicks } from './utils/sound';
+import { 
+  initGoogleAnalytics, 
+  trackPageView, 
+  trackProjectView, 
+  trackResumeDownload, 
+  trackSectionScroll 
+} from './utils/analytics';
+import { PROJECTS } from './data/portfolioData';
 import { FileText } from 'lucide-react';
 
 // Lazy load heavy components to drastically improve LCP and initial bundle size
@@ -31,18 +39,34 @@ export default function App() {
     return null;
   });
 
-  // Sync browser back/forward and hash changes
+  // Initialize GA4 tracking & sync browser back/forward and hash changes
   useEffect(() => {
+    initGoogleAnalytics();
     const cleanupSounds = initGlobalTactileClicks();
+
+    // Initial pageview
+    if (activeProjectId) {
+      const proj = PROJECTS.find(p => p.id === activeProjectId);
+      trackProjectView(activeProjectId, proj?.title || activeProjectId, proj?.category);
+    } else {
+      trackPageView('/', 'Ambigapathi V | Data Analyst & Data Scientist Portfolio');
+    }
 
     const handleHashChange = () => {
       const hash = window.location.hash;
       if (hash.startsWith('#project-')) {
-        setActiveProjectId(hash.replace('#', ''));
+        const id = hash.replace('#', '');
+        setActiveProjectId(id);
+        const proj = PROJECTS.find(p => p.id === id);
+        trackProjectView(id, proj?.title || id, proj?.category);
       } else if (hash === '' || hash === '#home' || hash === '#projects') {
         setActiveProjectId(null);
+        trackPageView('/#projects', 'Ambigapathi V | Projects Showcase');
+      } else {
+        trackSectionScroll(hash.replace('#', ''));
       }
     };
+
     window.addEventListener('hashchange', handleHashChange);
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
@@ -51,25 +75,24 @@ export default function App() {
   }, []);
 
   const handleOpenResume = (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => {
-    if (role === 'DATA_ANALYST' || role === 'DATA_SCIENTIST') {
-      setResumeRole(role);
-    } else if (roleMode === 'DATA_ANALYST' || roleMode === 'DATA_SCIENTIST') {
-      setResumeRole(roleMode);
-    } else {
-      setResumeRole('DATA_ANALYST');
-    }
+    const selected = role || (roleMode === 'DATA_ANALYST' || roleMode === 'DATA_SCIENTIST' ? roleMode : 'DATA_ANALYST');
+    setResumeRole(selected);
+    trackResumeDownload(selected, 'open_modal');
     setIsResumeOpen(true);
   };
 
   const handleSelectProject = (projectId: string) => {
     setActiveProjectId(projectId);
     window.location.hash = projectId;
+    const proj = PROJECTS.find(p => p.id === projectId);
+    trackProjectView(projectId, proj?.title || projectId, proj?.category);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBackToOverview = () => {
     setActiveProjectId(null);
     window.location.hash = 'projects';
+    trackPageView('/#projects', 'Ambigapathi V | Projects Showcase');
     setTimeout(() => {
       const el = document.getElementById('projects');
       if (el) {
@@ -79,6 +102,7 @@ export default function App() {
   };
 
   const scrollToSection = (id: string) => {
+    trackSectionScroll(id);
     if (activeProjectId) {
       setActiveProjectId(null);
       window.location.hash = id;
@@ -117,7 +141,9 @@ export default function App() {
           />
         </Suspense>
 
-        <Footer onOpenResume={handleOpenResume} />
+        <Footer 
+          onOpenResume={handleOpenResume} 
+        />
         
         {isResumeOpen && (
           <Suspense fallback={null}>
@@ -189,10 +215,12 @@ export default function App() {
       </main>
 
       {/* Footer with Back to Top */}
-      <Footer onOpenResume={handleOpenResume} />
+      <Footer 
+        onOpenResume={handleOpenResume} 
+      />
 
       {/* Mobile Floating Action Button (FAB) for Resume */}
-      <div className="fixed bottom-5 right-4 z-40 md:hidden">
+      <div className="fixed bottom-5 right-4 z-40 md:hidden flex flex-col gap-2">
         <button
           type="button"
           onClick={() => handleOpenResume()}

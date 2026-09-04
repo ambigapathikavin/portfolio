@@ -9,6 +9,7 @@ import {
   Sliders, Activity, Users, FileText, ChevronRight, BarChart2, ShieldAlert, Award
 } from 'lucide-react';
 import { Project } from '../types';
+import { trackSimulatorAction } from '../utils/analytics';
 
 interface DashboardProps {
   project: Project;
@@ -114,6 +115,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
   // Handle news classifier live test
   const handleNewsClassify = (text: string) => {
     setNewsInputText(text);
+    trackSimulatorAction(project.id, 'news_nlp', 'classify_headline', { headline_length: text.length });
     const lower = text.toLowerCase();
     if (lower.includes('rate') || lower.includes('inflation') || lower.includes('bank') || lower.includes('revenue') || lower.includes('market') || lower.includes('economy')) {
       setNewsPredictedTopic('BUSINESS & FINANCE');
@@ -135,6 +137,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
 
   // Toggle cricket squad selection
   const togglePlayer = (id: string) => {
+    trackSimulatorAction(project.id, 'cricket', 'toggle_player', { player_id: id });
     if (selectedSquad.includes(id)) {
       if (selectedSquad.length > 1) {
         setSelectedSquad(selectedSquad.filter(pId => pId !== id));

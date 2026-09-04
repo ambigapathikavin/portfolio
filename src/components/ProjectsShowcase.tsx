@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { PROJECTS } from '../data/portfolioData';
 import { Project, ProjectCategory } from '../types';
+import { trackEvent, trackExternalLink } from '../utils/analytics';
 
 const FILTER_OPTIONS: { label: string; value: ProjectCategory }[] = [
   { label: 'ALL', value: 'ALL' },
@@ -91,6 +92,12 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
     });
 
   const handleProjectClick = (projectId: string) => {
+    const proj = PROJECTS.find(p => p.id === projectId);
+    trackEvent('select_project_card', {
+      project_id: projectId,
+      project_title: proj?.title || projectId,
+      role_track: proj?.roleType,
+    });
     if (onSelectProject) {
       onSelectProject(projectId);
     }
@@ -439,7 +446,10 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                           href={project.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            trackExternalLink('Card_GitHub', project.githubUrl!);
+                          }}
                           className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-[#141414] hover:bg-[#1f1f1f] border border-[#ffffff15] hover:border-[#ffffff30] text-[10px] font-mono text-[#d0d0d0] hover:text-white transition-all cursor-pointer shadow-sm group/git"
                           title="View GitHub Repository"
                         >
@@ -453,7 +463,10 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                           href={project.liveDemoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            trackExternalLink('Card_LiveDemo', project.liveDemoUrl!);
+                          }}
                           className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/40 hover:border-emerald-400/60 text-[10px] font-mono text-emerald-200 hover:text-emerald-100 font-semibold transition-all cursor-pointer shadow-[0_0_12px_rgba(16,185,129,0.12)] group/live"
                           title="Open Live Streamlit Application"
                         >
