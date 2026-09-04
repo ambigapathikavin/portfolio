@@ -131,13 +131,8 @@ export const Hero: React.FC<HeroProps> = ({
               </motion.div>
             )}
 
-            {/* Large Main Heading */}
-            <motion.h1
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.08 }}
-              className="text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-white leading-[1.12] mb-5"
-            >
+            {/* Large Main Heading - Immediate LCP Paint */}
+            <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-white leading-[1.12] mb-5">
               Turning Data Into <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-violet-400">
                 {roleMode === 'DATA_ANALYST' ? 'Actionable BI Insights' :
@@ -145,7 +140,7 @@ export const Hero: React.FC<HeroProps> = ({
                  'Insights, Predictions'}
               </span> <br />
               & Intelligent Solutions.
-            </motion.h1>
+            </h1>
 
             {/* Dynamic Role Highlights Pills */}
             <motion.div
@@ -261,12 +256,7 @@ export const Hero: React.FC<HeroProps> = ({
 
           {/* Right Column: Professional Portrait Frame & Data Visual Elements */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end relative items-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="relative w-full max-w-[290px] sm:max-w-[340px] lg:max-w-[360px] h-[380px] sm:h-[420px] lg:h-[450px] flex items-center justify-center"
-            >
+            <div className="relative w-full max-w-[290px] sm:max-w-[340px] lg:max-w-[360px] h-[380px] sm:h-[420px] lg:h-[450px] flex items-center justify-center">
               
               {/* Outer Decorative Ambient Glow & Orbit Grids */}
               <div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-cyan-500/10 via-transparent to-violet-500/15 blur-2xl pointer-events-none" />
@@ -323,7 +313,7 @@ export const Hero: React.FC<HeroProps> = ({
                 <span className="text-[11px] font-mono text-emerald-300 font-bold">-40% Query Latency</span>
               </motion.div>
 
-            </motion.div>
+            </div>
           </div>
 
         </div>

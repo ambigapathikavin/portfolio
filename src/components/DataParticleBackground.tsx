@@ -37,10 +37,13 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
       'rgba(45, 212, 191,',  // Teal
     ];
 
+    let isVisible = true;
     const initParticles = () => {
       particles = [];
-      // Calculate particle density based on canvas area
-      const count = Math.min(Math.floor((width * height) / 14000), 75);
+      const isMobile = width < 640;
+      // Calculate particle density based on canvas area, mobile friendly
+      const maxCount = isMobile ? 32 : 65;
+      const count = Math.min(Math.floor((width * height) / 16000), maxCount);
 
       for (let i = 0; i < count; i++) {
         const radius = Math.random() * 1.8 + 1.2;
@@ -163,7 +166,9 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
         }
       }
 
-      animationFrameId = requestAnimationFrame(render);
+      if (isVisible) {
+        animationFrameId = requestAnimationFrame(render);
+      }
     };
 
     // Initialize observer for responsive sizing
@@ -171,7 +176,21 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
       resize();
     });
 
+    // Pause particle animations when scrolled out of viewport
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisible;
+        isVisible = entry.isIntersecting;
+        if (!wasVisible && isVisible) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = requestAnimationFrame(render);
+        }
+      },
+      { threshold: 0.05 }
+    );
+
     resizeObserver.observe(canvas);
+    intersectionObserver.observe(canvas);
     resize();
     render();
 
@@ -184,6 +203,7 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
     return () => {
       cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
+      intersectionObserver.disconnect();
       if (parent) {
         parent.removeEventListener('mousemove', handleMouseMove);
         parent.removeEventListener('mouseleave', handleMouseLeave);

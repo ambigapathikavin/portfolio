@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { ScrollProgressBar } from './components/ScrollProgressBar';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -12,9 +12,11 @@ import { WhatIBring } from './components/WhatIBring';
 import { EducationCertifications } from './components/EducationCertifications';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
-import { ResumeModal } from './components/ResumeModal';
-import { ProjectPage } from './components/ProjectPage';
 import { initGlobalTactileClicks } from './utils/sound';
+
+// Lazy load heavy components to drastically improve LCP and initial bundle size
+const ResumeModal = lazy(() => import('./components/ResumeModal').then(m => ({ default: m.ResumeModal })));
+const ProjectPage = lazy(() => import('./components/ProjectPage').then(m => ({ default: m.ProjectPage })));
 
 export default function App() {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
@@ -102,19 +104,29 @@ export default function App() {
           isProjectActive={true}
         />
         
-        <ProjectPage
-          projectId={activeProjectId}
-          onBack={handleBackToOverview}
-          onSelectProject={handleSelectProject}
-        />
+        <Suspense fallback={
+          <div className="min-h-[60vh] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full border-2 border-cyan-500/30 border-t-cyan-400 animate-spin" />
+          </div>
+        }>
+          <ProjectPage
+            projectId={activeProjectId}
+            onBack={handleBackToOverview}
+            onSelectProject={handleSelectProject}
+          />
+        </Suspense>
 
         <Footer onOpenResume={handleOpenResume} />
         
-        <ResumeModal
-          isOpen={isResumeOpen}
-          onClose={() => setIsResumeOpen(false)}
-          initialRole={resumeRole}
-        />
+        {isResumeOpen && (
+          <Suspense fallback={null}>
+            <ResumeModal
+              isOpen={isResumeOpen}
+              onClose={() => setIsResumeOpen(false)}
+              initialRole={resumeRole}
+            />
+          </Suspense>
+        )}
       </div>
     );
   }
@@ -178,12 +190,16 @@ export default function App() {
       {/* Footer with Back to Top */}
       <Footer onOpenResume={handleOpenResume} />
 
-      {/* Interactive Comprehensive Dual Resume Modal */}
-      <ResumeModal
-        isOpen={isResumeOpen}
-        onClose={() => setIsResumeOpen(false)}
-        initialRole={resumeRole}
-      />
+      {/* Interactive Comprehensive Dual Resume Modal (Loaded on demand) */}
+      {isResumeOpen && (
+        <Suspense fallback={null}>
+          <ResumeModal
+            isOpen={isResumeOpen}
+            onClose={() => setIsResumeOpen(false)}
+            initialRole={resumeRole}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }
