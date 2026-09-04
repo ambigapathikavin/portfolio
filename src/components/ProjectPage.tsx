@@ -4,11 +4,12 @@ import {
   ArrowLeft, ArrowRight, ExternalLink, Download, CheckCircle2, TrendingUp, 
   Cpu, Database, Sparkles, Layers, Terminal, FileCode2, LineChart, 
   Sliders, ShieldCheck, Share2, HelpCircle, Briefcase, Award, BarChart2,
-  GitBranch, Play, Code2
+  GitBranch, Play, Code2, Github, Activity
 } from 'lucide-react';
 import { Project } from '../types';
 import { PROJECTS } from '../data/portfolioData';
 import { ProjectInteractiveDashboard } from './ProjectInteractiveDashboard';
+import { PipelineFlowchart } from './PipelineFlowchart';
 
 const getTechBadgeStyle = (tech: string) => {
   const lower = tech.toLowerCase();
@@ -90,15 +91,59 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
             </div>
           </div>
 
-          {/* Prev / Next Switchers */}
-          <div className="flex items-center gap-2">
+          {/* Quick Action Links & Prev / Next Switchers */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {project.liveDemoUrl && (
+              <a
+                href={project.liveDemoUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/40 text-xs font-mono text-emerald-300 font-bold transition-all shadow-sm"
+                title="Launch Live Application / Streamlit"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Live Demo</span>
+                <ExternalLink className="w-3 h-3 text-emerald-400" />
+              </a>
+            )}
+
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#141414] hover:bg-[#202020] border border-[#ffffff15] hover:border-cyan-500/40 text-xs font-mono text-[#ccc] hover:text-white transition-all shadow-sm"
+                title="View Source Repository on GitHub"
+              >
+                <Github className="w-3 h-3 text-cyan-400" />
+                <span>GitHub</span>
+              </a>
+            )}
+
+            <button
+              onClick={() => {
+                setActiveTab('dashboard');
+                setTimeout(() => {
+                  const el = document.getElementById('interactive-simulator-section') || document.getElementById('project-tabs-content');
+                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 40);
+              }}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cyan-950/70 hover:bg-cyan-900/90 border border-cyan-500/40 text-xs font-mono text-cyan-300 font-semibold transition-all cursor-pointer shadow-sm group/sim"
+              title="Launch Interactive Simulator & Live Metrics"
+            >
+              <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+              <span>Simulator</span>
+            </button>
+
+            <div className="h-4 w-[1px] bg-[#ffffff15] hidden sm:block mx-0.5" />
+
             <button
               onClick={handleShare}
               className="px-2.5 py-1.5 rounded-lg bg-[#141414] hover:bg-[#202020] border border-[#ffffff15] text-xs font-mono text-[#aaa] hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
               title="Share this project link"
             >
               <Share2 className="w-3 h-3" />
-              <span className="hidden sm:inline">{copiedLink ? 'Copied Link' : 'Share'}</span>
+              <span className="hidden sm:inline">{copiedLink ? 'Copied' : 'Share'}</span>
             </button>
 
             <button
@@ -267,9 +312,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
         )}
 
         {/* Navigation Tabs Bar */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-6 border-b border-[#ffffff10]">
+        <div id="project-tabs-content" className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-6 border-b border-[#ffffff10] scroll-mt-20">
           {[
-            { id: 'dashboard' as TabKey, label: 'Interactive Dashboard & Metrics', icon: BarChart2 },
+            { id: 'dashboard' as TabKey, label: 'Interactive Simulator & Dashboard', icon: BarChart2, isLive: true },
             { id: 'pipeline' as TabKey, label: '9-Stage Pipeline Architecture', icon: Layers },
             { id: 'problem' as TabKey, label: 'Business Problem & Context', icon: Briefcase },
             { id: 'methodology' as TabKey, label: 'Technical Methodology', icon: FileCode2 },
@@ -289,6 +334,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
               >
                 <Icon className="w-3.5 h-3.5" />
                 <span>{tab.label}</span>
+                {tab.isLive && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
+                )}
               </button>
             );
           })}
@@ -340,8 +388,35 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
               </div>
             )}
 
-            {/* The Live Interactive Dashboard */}
-            <ProjectInteractiveDashboard project={project} />
+            {/* Live Interactive Simulator Wrapper */}
+            <div id="interactive-simulator-section" className="scroll-mt-24 space-y-4">
+              {project.liveDemoUrl && (
+                <div className="p-3.5 rounded-xl bg-gradient-to-r from-emerald-950/40 via-[#0e1613] to-cyan-950/30 border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono shadow-sm">
+                  <div className="flex items-start sm:items-center gap-2.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0 mt-0.5 sm:mt-0 animate-ping" />
+                    <div>
+                      <span className="text-white font-bold">Dual Model Simulation:</span>{' '}
+                      <span className="text-[#bbb]">
+                        Execute instant in-browser ML parameter predictions below (0ms latency), or access the deployed{' '}
+                      </span>
+                      <a
+                        href={project.liveDemoUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-emerald-300 hover:text-emerald-200 underline font-bold inline-flex items-center gap-1"
+                      >
+                        Streamlit Cloud App ↗
+                      </a>
+                    </div>
+                  </div>
+                  <span className="text-[10px] text-[#888] shrink-0 bg-[#080808] px-2 py-1 rounded border border-[#ffffff10]">
+                    Streamlit Cloud free-tier takes ~45s to wake up if sleeping
+                  </span>
+                </div>
+              )}
+
+              <ProjectInteractiveDashboard project={project} />
+            </div>
 
             {/* Performance KPIs Comparison Table */}
             {project.kpis && project.kpis.length > 0 && (
@@ -392,6 +467,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
             transition={{ duration: 0.3 }}
             className="space-y-4"
           >
+            {/* Visual Interactive Architecture Flowchart */}
+            <PipelineFlowchart category={project.category} projectTitle={project.title} />
+
             <div className="p-6 rounded-xl bg-[#0e0e0e] border border-[#ffffff10]">
               <div className="mb-6">
                 <h3 className="text-sm font-bold text-white font-mono flex items-center gap-2">

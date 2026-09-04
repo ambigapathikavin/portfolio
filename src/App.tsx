@@ -13,6 +13,7 @@ import { EducationCertifications } from './components/EducationCertifications';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { initGlobalTactileClicks } from './utils/sound';
+import { FileText } from 'lucide-react';
 
 // Lazy load heavy components to drastically improve LCP and initial bundle size
 const ResumeModal = lazy(() => import('./components/ResumeModal').then(m => ({ default: m.ResumeModal })));
@@ -189,6 +190,19 @@ export default function App() {
 
       {/* Footer with Back to Top */}
       <Footer onOpenResume={handleOpenResume} />
+
+      {/* Mobile Floating Action Button (FAB) for Resume */}
+      <div className="fixed bottom-5 right-4 z-40 md:hidden">
+        <button
+          type="button"
+          onClick={() => handleOpenResume()}
+          className="flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-[#0a0a0a]/95 backdrop-blur-md border border-cyan-500/50 text-cyan-300 shadow-xl shadow-cyan-950/60 text-xs font-mono font-bold active:scale-95 transition-all cursor-pointer"
+          aria-label="View or Download Resume"
+        >
+          <FileText className="w-4 h-4 text-cyan-400" />
+          <span>Resume</span>
+        </button>
+      </div>
 
       {/* Interactive Comprehensive Dual Resume Modal (Loaded on demand) */}
       {isResumeOpen && (

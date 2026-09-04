@@ -83,10 +83,17 @@ export const Hero: React.FC<HeroProps> = ({
                     <div className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-wider">
                       Hiring Manager Lens
                     </div>
-                    <div className="text-[11px] text-[#A0AEC0] font-mono">
-                      {roleMode === 'DATA_ANALYST' ? 'Emphasizing SQL, Power BI, DAX & Storytelling' :
-                       roleMode === 'DATA_SCIENTIST' ? 'Emphasizing Python, BERT, PyTorch & MLOps' :
-                       'Select a role to highlight relevant skills & projects:'}
+                    <div className="text-[11px] text-[#A0AEC0] font-mono flex items-center gap-1.5">
+                      <span>
+                        {roleMode === 'DATA_ANALYST' ? 'Emphasizing SQL, Power BI, DAX & Storytelling' :
+                         roleMode === 'DATA_SCIENTIST' ? 'Emphasizing Python, BERT, PyTorch & MLOps' :
+                         'Select a role to highlight relevant skills & projects:'}
+                      </span>
+                      <span className="hidden md:inline-block px-1.5 py-0.2 rounded bg-cyan-950/80 border border-cyan-500/30 text-[9px] font-mono text-cyan-300 font-semibold animate-pulse">
+                        {roleMode === 'DATA_ANALYST' ? '5 Analyst Projects' :
+                         roleMode === 'DATA_SCIENTIST' ? '5 ML/AI Projects' :
+                         '10 Total Projects'}
+                      </span>
                     </div>
                   </div>
                 </div>

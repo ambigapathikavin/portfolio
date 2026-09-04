@@ -205,28 +205,35 @@ export const ContactSection: React.FC = () => {
                     </div>
                   </a>
                   
-                  <button
-                    type="button"
-                    onClick={handleCopyEmail}
-                    title="Copy email to clipboard"
-                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-mono transition-all shrink-0 cursor-pointer shadow-sm active:scale-95 ${
-                      copiedEmail
-                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                        : 'bg-[#181818] hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border border-[#ffffff10] hover:border-cyan-500/40'
-                    }`}
-                  >
-                    {copiedEmail ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-[11px] font-semibold">Copied!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span className="text-[11px]">Copy</span>
-                      </>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={handleCopyEmail}
+                      title="Copy email to clipboard"
+                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-mono transition-all shrink-0 cursor-pointer shadow-sm active:scale-95 ${
+                        copiedEmail
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                          : 'bg-[#181818] hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border border-[#ffffff10] hover:border-cyan-500/40'
+                      }`}
+                    >
+                      {copiedEmail ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span className="text-[11px] font-semibold">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span className="text-[11px]">Copy</span>
+                        </>
+                      )}
+                    </button>
+                    {copiedEmail && (
+                      <div className="absolute right-0 -top-8 px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500/50 text-[10px] font-mono text-emerald-300 shadow-lg pointer-events-none whitespace-nowrap animate-bounce">
+                        Copied to clipboard!
+                      </div>
                     )}
-                  </button>
+                  </div>
                 </div>
 
                 <a
@@ -286,12 +293,33 @@ export const ContactSection: React.FC = () => {
 
             </div>
 
-            {/* Recruiter Note */}
-            <div className="p-3.5 rounded-xl bg-[#0a1512] border border-cyan-500/20 flex items-start gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-              <p className="text-xs text-[#A0A0A0] leading-relaxed">
-                Available for full-time, contract, and remote roles in Data Analytics, Machine Learning Engineering, and Data Science.
-              </p>
+            {/* Recruiter Availability & Work Authorization Card */}
+            <div className="p-4 rounded-xl bg-gradient-to-br from-[#0c1618] to-[#071012] border border-emerald-500/30 shadow-md space-y-2.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                  </span>
+                  <span className="text-xs font-bold font-mono text-emerald-300 uppercase tracking-wider">
+                    Available for Immediate Hire
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-cyan-400/90 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-500/30">
+                  Full-Time / Contract
+                </span>
+              </div>
+
+              <div className="space-y-1.5 text-xs text-[#B0B0B0] leading-relaxed pt-1 border-t border-[#ffffff0a]">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                  <span><strong>Timezone:</strong> IST (UTC+5:30) • Comfortable with US/EU overlaps</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span><strong>Work Mode:</strong> Remote Worldwide • Open to Relocation</span>
+                </div>
+              </div>
             </div>
 
           </div>

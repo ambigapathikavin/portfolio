@@ -1,6 +1,24 @@
 // Professional subtle tactile sound engine using Web Audio API
 let audioCtx: AudioContext | null = null;
-let soundEnabled = true;
+let soundEnabled = typeof window !== 'undefined' ? localStorage.getItem('portfolio_sfx_enabled') !== 'false' : true;
+
+export const isSoundEnabled = () => soundEnabled;
+
+export const setSoundEnabled = (enabled: boolean) => {
+  soundEnabled = enabled;
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('portfolio_sfx_enabled', enabled ? 'true' : 'false');
+    window.dispatchEvent(new CustomEvent('sfx-toggle', { detail: { enabled } }));
+  }
+};
+
+export const toggleSound = () => {
+  setSoundEnabled(!soundEnabled);
+  if (soundEnabled) {
+    playTactileClick('switch');
+  }
+  return soundEnabled;
+};
 
 /**
  * Plays an ultra-subtle, tactile mechanical tap sound for buttons and interactive controls.

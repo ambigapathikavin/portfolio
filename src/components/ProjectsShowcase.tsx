@@ -15,7 +15,8 @@ import {
   CheckCircle2,
   Code2,
   Play,
-  ExternalLink
+  ExternalLink,
+  Activity
 } from 'lucide-react';
 import { PROJECTS } from '../data/portfolioData';
 import { Project, ProjectCategory } from '../types';
@@ -467,13 +468,24 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                     </div>
                   )}
 
-                  <button
-                    onClick={() => handleProjectClick(project.id)}
-                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#181818] hover:bg-cyan-500 hover:text-black text-white text-[11px] font-semibold font-mono border border-[#ffffff0a] hover:border-cyan-400 transition-all duration-150 shadow-sm cursor-pointer group/btn"
-                  >
-                    <span>View Project & Detailed Metrics</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleProjectClick(project.id)}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-cyan-950/60 hover:bg-cyan-500 hover:text-black text-cyan-300 text-[11px] font-semibold font-mono border border-cyan-500/35 hover:border-cyan-400 transition-all duration-150 shadow-sm cursor-pointer group/simbtn"
+                      title="Launch live interactive simulator"
+                    >
+                      <Activity className="w-3.5 h-3.5 text-cyan-400 group-hover/simbtn:text-black animate-pulse" />
+                      <span>Live Simulator</span>
+                    </button>
+                    <button
+                      onClick={() => handleProjectClick(project.id)}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-[#181818] hover:bg-[#252525] text-[#e0e0e0] hover:text-white text-[11px] font-semibold font-mono border border-[#ffffff0a] hover:border-[#ffffff20] transition-all duration-150 shadow-sm cursor-pointer group/casebtn"
+                      title="View full architectural case study"
+                    >
+                      <span>Case Study</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[#888] group-hover/casebtn:text-white group-hover/casebtn:translate-x-0.5 group-hover/casebtn:-translate-y-0.5 transition-transform" />
+                    </button>
+                  </div>
                 </div>
 
               </motion.div>

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { ThemeToggle } from './ThemeToggle';
+import { SoundToggle } from './SoundToggle';
 
 interface NavbarProps {
   onOpenResume: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
@@ -198,6 +199,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Resume</span>
             </button>
 
+            {/* Tactile Sound FX Toggle */}
+            <SoundToggle />
+
             {/* Theme Toggle Button (Light/Dark mode) */}
             <ThemeToggle />
 
@@ -339,6 +343,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <FileText className="w-3.5 h-3.5" />
                   <span>View Resume</span>
                 </button>
+
+                <div className="flex items-center justify-between px-1 py-1">
+                  <span className="text-[11px] font-mono text-[#888]">Tactile Sound FX:</span>
+                  <SoundToggle showLabel={true} />
+                </div>
 
                 <div className="flex items-center justify-center gap-3 pt-1">
                   <a
