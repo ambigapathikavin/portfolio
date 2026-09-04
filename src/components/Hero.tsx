@@ -91,14 +91,14 @@ export const Hero: React.FC<HeroProps> = ({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 bg-[#05080e] p-1 rounded-lg border border-[#ffffff10] shrink-0 self-start sm:self-auto">
+                <div className="flex items-center gap-1 bg-[#090e17] p-1 rounded-xl border border-[#ffffff15] shadow-inner shrink-0 self-start sm:self-auto">
                   <button
                     type="button"
                     onClick={() => onRoleModeChange('ALL')}
-                    className={`px-2.5 py-1 rounded text-[10px] font-mono transition-all cursor-pointer ${
+                    className={`px-3 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
                       roleMode === 'ALL'
-                        ? 'bg-white text-black font-bold shadow-sm'
-                        : 'text-[#888] hover:text-white'
+                        ? 'bg-white text-black font-bold shadow-[0_0_12px_rgba(255,255,255,0.25)]'
+                        : 'text-[#aaa] hover:text-white hover:bg-white/5'
                     }`}
                   >
                     All
@@ -106,10 +106,10 @@ export const Hero: React.FC<HeroProps> = ({
                   <button
                     type="button"
                     onClick={() => onRoleModeChange('DATA_ANALYST')}
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-mono transition-all cursor-pointer ${
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
                       roleMode === 'DATA_ANALYST'
-                        ? 'bg-cyan-500 text-black font-bold shadow-sm'
-                        : 'text-cyan-300 hover:bg-cyan-500/10'
+                        ? 'bg-cyan-400 text-black font-bold shadow-[0_0_15px_rgba(6,182,212,0.4)]'
+                        : 'text-cyan-300 hover:text-cyan-100 hover:bg-cyan-500/15 border border-cyan-500/20'
                     }`}
                   >
                     <BarChart3 className="w-3 h-3" />
@@ -118,10 +118,10 @@ export const Hero: React.FC<HeroProps> = ({
                   <button
                     type="button"
                     onClick={() => onRoleModeChange('DATA_SCIENTIST')}
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-mono transition-all cursor-pointer ${
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
                       roleMode === 'DATA_SCIENTIST'
-                        ? 'bg-violet-500 text-white font-bold shadow-sm'
-                        : 'text-violet-300 hover:bg-violet-500/10'
+                        ? 'bg-violet-500 text-white font-bold shadow-[0_0_15px_rgba(139,92,246,0.4)]'
+                        : 'text-violet-300 hover:text-violet-100 hover:bg-violet-500/15 border border-violet-500/20'
                     }`}
                   >
                     <BrainCircuit className="w-3 h-3" />
@@ -194,7 +194,7 @@ export const Hero: React.FC<HeroProps> = ({
             >
               <button
                 onClick={onViewWork}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs hover:bg-slate-200 transition-all cursor-pointer group shadow-sm"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs hover:bg-slate-100 transition-all cursor-pointer group shadow-[0_0_20px_rgba(255,255,255,0.18)] hover:shadow-[0_0_28px_rgba(255,255,255,0.3)]"
               >
                 <span>View Projects</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -202,25 +202,25 @@ export const Hero: React.FC<HeroProps> = ({
 
               <button
                 onClick={() => onOpenResume('DATA_ANALYST')}
-                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-[#111111] hover:bg-cyan-500/20 text-cyan-300 font-mono text-xs border border-cyan-500/40 transition-all cursor-pointer shadow-sm"
+                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-[#0d121c] hover:bg-cyan-500/20 text-cyan-300 font-mono text-xs border border-cyan-500/40 hover:border-cyan-400 transition-all cursor-pointer shadow-sm group/btn"
                 title="View & Download Data Analyst Resume"
               >
-                <Download className="w-3.5 h-3.5 text-cyan-400" />
+                <Download className="w-3.5 h-3.5 text-cyan-400 group-hover/btn:scale-110 transition-transform" />
                 <span>Data Analyst Resume</span>
               </button>
 
               <button
                 onClick={() => onOpenResume('DATA_SCIENTIST')}
-                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-[#111111] hover:bg-violet-500/20 text-violet-300 font-mono text-xs border border-violet-500/40 transition-all cursor-pointer shadow-sm"
+                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-[#0d121c] hover:bg-violet-500/20 text-violet-300 font-mono text-xs border border-violet-500/40 hover:border-violet-400 transition-all cursor-pointer shadow-sm group/btn2"
                 title="View & Download Data Scientist Resume"
               >
-                <Download className="w-3.5 h-3.5 text-violet-400" />
+                <Download className="w-3.5 h-3.5 text-violet-400 group-hover/btn2:scale-110 transition-transform" />
                 <span>Data Scientist Resume</span>
               </button>
 
               <button
                 onClick={onOpenContact}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#141414] hover:bg-[#202020] text-[#aaa] hover:text-white border border-[#ffffff15] text-xs font-mono transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#12161f] hover:bg-[#1c2230] text-[#c0c0c0] hover:text-white border border-[#ffffff18] hover:border-[#ffffff35] text-xs font-mono transition-all cursor-pointer shadow-sm"
               >
                 <Mail className="w-3.5 h-3.5" />
                 <span>Let's Connect</span>

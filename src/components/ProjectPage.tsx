@@ -10,6 +10,23 @@ import { Project } from '../types';
 import { PROJECTS } from '../data/portfolioData';
 import { ProjectInteractiveDashboard } from './ProjectInteractiveDashboard';
 
+const getTechBadgeStyle = (tech: string) => {
+  const lower = tech.toLowerCase();
+  if (lower.includes('python') || lower.includes('sql') || lower.includes('pyspark')) {
+    return 'bg-cyan-950/40 border-cyan-500/25 text-cyan-300';
+  }
+  if (lower.includes('power bi') || lower.includes('dax') || lower.includes('excel') || lower.includes('tableau')) {
+    return 'bg-sky-950/40 border-sky-500/25 text-sky-300';
+  }
+  if (lower.includes('pytorch') || lower.includes('bert') || lower.includes('xgboost') || lower.includes('machine learning') || lower.includes('nlp')) {
+    return 'bg-violet-950/40 border-violet-500/25 text-violet-300';
+  }
+  if (lower.includes('docker') || lower.includes('fastapi') || lower.includes('streamlit') || lower.includes('mlflow')) {
+    return 'bg-emerald-950/40 border-emerald-500/25 text-emerald-300';
+  }
+  return 'bg-[#161616] border-[#ffffff10] text-[#A0A0A0]';
+};
+
 interface ProjectPageProps {
   projectId: string;
   onBack: () => void;
@@ -200,18 +217,21 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                     href={project.liveDemoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-950/70 to-pink-950/70 hover:from-red-900/80 hover:to-pink-900/80 border border-red-500/40 text-xs font-mono text-red-200 font-bold transition-all cursor-pointer shadow-sm"
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/85 border border-emerald-500/40 hover:border-emerald-400/60 text-xs font-mono text-emerald-200 hover:text-emerald-100 font-bold transition-all cursor-pointer shadow-[0_0_14px_rgba(16,185,129,0.16)] group/live"
                   >
-                    <Play className="w-3 h-3 text-red-400 fill-red-400" />
+                    <span className="relative flex h-2 w-2 shrink-0">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                    </span>
                     <span>Live Streamlit App</span>
-                    <ExternalLink className="w-3 h-3 text-red-300" />
+                    <ExternalLink className="w-3 h-3 text-emerald-300 opacity-75 group-hover/live:opacity-100 transition-opacity" />
                   </a>
                 )}
 
                 {project.technology.map(tech => (
                   <span
                     key={tech}
-                    className="px-2.5 py-1 rounded bg-[#161616] border border-[#ffffff10] text-[11px] font-mono text-[#A0A0A0]"
+                    className={`px-2.5 py-1 rounded border text-[11px] font-mono font-medium transition-colors ${getTechBadgeStyle(tech)}`}
                   >
                     {tech}
                   </span>

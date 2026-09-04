@@ -350,7 +350,7 @@ export const EducationCertifications: React.FC = () => {
                     href={selectedCert.credentialUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 py-2 px-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs font-mono transition-colors flex items-center justify-center gap-2 shadow-sm"
+                    className="flex-1 py-2 px-3 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-black font-bold text-xs font-mono transition-all flex items-center justify-center gap-2 shadow-sm"
                   >
                     <span>Show credential</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -358,7 +358,7 @@ export const EducationCertifications: React.FC = () => {
                 )}
                 <button
                   onClick={() => setSelectedCert(null)}
-                  className="px-4 py-2 rounded-lg bg-[#181818] hover:bg-[#252525] text-[#ccc] hover:text-white font-semibold text-xs font-mono transition-colors cursor-pointer border border-[#ffffff10]"
+                  className="px-4 py-2 rounded-lg bg-[#181818] hover:bg-[#252525] text-[#ccc] hover:text-white font-semibold text-xs font-mono transition-colors cursor-pointer border border-[#ffffff15]"
                 >
                   Close
                 </button>

@@ -33,7 +33,7 @@ export const ExperienceTimeline: React.FC = () => {
         </div>
 
         {/* Vertical Timeline Container */}
-        <div className="relative pl-5 sm:pl-8 space-y-6 before:absolute before:left-2 sm:before:left-3 before:top-2 before:bottom-2 before:w-[1px] before:bg-[#ffffff15]">
+        <div className="relative pl-5 sm:pl-8 space-y-6 before:absolute before:left-2 sm:before:left-3 before:top-2 before:bottom-2 before:w-[2px] before:bg-gradient-to-b before:from-cyan-400/60 before:via-violet-500/40 before:to-emerald-400/20">
           
           {EXPERIENCES.map((exp, idx) => (
             <motion.div
@@ -45,12 +45,15 @@ export const ExperienceTimeline: React.FC = () => {
             >
               
               {/* Timeline Node Bullet */}
-              <div className="absolute -left-5 sm:-left-8 top-2 -translate-x-1/2 w-4 h-4 rounded-full bg-[#050505] border border-cyan-400 flex items-center justify-center group-hover:scale-110 transition-all">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              <div className="absolute -left-5 sm:-left-8 top-3 -translate-x-1/2 w-4 h-4 rounded-full bg-[#050505] border border-cyan-400 flex items-center justify-center group-hover:scale-110 transition-all shadow-[0_0_10px_rgba(6,182,212,0.3)]">
+                {exp.isCurrent && (
+                  <span className="absolute -inset-1 rounded-full bg-emerald-400/30 animate-ping pointer-events-none" />
+                )}
+                <span className={`w-1.5 h-1.5 rounded-full ${exp.isCurrent ? 'bg-emerald-400' : 'bg-cyan-400'}`} />
               </div>
 
               {/* Experience Card */}
-              <div className="p-4 sm:p-5 rounded-xl bg-[#111111] border border-[#ffffff08] hover:border-cyan-500/35 transition-all shadow-sm">
+              <div className="p-4 sm:p-5 rounded-xl bg-[#111111] border border-[#ffffff0e] hover:border-cyan-500/40 transition-all shadow-sm">
                 
                 {/* Header info */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-3 pb-3 border-b border-[#ffffff08]">

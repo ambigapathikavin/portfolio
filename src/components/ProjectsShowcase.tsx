@@ -29,6 +29,23 @@ const FILTER_OPTIONS: { label: string; value: ProjectCategory }[] = [
   { label: 'AI', value: 'AI' }
 ];
 
+const getTechBadgeStyle = (tech: string) => {
+  const lower = tech.toLowerCase();
+  if (lower.includes('python') || lower.includes('sql') || lower.includes('pyspark')) {
+    return 'bg-cyan-950/40 border-cyan-500/25 text-cyan-300';
+  }
+  if (lower.includes('power bi') || lower.includes('dax') || lower.includes('excel') || lower.includes('tableau')) {
+    return 'bg-sky-950/40 border-sky-500/25 text-sky-300';
+  }
+  if (lower.includes('pytorch') || lower.includes('bert') || lower.includes('xgboost') || lower.includes('machine learning') || lower.includes('nlp')) {
+    return 'bg-violet-950/40 border-violet-500/25 text-violet-300';
+  }
+  if (lower.includes('docker') || lower.includes('fastapi') || lower.includes('streamlit') || lower.includes('mlflow')) {
+    return 'bg-emerald-950/40 border-emerald-500/25 text-emerald-300';
+  }
+  return 'bg-[#161616] border-[#ffffff0a] text-[#A0A0A0]';
+};
+
 interface ProjectsShowcaseProps {
   onSelectProject?: (projectId: string) => void;
   onOpenResumeModal?: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
@@ -83,7 +100,13 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4"
+        >
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#111111] border border-[#ffffff15] text-cyan-400 text-[10px] font-mono tracking-[0.2em] mb-2.5">
               <FolderGit2 className="w-3 h-3" />
@@ -116,10 +139,16 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
               </button>
             </div>
           )}
-        </div>
+        </motion.div>
 
         {/* Filter Controls Row */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-8 pb-4 border-b border-[#ffffff08]">
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-8 pb-4 border-b border-[#ffffff08]"
+        >
           
           {/* Track Filter */}
           <div className="flex items-center gap-1 bg-[#0d0d0d] p-1 rounded-xl border border-[#ffffff10] self-start">
@@ -174,7 +203,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Project Cards Grid with Visual Thumbnails */}
         <motion.div 
@@ -186,15 +215,16 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
               <motion.div
                 key={project.id}
                 layout
-                initial={{ opacity: 0, y: 32, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
+                initial={{ opacity: 0, y: 36 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px', amount: 0.12 }}
                 exit={{ opacity: 0, scale: 0.94, y: 15, transition: { duration: 0.2 } }}
                 whileHover={{ y: -6, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
                 whileTap={{ scale: 0.985 }}
                 transition={{ 
-                  duration: 0.45, 
-                  ease: [0.16, 1, 0.3, 1],
-                  delay: (idx % 6) * 0.055 
+                  duration: 0.5, 
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: (idx % 3) * 0.09 
                 }}
                 className="group flex flex-col justify-between rounded-xl bg-[#0f0f0f] border border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-cyan-950/20 transition-colors duration-200 relative"
               >
@@ -385,13 +415,13 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                       {project.technology.slice(0, 3).map(tech => (
                         <span
                           key={tech}
-                          className="px-2 py-0.5 rounded bg-[#161616] border border-[#ffffff0a] text-[10px] font-mono text-[#A0A0A0]"
+                          className={`px-2 py-0.5 rounded border text-[10px] font-mono font-medium transition-colors ${getTechBadgeStyle(tech)}`}
                         >
                           {tech}
                         </span>
                       ))}
                       {project.technology.length > 3 && (
-                        <span className="px-1.5 py-0.5 rounded bg-[#161616] text-[9px] font-mono text-[#666]">
+                        <span className="px-1.5 py-0.5 rounded bg-[#161616] border border-[#ffffff0a] text-[9px] font-mono text-[#777]">
                           +{project.technology.length - 3}
                         </span>
                       )}
@@ -402,19 +432,19 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                 {/* View Project Action Footer */}
                 <div className="p-4 sm:p-5 pt-0 space-y-2">
                   {(project.githubUrl || project.liveDemoUrl) && (
-                    <div className="flex items-center gap-1.5 pt-1">
+                    <div className="flex items-center gap-2 pt-1">
                       {project.githubUrl && (
                         <a
                           href={project.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="flex-1 inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg bg-[#141414] hover:bg-[#222] border border-[#ffffff15] text-[10px] font-mono text-[#ccc] hover:text-white transition-all cursor-pointer"
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-[#141414] hover:bg-[#1f1f1f] border border-[#ffffff15] hover:border-[#ffffff30] text-[10px] font-mono text-[#d0d0d0] hover:text-white transition-all cursor-pointer shadow-sm group/git"
                           title="View GitHub Repository"
                         >
-                          <Code2 className="w-3 h-3 text-cyan-400" />
+                          <Code2 className="w-3 h-3 text-cyan-400 group-hover/git:scale-110 transition-transform" />
                           <span>GitHub</span>
-                          <ExternalLink className="w-2.5 h-2.5 opacity-60" />
+                          <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover/git:opacity-100 transition-opacity" />
                         </a>
                       )}
                       {project.liveDemoUrl && (
@@ -423,12 +453,15 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="flex-1 inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg bg-pink-950/40 hover:bg-pink-900/60 border border-pink-500/30 text-[10px] font-mono text-pink-200 font-semibold transition-all cursor-pointer"
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/40 hover:border-emerald-400/60 text-[10px] font-mono text-emerald-200 hover:text-emerald-100 font-semibold transition-all cursor-pointer shadow-[0_0_12px_rgba(16,185,129,0.12)] group/live"
                           title="Open Live Streamlit Application"
                         >
-                          <Play className="w-2.5 h-2.5 text-pink-400 fill-pink-400" />
+                          <span className="relative flex h-2 w-2 shrink-0">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                          </span>
                           <span>Live Demo</span>
-                          <ExternalLink className="w-2.5 h-2.5 opacity-60" />
+                          <ExternalLink className="w-2.5 h-2.5 text-emerald-300 opacity-70 group-hover/live:opacity-100 transition-opacity" />
                         </a>
                       )}
                     </div>

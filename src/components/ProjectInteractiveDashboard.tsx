@@ -756,10 +756,10 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                     <tr key={row.cohort} className="border-b border-[#181818]">
                       <td className="p-2 text-left font-bold text-white">{row.cohort}</td>
                       <td className="p-2 text-[#aaa]">{row.users}</td>
-                      <td className="p-2 bg-pink-950/40 text-pink-300">{row.m0}</td>
-                      <td className="p-2 bg-pink-900/30 text-pink-200">{row.m1}</td>
-                      <td className="p-2 bg-pink-900/20 text-[#ddd]">{row.m2}</td>
-                      <td className="p-2 bg-pink-950/20 text-[#bbb]">{row.m3}</td>
+                      <td className="p-2 bg-cyan-950/60 text-cyan-200 font-semibold">{row.m0}</td>
+                      <td className="p-2 bg-cyan-950/40 text-cyan-300">{row.m1}</td>
+                      <td className="p-2 bg-cyan-950/25 text-[#ddd]">{row.m2}</td>
+                      <td className="p-2 bg-[#141414] text-[#bbb]">{row.m3}</td>
                       <td className="p-2 text-[#888]">{row.m6}</td>
                     </tr>
                   ))}
@@ -805,14 +805,14 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#222] pb-3">
               <div>
                 <div className="text-xs font-bold text-white font-mono flex items-center gap-2">
-                  <Sliders className="w-4 h-4 text-pink-400" />
+                  <Sliders className="w-4 h-4 text-emerald-400" />
                   <span>Real-Time Health Insurance Premium Price Simulator</span>
                 </div>
                 <div className="text-[11px] font-mono text-[#888] mt-0.5">
                   Trained Random Forest & XGBoost multi-variable risk regression model
                 </div>
               </div>
-              <span className="px-2.5 py-1 rounded bg-pink-950/60 border border-pink-500/40 text-[10px] font-mono text-pink-300 font-bold">
+              <span className="px-2.5 py-1 rounded bg-emerald-950/60 border border-emerald-500/40 text-[10px] font-mono text-emerald-300 font-bold">
                 R² = 0.912 | MAPE = 4.8%
               </span>
             </div>
@@ -830,7 +830,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                   max={75}
                   value={premAge}
                   onChange={(e) => setPremAge(Number(e.target.value))}
-                  className="w-full mt-1.5 accent-pink-400"
+                  className="w-full mt-1.5 accent-emerald-400"
                 />
               </div>
 
@@ -845,7 +845,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                   max={210}
                   value={premHeight}
                   onChange={(e) => setPremHeight(Number(e.target.value))}
-                  className="w-full mt-1.5 accent-pink-400"
+                  className="w-full mt-1.5 accent-emerald-400"
                 />
               </div>
 
@@ -860,7 +860,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                   max={135}
                   value={premWeight}
                   onChange={(e) => setPremWeight(Number(e.target.value))}
-                  className="w-full mt-1.5 accent-pink-400"
+                  className="w-full mt-1.5 accent-emerald-400"
                 />
               </div>
             </div>
@@ -876,7 +876,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                   onClick={() => setPremDiabetes(!premDiabetes)}
                   className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer ${
                     premDiabetes
-                      ? 'bg-pink-950/60 border-pink-500/60 text-pink-200'
+                      ? 'bg-emerald-950/60 border-emerald-500/60 text-emerald-200'
                       : 'bg-[#181818] border-[#2c2c2c] text-[#777] hover:text-white'
                   }`}
                 >
@@ -889,7 +889,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                   onClick={() => setPremBp(!premBp)}
                   className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer ${
                     premBp
-                      ? 'bg-pink-950/60 border-pink-500/60 text-pink-200'
+                      ? 'bg-emerald-950/60 border-emerald-500/60 text-emerald-200'
                       : 'bg-[#181818] border-[#2c2c2c] text-[#777] hover:text-white'
                   }`}
                 >
@@ -902,7 +902,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                   onClick={() => setPremTransplant(!premTransplant)}
                   className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer ${
                     premTransplant
-                      ? 'bg-pink-950/60 border-pink-500/60 text-pink-200'
+                      ? 'bg-emerald-950/60 border-emerald-500/60 text-emerald-200'
                       : 'bg-[#181818] border-[#2c2c2c] text-[#777] hover:text-white'
                   }`}
                 >
@@ -915,7 +915,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                   onClick={() => setPremChronic(!premChronic)}
                   className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer ${
                     premChronic
-                      ? 'bg-pink-950/60 border-pink-500/60 text-pink-200'
+                      ? 'bg-emerald-950/60 border-emerald-500/60 text-emerald-200'
                       : 'bg-[#181818] border-[#2c2c2c] text-[#777] hover:text-white'
                   }`}
                 >
@@ -939,7 +939,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                     onClick={() => setPremSurgeries(count)}
                     className={`flex-1 py-1.5 rounded-lg border text-xs font-mono font-bold transition-all cursor-pointer ${
                       premSurgeries === count
-                        ? 'bg-pink-600 text-white border-pink-500 shadow-sm'
+                        ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
                         : 'bg-[#181818] text-[#888] border-[#2c2c2c] hover:text-white'
                     }`}
                   >
@@ -965,12 +965,12 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
               );
 
               return (
-                <div className="p-4 rounded-lg bg-[#0a0a0a] border border-pink-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="p-4 rounded-lg bg-[#0a0a0a] border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <div className="text-[10px] font-mono text-[#888] uppercase">
                       Predicted Annual Insurance Premium
                     </div>
-                    <div className="text-2xl sm:text-3xl font-extrabold font-mono text-pink-300">
+                    <div className="text-2xl sm:text-3xl font-extrabold font-mono text-emerald-300">
                       ₹{estPremium.toLocaleString('en-IN')} / year
                     </div>
                   </div>
@@ -979,7 +979,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                     <span className="px-2.5 py-1 rounded bg-[#161616] border border-[#333] text-[#aaa]">
                       BMI: <strong className={bmiVal > 30 ? 'text-red-400' : bmiVal > 25 ? 'text-amber-300' : 'text-emerald-400'}>{bmiVal}</strong>
                     </span>
-                    <span className="px-2.5 py-1 rounded bg-pink-950/50 border border-pink-500/40 text-pink-300">
+                    <span className="px-2.5 py-1 rounded bg-emerald-950/50 border border-emerald-500/40 text-emerald-300">
                       Random Forest Regressor
                     </span>
                   </div>
