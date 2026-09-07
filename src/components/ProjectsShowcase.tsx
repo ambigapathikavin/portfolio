@@ -149,6 +149,35 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
           )}
         </motion.div>
 
+        {/* 6-Layer Case Study Anatomy Blueprint */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          className="mb-6 p-3 sm:p-3.5 rounded-xl bg-[#0b1019] border border-cyan-500/20 flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs font-mono shadow-sm"
+        >
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <span className="text-white font-bold text-[11px] uppercase tracking-wider">
+              Standardized Case Study Anatomy:
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-[#A0AEC0]">
+            <span className="px-2 py-0.5 rounded bg-[#101726] text-cyan-300 border border-cyan-500/30">1. Problem Context</span>
+            <span className="text-[#555]">→</span>
+            <span className="px-2 py-0.5 rounded bg-[#101726] text-sky-300 border border-sky-500/30">2. 9-Stage Pipeline</span>
+            <span className="text-[#555]">→</span>
+            <span className="px-2 py-0.5 rounded bg-[#101726] text-indigo-300 border border-indigo-500/30">3. Star Schema / Features</span>
+            <span className="text-[#555]">→</span>
+            <span className="px-2 py-0.5 rounded bg-[#101726] text-violet-300 border border-violet-500/30">4. Interactive Simulator</span>
+            <span className="text-[#555]">→</span>
+            <span className="px-2 py-0.5 rounded bg-[#101726] text-emerald-300 border border-emerald-500/30">5. Benchmark KPIs</span>
+            <span className="text-[#555]">→</span>
+            <span className="px-2 py-0.5 rounded bg-[#101726] text-amber-300 border border-amber-500/30">6. Strategic ROI</span>
+          </div>
+        </motion.div>
+
         {/* Filter Controls Row */}
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
@@ -358,10 +387,21 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                     {/* Title */}
                     <h3 
                       onClick={() => handleProjectClick(project.id)}
-                      className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors tracking-tight mb-2 cursor-pointer line-clamp-1"
+                      className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors tracking-tight mb-1.5 cursor-pointer line-clamp-1"
                     >
                       {project.title}
                     </h3>
+
+                    {/* Dataset Scope Strip */}
+                    {project.datasetStats && (
+                      <div className="flex items-center gap-1.5 mb-2.5 px-2 py-0.5 rounded bg-[#090d14] border border-[#ffffff08] text-[9px] font-mono text-[#8899ac] overflow-hidden">
+                        <span className="text-cyan-300 font-semibold">{project.datasetStats.rows}</span>
+                        <span className="text-[#444]">•</span>
+                        <span className="truncate">{project.datasetStats.features}</span>
+                        <span className="text-[#444]">•</span>
+                        <span className="text-violet-300 truncate">{project.datasetStats.format.split(' ')[0]}</span>
+                      </div>
+                    )}
 
                     {/* Short Description */}
                     <p className="text-[#A3A3A3] text-xs leading-relaxed mb-3.5 line-clamp-2">

@@ -115,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 AMBIGAPATHI V
               </span>
               <span className="text-[9px] text-[#A3A3A3] font-mono tracking-wider sm:tracking-widest uppercase whitespace-nowrap">
-                Data Analyst • ML Engineer
+                Data Analyst • Data Scientist
               </span>
             </div>
           </a>

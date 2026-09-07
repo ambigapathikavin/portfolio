@@ -63,7 +63,7 @@ const CRICKET_PLAYERS_POOL = [
 
 export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project }) => {
   // Common states
-  const [salesZoneFilter, setSalesZoneFilter] = useState<'All' | 'North' | 'South' | 'Central'>('All');
+  const [salesZoneFilter, setSalesZoneFilter] = useState<'All' | 'North' | 'South' | 'Central' | 'East'>('All');
   const [salesDiscountCap, setSalesDiscountCap] = useState(8);
   const [newsInputText, setNewsInputText] = useState(NLP_SAMPLE_HEADLINES[0].text);
   const [newsPredictedTopic, setNewsPredictedTopic] = useState(NLP_SAMPLE_HEADLINES[0].expectedTopic);
@@ -73,6 +73,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
   const [selectedSquad, setSelectedSquad] = useState<string[]>(
     CRICKET_PLAYERS_POOL.filter(p => p.selected).map(p => p.id)
   );
+  const [cricketNotification, setCricketNotification] = useState<string | null>(null);
 
   // HR State
   const [hrDeptFilter, setHrDeptFilter] = useState<'All' | 'Engineering' | 'Sales' | 'Operations'>('All');
@@ -112,39 +113,99 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
   const [healthcareBufferKm, setHealthcareBufferKm] = useState(30);
   const [healthcareRegion, setHealthcareRegion] = useState<'All' | 'Khartoum' | 'Darfur' | 'Blue Nile' | 'Kassala'>('All');
 
-  // Handle news classifier live test
+  // Multi-domain NLP classification logic with keyword density weighting
   const handleNewsClassify = (text: string) => {
     setNewsInputText(text);
     trackSimulatorAction(project.id, 'news_nlp', 'classify_headline', { headline_length: text.length });
-    const lower = text.toLowerCase();
-    if (lower.includes('rate') || lower.includes('inflation') || lower.includes('bank') || lower.includes('revenue') || lower.includes('market') || lower.includes('economy')) {
-      setNewsPredictedTopic('BUSINESS & FINANCE');
-      setNewsConfidence(98.6);
-    } else if (lower.includes('health') || lower.includes('clinic') || lower.includes('dose') || lower.includes('vaccine') || lower.includes('medical')) {
-      setNewsPredictedTopic('HEALTHCARE & MEDICINE');
-      setNewsConfidence(99.2);
-    } else if (lower.includes('soccer') || lower.includes('tournament') || lower.includes('champions') || lower.includes('cricket') || lower.includes('match')) {
-      setNewsPredictedTopic('SPORTS & ATHLETICS');
-      setNewsConfidence(99.5);
-    } else if (lower.includes('parliament') || lower.includes('bill') || lower.includes('gov') || lower.includes('minister') || lower.includes('policy')) {
-      setNewsPredictedTopic('POLITICS & GOVERNANCE');
-      setNewsConfidence(97.8);
-    } else {
-      setNewsPredictedTopic('SCIENCE & INNOVATION');
-      setNewsConfidence(98.1);
+    const lower = text.toLowerCase().trim();
+
+    if (!lower) {
+      setNewsPredictedTopic('GENERAL NEWS');
+      setNewsConfidence(85.0);
+      return;
     }
+
+    const categories = [
+      {
+        topic: 'BUSINESS & FINANCE',
+        baseConf: 98.4,
+        keywords: ['rate', 'inflation', 'bank', 'revenue', 'market', 'economy', 'trade', 'stocks', 'gdp', 'investor', 'profit', 'dollar', 'currency', 'price', 'cost', 'debt', 'copper', 'mining', 'audit', 'tax', 'funding', 'enterprise', 'quarterly', 'earnings', 'commercial', 'central bank', 'interest', 'capital', 'finance', 'shares', 'shares']
+      },
+      {
+        topic: 'HEALTHCARE & MEDICINE',
+        baseConf: 99.1,
+        keywords: ['health', 'clinic', 'dose', 'vaccine', 'medical', 'hospital', 'doctor', 'patient', 'disease', 'epidemic', 'malaria', 'covid', 'drug', 'treatment', 'therapy', 'surgery', 'nurse', 'pharma', 'nutrition', 'hygiene', 'mental', 'pediatric', 'immunization', 'ministry of health', 'outbreak', 'clinical', 'medicine']
+      },
+      {
+        topic: 'SPORTS & ATHLETICS',
+        baseConf: 99.4,
+        keywords: ['soccer', 'tournament', 'champions', 'cricket', 'match', 'football', 'league', 'cup', 'player', 'coach', 'score', 'goal', 'trophy', 'athlete', 'stadium', 'run', 'wicket', 'olympics', 'tennis', 'marathon', 'victory', 'qualifiers', 'squad', 'championship', 'club', 'fifa']
+      },
+      {
+        topic: 'POLITICS & GOVERNANCE',
+        baseConf: 97.6,
+        keywords: ['parliament', 'bill', 'gov', 'government', 'minister', 'policy', 'election', 'president', 'vote', 'law', 'reform', 'constitution', 'state', 'council', 'mayor', 'diplomatic', 'corruption', 'assembly', 'cabinet', 'official', 'sanctions', 'treaty', 'legislation', 'court']
+      },
+      {
+        topic: 'SCIENCE & INNOVATION',
+        baseConf: 98.2,
+        keywords: ['solar', 'water', 'filtration', 'research', 'tech', 'technology', 'software', 'ai', 'machine', 'data', 'algorithm', 'satellite', 'climate', 'renewable', 'energy', 'battery', 'electric', 'engineering', 'biotech', 'patent', 'innovation', 'laboratory', 'space', 'device', 'digital', 'computer']
+      },
+      {
+        topic: 'EDUCATION & COMMUNITY',
+        baseConf: 97.2,
+        keywords: ['school', 'student', 'university', 'teacher', 'literacy', 'training', 'youth', 'college', 'library', 'campus', 'classroom', 'exam', 'scholarship', 'cooperative', 'community', 'education', 'vocational', 'children']
+      }
+    ];
+
+    let bestTopic = 'SCIENCE & INNOVATION';
+    let maxMatches = 0;
+    let categoryBase = 96.0;
+
+    for (const cat of categories) {
+      let matches = 0;
+      for (const kw of cat.keywords) {
+        if (lower.includes(kw)) {
+          matches += kw.length > 5 ? 2 : 1;
+        }
+      }
+      if (matches > maxMatches) {
+        maxMatches = matches;
+        bestTopic = cat.topic;
+        categoryBase = cat.baseConf;
+      }
+    }
+
+    const calculatedConf = maxMatches > 0 
+      ? Math.min(99.8, Number((categoryBase + Math.min(maxMatches * 0.3, 1.4)).toFixed(1)))
+      : 93.5;
+
+    setNewsPredictedTopic(bestTopic);
+    setNewsConfidence(calculatedConf);
   };
 
-  // Toggle cricket squad selection
+  // Toggle cricket squad selection with intelligent auto-swap
   const togglePlayer = (id: string) => {
     trackSimulatorAction(project.id, 'cricket', 'toggle_player', { player_id: id });
+    const targetPlayer = CRICKET_PLAYERS_POOL.find(p => p.id === id);
+
     if (selectedSquad.includes(id)) {
       if (selectedSquad.length > 1) {
         setSelectedSquad(selectedSquad.filter(pId => pId !== id));
+        setCricketNotification(`Benched ${targetPlayer?.name || 'player'}`);
       }
     } else {
       if (selectedSquad.length < 11) {
         setSelectedSquad([...selectedSquad, id]);
+        setCricketNotification(`Added ${targetPlayer?.name || 'player'} to Playing 11`);
+      } else {
+        // Find currently active squad player with lowest impact rating
+        const activePlayers = CRICKET_PLAYERS_POOL.filter(p => selectedSquad.includes(p.id));
+        const lowestPlayer = [...activePlayers].sort((a, b) => a.impact - b.impact)[0];
+        if (lowestPlayer) {
+          setSelectedSquad(selectedSquad.map(pId => pId === lowestPlayer.id ? id : pId));
+          setCricketNotification(`Swapped out ${lowestPlayer.name} (${lowestPlayer.impact} pts) for ${targetPlayer?.name}`);
+        }
       }
     }
   };
@@ -163,44 +224,62 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
   const bowlingEconRating = selectedPlayers.filter(p => p.econ).length > 0
     ? (selectedPlayers.filter(p => p.econ).reduce((acc, p) => acc + (p.econ || 7.0), 0) / selectedPlayers.filter(p => p.econ).length).toFixed(2)
     : '6.45';
+  
+  // Dynamic projected match outcomes
+  const projectedMatchScore = Math.round(145 + (battingPowerScore - 130) * 0.75 + (Number(avgSquadImpact) - 80) * 0.4);
+  const projectedWinRate = Math.min(96, Math.max(35, Math.round(squadBalanceScore * 0.65 + (8.5 - Number(bowlingEconRating)) * 12)));
 
-  // Dynamic Clinical Prescription NER extraction
+  // Dynamic Clinical Prescription NER extraction supporting extensive formulary & clinical abbreviations
   const extractPrescriptionEntities = (text: string) => {
     const entities: { token: string; type: string; color: string; desc: string }[] = [];
     
-    const drugRegex = /\b(Amoxicillin|Omeprazole|Metformin|Paracetamol|Azithromycin|Atorvastatin|Ibuprofen|Lisinopril|Amlodipine|Ciprofloxacin|Augmentin|Pantoprazole|Aspirin|Cetirizine|Montelukast)\b/gi;
+    // 1. Comprehensive Drug formulary list + generic prefix forms (Tab, Cap, Inj, Syrup, Syp, Drops)
+    const drugDictionaryRegex = /\b(Amoxicillin|Omeprazole|Metformin|Paracetamol|Azithromycin|Atorvastatin|Ibuprofen|Lisinopril|Amlodipine|Ciprofloxacin|Augmentin|Pantoprazole|Aspirin|Cetirizine|Montelukast|Dolo|Pan|Calpol|Benadryl|Losartan|Doxycycline|Gabapentin|Levothyroxine|Prednisone|Albuterol|Insulin|Glimepiride|Rosuvastatin|Telmisartan|Diclofenac|Tramadol|Cefixime|Levofloxacin|Clopidogrel|Hydrochlorothiazide|Furosemide|Ranitidine|Famotidine|Zinc|Neurobion|Ascoril|Ceftriaxone)\b/gi;
     let match;
-    while ((match = drugRegex.exec(text)) !== null) {
+    while ((match = drugDictionaryRegex.exec(text)) !== null) {
       if (!entities.some(e => e.token.toLowerCase() === match![0].toLowerCase())) {
-        entities.push({ token: match[0], type: 'DRUG', color: 'cyan', desc: 'Active Molecule' });
+        entities.push({ token: match[0], type: 'DRUG', color: 'cyan', desc: 'Active Pharmaceutical Molecule' });
       }
     }
 
-    const doseRegex = /\b\d+(\.\d+)?\s*(mg|mcg|g|ml|IU|units)\b/gi;
+    // Capture prefix phrases like "Tab Pan 40", "Cap Doxycycline", "Inj Ceftriaxone"
+    const prefixDrugRegex = /\b(Tab|Cap|Inj|Syrup|Syp|Drops|Suspension)\.?\s+([A-Za-z0-9\-]+)\b/gi;
+    while ((match = prefixDrugRegex.exec(text)) !== null) {
+      const drugToken = match[2];
+      if (drugToken && !entities.some(e => e.token.toLowerCase() === drugToken.toLowerCase()) && drugToken.length > 2) {
+        entities.push({ token: drugToken, type: 'DRUG', color: 'cyan', desc: `${match[1]} Formulation Molecule` });
+      }
+    }
+
+    // 2. Dosages & concentrations
+    const doseRegex = /\b\d+(\.\d+)?\s*(mg|mcg|g|ml|IU|units?|puffs?|drops?|tablets?|capsules?|tsp|tbsp)\b/gi;
     while ((match = doseRegex.exec(text)) !== null) {
       if (!entities.some(e => e.token.toLowerCase() === match![0].toLowerCase())) {
-        entities.push({ token: match[0], type: 'DOSAGE', color: 'violet', desc: 'Concentration' });
+        entities.push({ token: match[0], type: 'DOSAGE', color: 'violet', desc: 'Target Concentration' });
       }
     }
 
-    const routeRegex = /\b(PO|IV|IM|SC|oral|orally|sublingual|topical|intravenous|inhalation)\b/gi;
+    // 3. Administration routes
+    const routeRegex = /\b(PO|IV|IM|SC|PR|oral|orally|sublingual|topical|intravenous|inhalation|ophthalmic|ocular|nasal)\b/gi;
     while ((match = routeRegex.exec(text)) !== null) {
       if (!entities.some(e => e.token.toLowerCase() === match![0].toLowerCase())) {
-        entities.push({ token: match[0], type: 'ROUTE', color: 'emerald', desc: 'Administration Route' });
+        entities.push({ token: match[0], type: 'ROUTE', color: 'emerald', desc: 'Route of Administration' });
       }
     }
 
-    const freqRegex = /\b(TID|BID|QD|QID|Q4H|Q6H|Q8H|QAM|QPM|PRN|once daily|twice daily|3x daily|with meals|at bedtime)\b/gi;
+    // 4. Dosing frequencies & schedules
+    const freqRegex = /\b(TID|BID|QD|QID|Q4H|Q6H|Q8H|Q12H|QAM|QPM|PRN|SOS|HS|STAT|once daily|twice daily|3x daily|with meals|after meals|before meals|before food|after food|at bedtime|AC|PC)\b/gi;
     while ((match = freqRegex.exec(text)) !== null) {
       if (!entities.some(e => e.token.toLowerCase() === match![0].toLowerCase())) {
-        entities.push({ token: match[0], type: 'FREQUENCY', color: 'amber', desc: 'Dosage Interval' });
+        entities.push({ token: match[0], type: 'FREQUENCY', color: 'amber', desc: 'Dose Frequency Interval' });
       }
     }
 
-    const durRegex = /\b(for\s+)?\d+\s*(days?|weeks?|months?|d|w)\b/gi;
+    // 5. Course Durations
+    const durRegex = /\b(for\s+)?\d+\s*(days?|weeks?|months?|d|w|m)\b|\bx\s*\d+\s*(days?|weeks?|d|w)\b/gi;
     while ((match = durRegex.exec(text)) !== null) {
       if (!entities.some(e => e.token.toLowerCase() === match![0].toLowerCase())) {
-        entities.push({ token: match[0], type: 'DURATION', color: 'rose', desc: 'Therapy Course' });
+        entities.push({ token: match[0], type: 'DURATION', color: 'rose', desc: 'Therapy Course Duration' });
       }
     }
 
@@ -209,35 +288,47 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
 
   const currentExtractedEntities = extractPrescriptionEntities(prescriptionInput);
 
-  // Churn calculation algorithm simulation
+  // Smooth continuous Logistic Sigmoid Churn Calculation
   const calcChurnProb = () => {
-    let score = 0.20;
-    if (churnContract === 'Month-to-Month') score += 0.35;
-    if (churnContract === 'One-Year') score += 0.10;
-    if (churnTenure < 12) score += 0.20;
-    if (churnTenure > 36) score -= 0.15;
-    if (churnMonthly > 70) score += 0.15;
-    if (churnSupportTickets >= 3) score += 0.22;
-    return Math.min(Math.max(score, 0.05), 0.96);
+    let logOdds = -0.75;
+    if (churnContract === 'Month-to-Month') logOdds += 1.20;
+    else if (churnContract === 'One-Year') logOdds -= 0.30;
+    else if (churnContract === 'Two-Year') logOdds -= 1.05;
+
+    logOdds += (36 - churnTenure) * 0.038;
+    logOdds += (churnMonthly - 70) * 0.014;
+    logOdds += (churnSupportTickets - 1.5) * 0.28;
+
+    const prob = 1 / (1 + Math.exp(-logOdds));
+    return Math.min(Math.max(Number(prob.toFixed(3)), 0.04), 0.96);
   };
   const churnProb = calcChurnProb();
 
-  // Credit calculation algorithm simulation
+  // Dynamic SHAP factor breakdown for churn
+  const dynamicShapDrivers = [
+    { name: `Contract (${churnContract})`, impact: churnContract === 'Month-to-Month' ? +0.32 : churnContract === 'Two-Year' ? -0.28 : -0.10 },
+    { name: `Tenure (${churnTenure} mo)`, impact: Number(((36 - churnTenure) * 0.008).toFixed(2)) },
+    { name: `Monthly Charge ($${churnMonthly})`, impact: Number(((churnMonthly - 70) * 0.003).toFixed(2)) },
+    { name: `Support Tickets (${churnSupportTickets})`, impact: Number(((churnSupportTickets - 1.5) * 0.07).toFixed(2)) }
+  ].sort((a, b) => Math.abs(b.impact) - Math.abs(a.impact));
+
+  // Continuous Credit Score Underwriting Engine
   const calcCreditScore = () => {
-    let base = 700;
-    if (creditIncome > 80000) base += 40;
-    if (creditIncome < 40000) base -= 50;
-    if (creditDti > 45) base -= 60;
-    else if (creditDti < 25) base += 35;
-    if (creditRevolving > 80) base -= 75;
-    else if (creditRevolving < 30) base += 40;
-    if (creditPastDelinq > 0) base -= creditPastDelinq * 45;
+    let base = 680;
+    base += ((creditIncome - 60000) / 1000) * 0.65;
+    base -= (creditDti - 30) * 2.2;
+    base -= (creditRevolving - 35) * 1.6;
+    base -= creditPastDelinq * 48;
     return Math.min(Math.max(Math.round(base), 350), 850);
   };
   const creditScoreVal = calcCreditScore();
+  const probDefault = Number(Math.max(0.4, Math.min(38.5, (((850 - creditScoreVal) / 500) ** 2) * 32)).toFixed(1));
+  const creditLimitRec = creditScoreVal >= 580 
+    ? Math.round((creditIncome * 0.28) * (creditScoreVal / 850) * (1 - (creditDti / 100) * 0.5))
+    : 0;
 
   // Filtered sales data with simulated discount recovery
-  const simulatedRecoveryMultiplier = 1 + (15 - salesDiscountCap) * 0.006;
+  const simulatedRecoveryMultiplier = 1 + (15 - salesDiscountCap) * 0.008;
   const filteredSalesData = (salesZoneFilter === 'All' 
     ? SALES_REGIONAL_DATA 
     : SALES_REGIONAL_DATA.filter(d => d.zone === salesZoneFilter)
@@ -245,6 +336,11 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
     ...d,
     simulatedProfit: Math.round(d.profit * simulatedRecoveryMultiplier),
     simulatedMargin: Number((d.margin * simulatedRecoveryMultiplier).toFixed(1))
+  }));
+
+  const salesMonthlyTrend = SALES_MONTHLY_TREND.map(d => ({
+    ...d,
+    simulatedProfit: Number((d.profit * simulatedRecoveryMultiplier).toFixed(1))
   }));
 
   return (
@@ -283,7 +379,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
             <div className="flex items-center gap-1.5 flex-wrap">
               <Filter className="w-3.5 h-3.5 text-cyan-400" />
               <span className="text-[11px] font-mono text-[#999] mr-1">Zone Slicer:</span>
-              {(['All', 'North', 'South', 'Central'] as const).map(zone => (
+              {(['All', 'North', 'South', 'Central', 'East'] as const).map(zone => (
                 <button
                   key={zone}
                   onClick={() => setSalesZoneFilter(zone)}
@@ -316,11 +412,11 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                 <span>Pricing & Discount Policy Sensitivity Simulator</span>
               </div>
               <p className="text-[10px] text-[#888]">
-                Adjust ceiling discount cap to model bottom-line margin recovery
+                Adjust ceiling discount cap to model bottom-line margin recovery (Live calculation multiplier: {simulatedRecoveryMultiplier.toFixed(3)}x)
               </p>
             </div>
-            <div className="flex items-center gap-3 min-w-[240px]">
-              <span className="text-[11px] text-[#aaa]">Cap: <strong className="text-cyan-300">{salesDiscountCap}%</strong></span>
+            <div className="flex items-center gap-3 min-w-[260px]">
+              <span className="text-[11px] text-[#aaa] whitespace-nowrap">Cap: <strong className="text-cyan-300 font-bold">{salesDiscountCap}%</strong></span>
               <input
                 type="range"
                 min={2}
@@ -328,7 +424,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                 step={1}
                 value={salesDiscountCap}
                 onChange={(e) => setSalesDiscountCap(Number(e.target.value))}
-                className="flex-1 accent-cyan-400"
+                className="flex-1 accent-cyan-400 cursor-pointer"
               />
               <span className="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-[10px] text-emerald-300 font-bold whitespace-nowrap">
                 +{((15 - salesDiscountCap) * 5.6).toFixed(1)}M Recovered
@@ -338,11 +434,11 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
 
           {/* Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-            {/* Regional Revenue Breakdown */}
+            {/* Regional Revenue & Margin Breakdown */}
             <div className="lg:col-span-7 p-4 rounded-lg bg-[#111111] border border-[#ffffff08]">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold text-white font-mono">Revenue by Market (₹ Millions)</span>
-                <span className="text-[10px] text-[#666] font-mono">DAX: [Normalized Revenue]</span>
+                <span className="text-xs font-bold text-white font-mono">Revenue & Simulated Margin by Market (₹M)</span>
+                <span className="text-[10px] text-[#666] font-mono">Live reactive to discount cap</span>
               </div>
               <div className="h-56 w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -352,31 +448,31 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                     <YAxis stroke="#666" fontSize={10} tickLine={false} />
                     <Tooltip 
                       contentStyle={{ backgroundColor: '#161616', borderColor: '#333', borderRadius: '8px', fontSize: '11px', color: '#fff' }}
-                      formatter={(val: any) => [`₹${val}M`, 'Revenue']}
+                      formatter={(val: any, name: any) => [`₹${val}M`, name]}
                     />
-                    <Bar dataKey="revenue" fill="#0ea5e9" radius={[4, 4, 0, 0]}>
-                      {filteredSalesData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.margin < 10 ? '#ef4444' : '#0ea5e9'} />
-                      ))}
-                    </Bar>
+                    <Bar dataKey="revenue" name="Gross Revenue" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="simulatedProfit" name="Simulated Margin" fill="#10b981" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-              <div className="flex items-center gap-3 mt-2 text-[10px] font-mono text-[#888]">
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#0ea5e9]" /> Healthy Margin (&gt;10%)</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#ef4444]" /> Margin Leakage (&lt;10%)</span>
+              <div className="flex items-center justify-between mt-2 text-[10px] font-mono text-[#888]">
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#0ea5e9]" /> Gross Revenue</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#10b981]" /> Simulated Margin</span>
+                </div>
+                <span className="text-cyan-300">Total Margin: ₹{filteredSalesData.reduce((acc, c) => acc + c.simulatedProfit, 0)}M</span>
               </div>
             </div>
 
             {/* Profit Margin Trend */}
             <div className="lg:col-span-5 p-4 rounded-lg bg-[#111111] border border-[#ffffff08]">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold text-white font-mono">MoM Revenue vs Margin %</span>
-                <span className="text-[10px] text-emerald-400 font-mono">+16% YoY</span>
+                <span className="text-xs font-bold text-white font-mono">MoM Revenue vs Margin Recovery</span>
+                <span className="text-[10px] text-emerald-400 font-mono">Cap: {salesDiscountCap}%</span>
               </div>
               <div className="h-56 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={SALES_MONTHLY_TREND} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <AreaChart data={salesMonthlyTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4}/>
@@ -388,6 +484,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                     <YAxis stroke="#666" fontSize={10} tickLine={false} />
                     <Tooltip contentStyle={{ backgroundColor: '#161616', borderColor: '#333', borderRadius: '8px', fontSize: '11px', color: '#fff' }} />
                     <Area type="monotone" dataKey="revenue2020" stroke="#0ea5e9" fillOpacity={1} fill="url(#colorRev)" strokeWidth={2} name="2020 Revenue" />
+                    <Line type="monotone" dataKey="simulatedProfit" stroke="#10b981" strokeWidth={2} name="Simulated Margin" />
                     <Line type="monotone" dataKey="revenue2019" stroke="#666" strokeDasharray="3 3" name="2019 Base" />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -524,14 +621,20 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setSelectedSquad(CRICKET_PLAYERS_POOL.slice(0, 11).map(p => p.id))}
+                  onClick={() => {
+                    setSelectedSquad(CRICKET_PLAYERS_POOL.slice(0, 11).map(p => p.id));
+                    setCricketNotification('Loaded AI Optimal 11 Tournament Composition');
+                  }}
                   className="px-2.5 py-1 rounded bg-sky-950/60 hover:bg-sky-900 border border-sky-500/40 text-[10px] font-mono text-sky-300 transition-all cursor-pointer"
                 >
                   AI Optimal 11
                 </button>
                 <button
                   type="button"
-                  onClick={() => setSelectedSquad([])}
+                  onClick={() => {
+                    setSelectedSquad([]);
+                    setCricketNotification('Cleared squad. Select 11 players below.');
+                  }}
                   className="px-2 py-1 rounded bg-[#181818] hover:bg-[#222] border border-[#333] text-[10px] font-mono text-[#888] hover:text-white transition-all cursor-pointer"
                 >
                   Clear
@@ -539,25 +642,41 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
               </div>
             </div>
 
+            {/* Live Swap Feedback Banner */}
+            {cricketNotification && (
+              <div className="p-2 rounded bg-sky-950/40 border border-sky-500/30 text-[11px] font-mono text-sky-200 flex items-center justify-between">
+                <span>⚡ {cricketNotification}</span>
+                <button
+                  type="button"
+                  onClick={() => setCricketNotification(null)}
+                  className="text-sky-400 hover:text-white ml-2 text-xs"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+
             {/* Live Squad Telemetry Bar */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 rounded-lg bg-[#0a0a0a] border border-[#ffffff08] text-xs font-mono">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 p-3 rounded-lg bg-[#0a0a0a] border border-[#ffffff08] text-xs font-mono">
               <div className="p-2 rounded bg-[#141414]">
-                <div className="text-[9px] text-[#888]">Squad Balance Index</div>
+                <div className="text-[9px] text-[#888]">Squad Balance</div>
                 <div className="text-lg font-bold text-emerald-400 mt-0.5">{squadBalanceScore} / 100</div>
               </div>
               <div className="p-2 rounded bg-[#141414]">
-                <div className="text-[9px] text-[#888]">Batting Strike Rating</div>
+                <div className="text-[9px] text-[#888]">Batting Power</div>
                 <div className="text-lg font-bold text-sky-400 mt-0.5">{battingPowerScore}</div>
               </div>
               <div className="p-2 rounded bg-[#141414]">
-                <div className="text-[9px] text-[#888]">Avg Economy Rate</div>
+                <div className="text-[9px] text-[#888]">Avg Econ Rate</div>
                 <div className="text-lg font-bold text-violet-400 mt-0.5">{bowlingEconRating} rpo</div>
               </div>
               <div className="p-2 rounded bg-[#141414]">
-                <div className="text-[9px] text-[#888]">Role Breakdown</div>
-                <div className="text-[11px] text-[#ddd] mt-1 font-bold">
-                  {selectedPlayers.filter(p => p.role.includes('Opener') || p.role.includes('Anchor')).length} Top • {selectedPlayers.filter(p => p.role.includes('All-Rounder')).length} All • {selectedPlayers.filter(p => p.role.includes('Bowler')).length} Bowl
-                </div>
+                <div className="text-[9px] text-[#888]">Projected 20-Over Score</div>
+                <div className="text-lg font-bold text-amber-400 mt-0.5">{projectedMatchScore} runs</div>
+              </div>
+              <div className="p-2 rounded bg-[#141414] col-span-2 sm:col-span-1">
+                <div className="text-[9px] text-[#888]">Projected Win %</div>
+                <div className="text-lg font-bold text-emerald-300 mt-0.5">{projectedWinRate}%</div>
               </div>
             </div>
 
@@ -571,7 +690,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                     onClick={() => togglePlayer(player.id)}
                     className={`p-2.5 rounded-lg border text-left flex items-center justify-between transition-all cursor-pointer ${
                       isChosen
-                        ? 'bg-sky-950/30 border-sky-500/50 text-white'
+                        ? 'bg-sky-950/30 border-sky-500/50 text-white shadow-sm'
                         : 'bg-[#0e0e0e] border-[#ffffff08] text-[#888] hover:border-[#ffffff20]'
                     }`}
                   >
@@ -587,7 +706,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                     <div className="text-right">
                       <div className="text-[11px] font-mono font-bold text-sky-400">{player.impact} pts</div>
                       <div className={`text-[9px] font-mono ${isChosen ? 'text-emerald-400 font-bold' : 'text-[#666]'}`}>
-                        {isChosen ? '✓ Selected' : '+ Bench'}
+                        {isChosen ? '✓ In 11' : '+ Select'}
                       </div>
                     </div>
                   </button>
@@ -626,28 +745,43 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
               ))}
             </div>
 
-            <div className="text-[11px] font-mono text-cyan-300">
-              Department: <strong className="text-white">All Organization (500+ Staff)</strong>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-[11px] font-mono text-[#888] mr-1">Department:</span>
+              {(['All', 'Engineering', 'Sales', 'Operations'] as const).map(dept => (
+                <button
+                  key={dept}
+                  onClick={() => setHrDeptFilter(dept)}
+                  className={`px-2 py-0.5 rounded text-[10px] font-mono transition-all cursor-pointer ${
+                    hrDeptFilter === dept
+                      ? 'bg-violet-500 text-white font-bold shadow-sm'
+                      : 'bg-[#1e1e1e] text-[#aaa] hover:text-white'
+                  }`}
+                >
+                  {dept}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Dynamic KPI Cards */}
           {(() => {
-            const presence = hrWorkModel === 'office' ? 97.4 : hrWorkModel === 'hybrid3' ? 93.4 : hrWorkModel === 'hybrid2' ? 88.2 : 74.8;
-            const wfh = hrWorkModel === 'office' ? 5.2 : hrWorkModel === 'hybrid3' ? 24.6 : hrWorkModel === 'hybrid2' ? 42.1 : 68.4;
-            const savedHours = hrWorkModel === 'remote' ? 4.8 : hrWorkModel === 'hybrid3' ? 3.5 : hrWorkModel === 'hybrid2' ? 3.8 : 2.1;
+            const deptModifier = hrDeptFilter === 'Engineering' ? -4.5 : hrDeptFilter === 'Sales' ? 3.2 : hrDeptFilter === 'Operations' ? 5.8 : 0;
+            const presenceBase = hrWorkModel === 'office' ? 97.4 : hrWorkModel === 'hybrid3' ? 93.4 : hrWorkModel === 'hybrid2' ? 88.2 : 74.8;
+            const presence = Math.min(99.4, Math.max(65.0, Number((presenceBase + deptModifier).toFixed(1))));
+            const wfh = Number((100 - presence).toFixed(1));
+            const savedHours = Number(((hrWorkModel === 'remote' ? 4.8 : hrWorkModel === 'hybrid3' ? 3.5 : hrWorkModel === 'hybrid2' ? 3.8 : 2.1) + (hrDeptFilter === 'Engineering' ? 0.6 : 0)).toFixed(1));
 
             return (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="p-3.5 rounded-lg bg-[#111111] border border-[#ffffff08]">
-                  <div className="text-[10px] font-mono text-[#888] uppercase">Presence Rate</div>
+                  <div className="text-[10px] font-mono text-[#888] uppercase">Presence Rate ({hrDeptFilter})</div>
                   <div className="text-xl font-bold font-mono text-emerald-400 mt-0.5">{presence}%</div>
-                  <div className="text-[9px] font-mono text-[#666] mt-1">Automated biometric logging</div>
+                  <div className="text-[9px] font-mono text-[#666] mt-1">Live reactive to policy + department</div>
                 </div>
                 <div className="p-3.5 rounded-lg bg-[#111111] border border-[#ffffff08]">
                   <div className="text-[10px] font-mono text-[#888] uppercase">WFH Utilization</div>
                   <div className="text-xl font-bold font-mono text-cyan-400 mt-0.5">{wfh}%</div>
-                  <div className="text-[9px] font-mono text-[#666] mt-1">Concentrated on Mon / Fri</div>
+                  <div className="text-[9px] font-mono text-[#666] mt-1">Calculated from biometric punch records</div>
                 </div>
                 <div className="p-3.5 rounded-lg bg-[#111111] border border-[#ffffff08]">
                   <div className="text-[10px] font-mono text-[#888] uppercase">Administrative Time Saved</div>
@@ -660,15 +794,20 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
 
           {/* Day-of-Week Attendance Distribution */}
           <div className="p-4 rounded-lg bg-[#111111] border border-[#ffffff08]">
-            <div className="text-xs font-bold text-white font-mono mb-3">Day-of-Week Attendance Distribution (%)</div>
+            <div className="text-xs font-bold text-white font-mono mb-3">
+              Day-of-Week Attendance Distribution ({hrDeptFilter} • {hrWorkModel.toUpperCase()})
+            </div>
             <div className="grid grid-cols-5 gap-2 text-center">
-              {[
-                { day: 'Mon', present: hrWorkModel === 'office' ? 95 : hrWorkModel === 'remote' ? 62 : 88, wfh: hrWorkModel === 'office' ? 3 : hrWorkModel === 'remote' ? 35 : 38 },
-                { day: 'Tue', present: hrWorkModel === 'office' ? 98 : hrWorkModel === 'remote' ? 78 : 96, wfh: hrWorkModel === 'office' ? 1 : hrWorkModel === 'remote' ? 20 : 12 },
-                { day: 'Wed', present: hrWorkModel === 'office' ? 99 : hrWorkModel === 'remote' ? 82 : 97, wfh: hrWorkModel === 'office' ? 1 : hrWorkModel === 'remote' ? 16 : 10 },
-                { day: 'Thu', present: hrWorkModel === 'office' ? 97 : hrWorkModel === 'remote' ? 76 : 95, wfh: hrWorkModel === 'office' ? 2 : hrWorkModel === 'remote' ? 22 : 15 },
-                { day: 'Fri', present: hrWorkModel === 'office' ? 92 : hrWorkModel === 'remote' ? 58 : 86, wfh: hrWorkModel === 'office' ? 6 : hrWorkModel === 'remote' ? 39 : 44 }
-              ].map(d => (
+              {(() => {
+                const deptMod = hrDeptFilter === 'Engineering' ? -5 : hrDeptFilter === 'Operations' ? 5 : 0;
+                return [
+                  { day: 'Mon', present: Math.min(99, Math.max(50, (hrWorkModel === 'office' ? 95 : hrWorkModel === 'remote' ? 62 : 88) + deptMod)), wfh: Math.max(1, (hrWorkModel === 'office' ? 3 : hrWorkModel === 'remote' ? 35 : 38) - deptMod) },
+                  { day: 'Tue', present: Math.min(99, Math.max(50, (hrWorkModel === 'office' ? 98 : hrWorkModel === 'remote' ? 78 : 96) + deptMod)), wfh: Math.max(1, (hrWorkModel === 'office' ? 1 : hrWorkModel === 'remote' ? 20 : 12) - deptMod) },
+                  { day: 'Wed', present: Math.min(99, Math.max(50, (hrWorkModel === 'office' ? 99 : hrWorkModel === 'remote' ? 82 : 97) + deptMod)), wfh: Math.max(1, (hrWorkModel === 'office' ? 1 : hrWorkModel === 'remote' ? 16 : 10) - deptMod) },
+                  { day: 'Thu', present: Math.min(99, Math.max(50, (hrWorkModel === 'office' ? 97 : hrWorkModel === 'remote' ? 76 : 95) + deptMod)), wfh: Math.max(1, (hrWorkModel === 'office' ? 2 : hrWorkModel === 'remote' ? 22 : 15) - deptMod) },
+                  { day: 'Fri', present: Math.min(99, Math.max(50, (hrWorkModel === 'office' ? 92 : hrWorkModel === 'remote' ? 58 : 86) + deptMod)), wfh: Math.max(1, (hrWorkModel === 'office' ? 6 : hrWorkModel === 'remote' ? 39 : 44) - deptMod) }
+                ];
+              })().map(d => (
                 <div key={d.day} className="p-2.5 rounded bg-[#0a0a0a] border border-[#ffffff08]">
                   <div className="text-xs font-bold font-mono text-white mb-1">{d.day}</div>
                   <div className="text-[10px] font-mono text-emerald-400">{d.present}% In-Office</div>
@@ -895,7 +1034,7 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
               </div>
             </div>
 
-            {/* Churn Probability Gauge Output */}
+            {/* Churn Probability Gauge Output & Real-Time SHAP Explanation */}
             <div className={`p-4 rounded-lg border flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
               churnProb > 0.45 ? 'bg-red-950/20 border-red-500/40' : 'bg-emerald-950/20 border-emerald-500/40'
             }`}>
@@ -908,13 +1047,29 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
                 <div>
                   <div className="text-[10px] font-mono text-[#888] uppercase">Calculated Churn Probability</div>
                   <div className="text-sm font-bold text-white font-mono">
-                    {churnProb > 0.45 ? 'HIGH RISK SUBSCRIBER — Trigger VIP Retention' : 'LOW RISK SUBSCRIBER — Healthy Account'}
+                    {churnProb > 0.45 ? 'HIGH RISK SUBSCRIBER — Trigger Automated Retention Offer' : 'LOW RISK SUBSCRIBER — Account in Healthy Zone'}
                   </div>
                 </div>
               </div>
 
-              <div className="text-[11px] font-mono text-[#aaa]">
-                Top SHAP Driver: <span className="text-white font-bold">{churnContract === 'Month-to-Month' ? '+0.32 Contract Type' : '-0.24 Long Tenure'}</span>
+              {/* Dynamic Real-Time SHAP Contribution Badges */}
+              <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
+                <span className="text-[#888]">Live SHAP Drivers:</span>
+                <span className={`px-2 py-0.5 rounded border ${
+                  churnContract === 'Month-to-Month' ? 'bg-red-950/60 border-red-500/40 text-red-300' : 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
+                }`}>
+                  Contract ({churnContract === 'Month-to-Month' ? '+0.32' : '-0.24'})
+                </span>
+                <span className={`px-2 py-0.5 rounded border ${
+                  churnSupportTickets >= 3 ? 'bg-red-950/60 border-red-500/40 text-red-300' : 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
+                }`}>
+                  Tickets ({churnSupportTickets >= 3 ? `+${(churnSupportTickets * 0.08).toFixed(2)}` : '0.00'})
+                </span>
+                <span className={`px-2 py-0.5 rounded border ${
+                  churnTenure <= 6 ? 'bg-amber-950/60 border-amber-500/40 text-amber-300' : 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300'
+                }`}>
+                  Tenure ({churnTenure <= 6 ? '+0.18' : '-0.15'})
+                </span>
               </div>
             </div>
           </div>
@@ -1035,11 +1190,16 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
               </div>
             </div>
 
-            {/* Scorecard Output */}
+            {/* Scorecard Output with Automated Limits & Risk Metrics */}
             <div className="p-4 rounded-lg bg-[#0a0a0a] border border-teal-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <div className="text-[10px] font-mono text-[#888]">Generated Credit Rating</div>
                 <div className="text-2xl font-extrabold font-mono text-teal-300">{creditScoreVal} / 850</div>
+                <div className="text-[10px] font-mono text-[#aaa] mt-0.5">
+                  Rec. Limit: <strong className="text-white">
+                    {creditScoreVal >= 740 ? '$25,000' : creditScoreVal >= 680 ? '$12,500' : creditScoreVal >= 580 ? '$3,500' : '$0 (Declined)'}
+                  </strong> • Rate: <span className="text-teal-400">{creditScoreVal >= 740 ? '9.9% APR' : creditScoreVal >= 680 ? '14.2% APR' : creditScoreVal >= 580 ? '24.9% APR' : 'N/A'}</span>
+                </div>
               </div>
 
               <div className="flex items-center gap-3">
@@ -1099,39 +1259,48 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
               </button>
             </div>
 
-            {/* Metric Overview */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-              <div className="p-3 rounded bg-[#0a0a0a] border border-[#ffffff08]">
-                <div className="text-[10px] text-[#888]">12-Month LTV</div>
-                <div className="text-lg font-bold text-emerald-400 mt-0.5">
-                  ${ecommerceVipBoost ? '184.50' : '142.20'}
+            {/* Metric Overview with Channel Modifiers */}
+            {(() => {
+              const channelMultiplier = ecommerceChannel === 'Shopify' ? 1.15 : ecommerceChannel === 'Amazon' ? 0.95 : ecommerceChannel === 'Paid Ads' ? 0.88 : 1.0;
+              const baseLtv = ecommerceVipBoost ? 184.50 : 142.20;
+              const currentLtv = (baseLtv * channelMultiplier).toFixed(2);
+              const m3Ret = ((ecommerceVipBoost ? 42.8 : 31.2) * (ecommerceChannel === 'Shopify' ? 1.1 : ecommerceChannel === 'Paid Ads' ? 0.92 : 1.0)).toFixed(1);
+
+              return (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+                  <div className="p-3 rounded bg-[#0a0a0a] border border-[#ffffff08]">
+                    <div className="text-[10px] text-[#888]">12-Month LTV ({ecommerceChannel})</div>
+                    <div className="text-lg font-bold text-emerald-400 mt-0.5">
+                      ${currentLtv}
+                    </div>
+                    <div className="text-[9px] text-[#666] mt-0.5">
+                      {ecommerceVipBoost ? '+29.7% expansion' : 'Baseline'}
+                    </div>
+                  </div>
+                  <div className="p-3 rounded bg-[#0a0a0a] border border-[#ffffff08]">
+                    <div className="text-[10px] text-[#888]">Month 3 Retention</div>
+                    <div className="text-lg font-bold text-cyan-400 mt-0.5">
+                      {m3Ret}%
+                    </div>
+                    <div className="text-[9px] text-[#666] mt-0.5">Automated re-order trigger</div>
+                  </div>
+                  <div className="p-3 rounded bg-[#0a0a0a] border border-[#ffffff08]">
+                    <div className="text-[10px] text-[#888]">Repurchase Frequency</div>
+                    <div className="text-lg font-bold text-violet-400 mt-0.5">
+                      {ecommerceVipBoost ? '3.4x / yr' : '2.1x / yr'}
+                    </div>
+                    <div className="text-[9px] text-[#666] mt-0.5">Cohort average</div>
+                  </div>
+                  <div className="p-3 rounded bg-[#0a0a0a] border border-[#ffffff08]">
+                    <div className="text-[10px] text-[#888]">Payback Period</div>
+                    <div className="text-lg font-bold text-amber-400 mt-0.5">
+                      {ecommerceVipBoost ? '2.4 mos' : '4.1 mos'}
+                    </div>
+                    <div className="text-[9px] text-[#666] mt-0.5">CAC fully amortized</div>
+                  </div>
                 </div>
-                <div className="text-[9px] text-[#666] mt-0.5">
-                  {ecommerceVipBoost ? '+29.7% expansion' : 'Baseline'}
-                </div>
-              </div>
-              <div className="p-3 rounded bg-[#0a0a0a] border border-[#ffffff08]">
-                <div className="text-[10px] text-[#888]">Month 3 Retention</div>
-                <div className="text-lg font-bold text-cyan-400 mt-0.5">
-                  {ecommerceVipBoost ? '42.8%' : '31.2%'}
-                </div>
-                <div className="text-[9px] text-[#666] mt-0.5">Automated re-order trigger</div>
-              </div>
-              <div className="p-3 rounded bg-[#0a0a0a] border border-[#ffffff08]">
-                <div className="text-[10px] text-[#888]">Repurchase Frequency</div>
-                <div className="text-lg font-bold text-violet-400 mt-0.5">
-                  {ecommerceVipBoost ? '3.4x / yr' : '2.1x / yr'}
-                </div>
-                <div className="text-[9px] text-[#666] mt-0.5">Cohort average</div>
-              </div>
-              <div className="p-3 rounded bg-[#0a0a0a] border border-[#ffffff08]">
-                <div className="text-[10px] text-[#888]">Payback Period</div>
-                <div className="text-lg font-bold text-amber-400 mt-0.5">
-                  {ecommerceVipBoost ? '2.4 mos' : '4.1 mos'}
-                </div>
-                <div className="text-[9px] text-[#666] mt-0.5">CAC fully amortized</div>
-              </div>
-            </div>
+              );
+            })()}
 
             {/* Retention Heatmap Table */}
             <div>
@@ -1470,23 +1639,53 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
               );
 
               return (
-                <div className="p-4 rounded-lg bg-[#0a0a0a] border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <div className="text-[10px] font-mono text-[#888] uppercase">
-                      Predicted Annual Insurance Premium
+                <div className="space-y-3">
+                  <div className="p-4 rounded-lg bg-[#0a0a0a] border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <div className="text-[10px] font-mono text-[#888] uppercase">
+                        Predicted Annual Insurance Premium
+                      </div>
+                      <div className="text-2xl sm:text-3xl font-extrabold font-mono text-emerald-300">
+                        ₹{estPremium.toLocaleString('en-IN')} / year
+                      </div>
                     </div>
-                    <div className="text-2xl sm:text-3xl font-extrabold font-mono text-emerald-300">
-                      ₹{estPremium.toLocaleString('en-IN')} / year
+
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+                      <span className="px-2.5 py-1 rounded bg-[#161616] border border-[#333] text-[#aaa]">
+                        BMI: <strong className={bmiVal > 30 ? 'text-red-400' : bmiVal > 25 ? 'text-amber-300' : 'text-emerald-400'}>{bmiVal}</strong> ({bmiVal > 30 ? 'Obese' : bmiVal > 25 ? 'Overweight' : 'Normal'})
+                      </span>
+                      <span className="px-2.5 py-1 rounded bg-emerald-950/50 border border-emerald-500/40 text-emerald-300">
+                        Random Forest Regressor
+                      </span>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
-                    <span className="px-2.5 py-1 rounded bg-[#161616] border border-[#333] text-[#aaa]">
-                      BMI: <strong className={bmiVal > 30 ? 'text-red-400' : bmiVal > 25 ? 'text-amber-300' : 'text-emerald-400'}>{bmiVal}</strong>
-                    </span>
-                    <span className="px-2.5 py-1 rounded bg-emerald-950/50 border border-emerald-500/40 text-emerald-300">
-                      Random Forest Regressor
-                    </span>
+                  {/* Real-time Actuarial Component Breakdown */}
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[10px] font-mono">
+                    <div className="p-2 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
+                      <div className="text-[#888]">Base Premium</div>
+                      <div className="font-bold text-white mt-0.5">₹14,000</div>
+                    </div>
+                    <div className="p-2 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
+                      <div className="text-[#888]">Age Loading ({premAge}y)</div>
+                      <div className="font-bold text-cyan-300 mt-0.5">+₹{Math.max(0, (premAge - 18) * 380).toLocaleString('en-IN')}</div>
+                    </div>
+                    <div className="p-2 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
+                      <div className="text-[#888]">BMI Surcharge ({bmiVal})</div>
+                      <div className="font-bold text-amber-300 mt-0.5">
+                        {bmiVal > 25 ? `+₹${Math.round((bmiVal - 25) * 850).toLocaleString('en-IN')}` : '₹0'}
+                      </div>
+                    </div>
+                    <div className="p-2 rounded bg-[#0a0a0a] border border-[#1f1f1f]">
+                      <div className="text-[#888]">Clinical Factors</div>
+                      <div className="font-bold text-rose-300 mt-0.5">
+                        +₹{((premDiabetes ? 6200 : 0) + (premBp ? 4800 : 0) + (premTransplant ? 19500 : 0) + (premChronic ? 11000 : 0)).toLocaleString('en-IN')}
+                      </div>
+                    </div>
+                    <div className="p-2 rounded bg-[#0a0a0a] border border-[#1f1f1f] col-span-2 sm:col-span-1">
+                      <div className="text-[#888]">Surgeries ({premSurgeries})</div>
+                      <div className="font-bold text-violet-300 mt-0.5">+₹{(premSurgeries * 5200).toLocaleString('en-IN')}</div>
+                    </div>
                   </div>
                 </div>
               );

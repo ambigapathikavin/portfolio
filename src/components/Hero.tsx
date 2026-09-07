@@ -4,19 +4,10 @@ import {
   ArrowRight, 
   Download, 
   Mail, 
-  Sparkles, 
   Database, 
   TrendingUp, 
-  BrainCircuit, 
-  Layers, 
-  Cpu, 
-  CheckCircle2, 
-  Activity,
   BarChart2,
-  BarChart3,
-  GitBranch,
-  Filter,
-  Check
+  GitBranch
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { AmbigapathiPortrait } from './AmbigapathiPortrait';
@@ -57,86 +48,15 @@ export const Hero: React.FC<HeroProps> = ({
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#111111] border border-[#ffffff15] text-cyan-400 text-[10px] font-mono tracking-[0.2em] shadow-sm mb-4"
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#111111] border border-[#ffffff15] text-cyan-400 text-[10px] font-mono tracking-[0.2em] shadow-sm mb-5"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
               <span>
-                {roleMode === 'DATA_ANALYST' ? 'DATA ANALYST & BI SPECIALIST' :
-                 roleMode === 'DATA_SCIENTIST' ? 'DATA SCIENTIST & ML ENGINEER' :
-                 'DATA ANALYST • DATA SCIENTIST • ML ENGINEER'}
+                {roleMode === 'DATA_ANALYST' ? 'DATA ANALYST' :
+                 roleMode === 'DATA_SCIENTIST' ? 'DATA SCIENTIST' :
+                 'DATA ANALYST • DATA SCIENTIST'}
               </span>
             </motion.div>
-
-            {/* 1-Click Role Customizer Banner for Hiring Managers */}
-            {onRoleModeChange && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.05 }}
-                className="w-full max-w-xl p-2.5 rounded-xl bg-[#0b1019]/90 border border-cyan-500/30 backdrop-blur-md mb-5 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2.5"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-300 shrink-0">
-                    <Filter className="w-3 h-3" />
-                  </div>
-                  <div>
-                    <div className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-wider">
-                      Hiring Manager Lens
-                    </div>
-                    <div className="text-[11px] text-[#A0AEC0] font-mono flex items-center gap-1.5">
-                      <span>
-                        {roleMode === 'DATA_ANALYST' ? 'Emphasizing SQL, Power BI, DAX & Storytelling' :
-                         roleMode === 'DATA_SCIENTIST' ? 'Emphasizing Python, BERT, PyTorch & MLOps' :
-                         'Select a role to highlight relevant skills & projects:'}
-                      </span>
-                      <span className="hidden md:inline-block px-1.5 py-0.2 rounded bg-cyan-950/80 border border-cyan-500/30 text-[9px] font-mono text-cyan-300 font-semibold animate-pulse">
-                        {roleMode === 'DATA_ANALYST' ? '5 Analyst Projects' :
-                         roleMode === 'DATA_SCIENTIST' ? '5 ML/AI Projects' :
-                         '10 Total Projects'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1 bg-[#090e17] p-1 rounded-xl border border-[#ffffff15] shadow-inner shrink-0 self-start sm:self-auto">
-                  <button
-                    type="button"
-                    onClick={() => onRoleModeChange('ALL')}
-                    className={`px-3 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
-                      roleMode === 'ALL'
-                        ? 'bg-white text-black font-bold shadow-[0_0_12px_rgba(255,255,255,0.25)]'
-                        : 'text-[#aaa] hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    All
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onRoleModeChange('DATA_ANALYST')}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
-                      roleMode === 'DATA_ANALYST'
-                        ? 'bg-cyan-400 text-black font-bold shadow-[0_0_15px_rgba(6,182,212,0.4)]'
-                        : 'text-cyan-300 hover:text-cyan-100 hover:bg-cyan-500/15 border border-cyan-500/20'
-                    }`}
-                  >
-                    <BarChart3 className="w-3 h-3" />
-                    <span>Analyst</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onRoleModeChange('DATA_SCIENTIST')}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
-                      roleMode === 'DATA_SCIENTIST'
-                        ? 'bg-violet-500 text-white font-bold shadow-[0_0_15px_rgba(139,92,246,0.4)]'
-                        : 'text-violet-300 hover:text-violet-100 hover:bg-violet-500/15 border border-violet-500/20'
-                    }`}
-                  >
-                    <BrainCircuit className="w-3 h-3" />
-                    <span>Scientist</span>
-                  </button>
-                </div>
-              </motion.div>
-            )}
 
             {/* Large Main Heading - Immediate LCP Paint */}
             <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-white leading-[1.12] mb-5">
@@ -188,7 +108,7 @@ export const Hero: React.FC<HeroProps> = ({
               {roleMode === 'DATA_ANALYST'
                 ? 'Data Analyst with hands-on expertise building executive Power BI dashboards, authoring complex SQL window queries & CTEs, and translating raw transactional metrics into bottom-line business strategies.'
                 : roleMode === 'DATA_SCIENTIST'
-                ? 'Data Scientist & ML Engineer specializing in BERT NLP fine-tuning, automated Scikit-learn pipelines, predictive modeling, and scalable PyTorch training workflows deployed on real-world datasets.'
+                ? 'Data Scientist specializing in BERT NLP fine-tuning, automated Scikit-learn pipelines, predictive modeling, and scalable PyTorch training workflows deployed on real-world datasets.'
                 : PERSONAL_INFO.heroDescription}
             </motion.p>
 

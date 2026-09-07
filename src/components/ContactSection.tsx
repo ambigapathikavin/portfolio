@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PERSONAL_INFO } from '../data/portfolioData';
+import { trackEvent } from '../utils/analytics';
 
 export const ContactSection: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -42,6 +43,7 @@ export const ContactSection: React.FC = () => {
     }
     navigator.clipboard.writeText(PERSONAL_INFO.email);
     setCopiedEmail(true);
+    trackEvent('copy_email', { method: 'button_click' });
     setTimeout(() => {
       setCopiedEmail(false);
     }, 2500);
@@ -54,6 +56,7 @@ export const ContactSection: React.FC = () => {
     }
     navigator.clipboard.writeText(PERSONAL_INFO.scheduleCallUrl);
     setCopiedScheduleLink(true);
+    trackEvent('copy_schedule_link', { method: 'button_click' });
     setTimeout(() => {
       setCopiedScheduleLink(false);
     }, 2500);
@@ -69,6 +72,10 @@ export const ContactSection: React.FC = () => {
     }
 
     setIsSubmitting(true);
+    trackEvent('submit_contact_form', {
+      subject: formData.subject || 'Inquiry',
+      has_message: true,
+    });
 
     // Simulate sending message + trigger mailto link fallback
     setTimeout(() => {

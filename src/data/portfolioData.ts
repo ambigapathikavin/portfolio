@@ -2,7 +2,7 @@ import { Project, SkillCategory, ExperienceItem, EducationItem, CertificationIte
 
 export const PERSONAL_INFO = {
   name: 'Ambigapathi V',
-  titles: 'Data Analyst | Data Scientist | Machine Learning Engineer',
+  titles: 'Data Analyst | Data Scientist',
   primaryHeadline: 'Turning Data Into Insights, Predictions & Intelligent Solutions.',
   supportingText: 'I work across data analytics, machine learning, NLP and AI to transform raw data into meaningful insights, predictive solutions and data-driven decisions.',
   heroDescription: 'Data Analyst and Data Scientist with hands-on experience in data analysis, business intelligence, machine learning, NLP and AI.',

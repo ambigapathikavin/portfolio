@@ -369,7 +369,7 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
           }`}>
             <span className="flex items-center gap-2">
               <Sparkles className="w-3.5 h-3.5" />
-              Showing tailored <strong>{selectedRole === 'DATA_ANALYST' ? 'Data Analyst' : 'Data Scientist & ML Engineer'}</strong> Resume
+              Showing tailored <strong>{selectedRole === 'DATA_ANALYST' ? 'Data Analyst' : 'Data Scientist'}</strong> Resume
             </span>
             <span className="text-[10px] text-[#888] hidden sm:inline">
               Downloadable as a clean, formatted PDF

@@ -314,14 +314,47 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
           </div>
         )}
 
+        {/* 6-Layer Architecture Quick Indicator Bar */}
+        <div className="mb-6 p-3 sm:p-3.5 rounded-xl bg-[#090e17] border border-cyan-500/25 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs font-mono shadow-sm">
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <span className="text-white font-bold text-[11px] uppercase tracking-wider">
+              6-Layer Case Study Anatomy:
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5 overflow-x-auto text-[10px] pb-1 md:pb-0">
+            {[
+              { id: 'dashboard' as TabKey, label: '1. Simulator' },
+              { id: 'pipeline' as TabKey, label: '2. Pipeline' },
+              { id: 'problem' as TabKey, label: '3. Problem & Context' },
+              { id: 'methodology' as TabKey, label: '4. Deep-Dive' },
+              { id: 'roi' as TabKey, label: '5. ROI & Strategy' }
+            ].map((step, sIdx, arr) => (
+              <React.Fragment key={step.id}>
+                <button
+                  onClick={() => setActiveTab(step.id)}
+                  className={`px-2 py-1 rounded transition-all cursor-pointer whitespace-nowrap ${
+                    activeTab === step.id
+                      ? 'bg-cyan-500 text-black font-bold shadow-sm'
+                      : 'bg-[#101726] text-[#A0AEC0] hover:text-white hover:bg-[#162035] border border-cyan-500/20'
+                  }`}
+                >
+                  {step.label}
+                </button>
+                {sIdx < arr.length - 1 && <span className="text-[#444] shrink-0">→</span>}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+
         {/* Navigation Tabs Bar */}
         <div id="project-tabs-content" className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-6 border-b border-[#ffffff10] scroll-mt-20">
           {[
-            { id: 'dashboard' as TabKey, label: 'Interactive Simulator & Dashboard', icon: BarChart2, isLive: true },
-            { id: 'pipeline' as TabKey, label: '9-Stage Pipeline Architecture', icon: Layers },
-            { id: 'problem' as TabKey, label: 'Business Problem & Context', icon: Briefcase },
-            { id: 'methodology' as TabKey, label: 'Technical Methodology', icon: FileCode2 },
-            { id: 'roi' as TabKey, label: 'Quantified ROI & Key Learnings', icon: Award }
+            { id: 'dashboard' as TabKey, label: '1. Interactive Simulator & KPIs', icon: BarChart2, isLive: true },
+            { id: 'pipeline' as TabKey, label: '2. 9-Stage Pipeline Architecture', icon: Layers },
+            { id: 'problem' as TabKey, label: '3. Business Problem & Scope', icon: Briefcase },
+            { id: 'methodology' as TabKey, label: '4. Technical Deep-Dive & Schemas', icon: FileCode2 },
+            { id: 'roi' as TabKey, label: '5. Quantified ROI & Strategic Directives', icon: Award }
           ].map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -628,43 +661,98 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
           </motion.div>
         )}
 
-        {/* TAB 5: QUANTIFIED ROI & LEARNINGS */}
+        {/* TAB 5: QUANTIFIED ROI & STRATEGIC DIRECTIVES */}
         {activeTab === 'roi' && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            className="space-y-6"
           >
-            {/* Results */}
-            <div className="p-6 rounded-xl bg-[#0e0e0e] border border-[#ffffff10]">
-              <h3 className="text-sm font-bold text-white font-mono mb-4 flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-emerald-400" />
-                <span>Verified Business Outcomes</span>
-              </h3>
-              <div className="space-y-3">
-                {project.results.map((r, i) => (
-                  <div key={i} className="p-3 rounded-lg bg-[#141414] border border-[#ffffff08] flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <span className="text-xs text-[#D0D0D0] leading-relaxed">{r}</span>
-                  </div>
-                ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Results */}
+              <div className="p-6 rounded-xl bg-[#0e0e0e] border border-[#ffffff10]">
+                <h3 className="text-sm font-bold text-white font-mono mb-4 flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-emerald-400" />
+                  <span>Verified Business Outcomes & Impact</span>
+                </h3>
+                <div className="space-y-3">
+                  {project.results.map((r, i) => (
+                    <div key={i} className="p-3 rounded-lg bg-[#141414] border border-[#ffffff08] flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <span className="text-xs text-[#D0D0D0] leading-relaxed">{r}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Learnings */}
+              <div className="p-6 rounded-xl bg-[#0e0e0e] border border-[#ffffff10]">
+                <h3 className="text-sm font-bold text-white font-mono mb-4 flex items-center gap-2">
+                  <Award className="w-4 h-4 text-amber-400" />
+                  <span>Key Technical Insights & Engineering Takeaways</span>
+                </h3>
+                <div className="space-y-3">
+                  {project.learnings.map((l, i) => (
+                    <div key={i} className="p-3 rounded-lg bg-[#141414] border border-[#ffffff08] flex items-start gap-2.5">
+                      <span className="text-xs font-mono font-bold text-amber-400 shrink-0">0{i + 1}</span>
+                      <span className="text-xs text-[#D0D0D0] leading-relaxed">{l}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Learnings */}
-            <div className="p-6 rounded-xl bg-[#0e0e0e] border border-[#ffffff10]">
-              <h3 className="text-sm font-bold text-white font-mono mb-4 flex items-center gap-2">
-                <Award className="w-4 h-4 text-amber-400" />
-                <span>Key Technical Insights & Takeaways</span>
-              </h3>
-              <div className="space-y-3">
-                {project.learnings.map((l, i) => (
-                  <div key={i} className="p-3 rounded-lg bg-[#141414] border border-[#ffffff08] flex items-start gap-2.5">
-                    <span className="text-xs font-mono font-bold text-amber-400 shrink-0">0{i + 1}</span>
-                    <span className="text-xs text-[#D0D0D0] leading-relaxed">{l}</span>
+            {/* Strategic Directives & Production Scalability Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Strategic Executive Directives */}
+              <div className="p-6 rounded-xl bg-[#0c1017] border border-cyan-500/25">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-[10px] font-mono mb-3">
+                  <span>EXECUTIVE ACTION PLAN</span>
+                </div>
+                <h3 className="text-sm font-bold text-white font-mono mb-3 flex items-center gap-2">
+                  <Briefcase className="w-4 h-4 text-cyan-400" />
+                  <span>Strategic Business Recommendations</span>
+                </h3>
+                <div className="space-y-2.5 text-xs text-[#C5CAD3]">
+                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#101726] border border-cyan-500/15">
+                    <span className="text-cyan-400 font-bold font-mono">1.</span>
+                    <span>Establish automated threshold alerts to proactively trigger operational interventions before margin erosion or churn occurs.</span>
                   </div>
-                ))}
+                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#101726] border border-cyan-500/15">
+                    <span className="text-cyan-400 font-bold font-mono">2.</span>
+                    <span>Adopt unified data dictionaries and dimensional models across sales, operations, and leadership to eliminate metric discrepancies.</span>
+                  </div>
+                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#101726] border border-cyan-500/15">
+                    <span className="text-cyan-400 font-bold font-mono">3.</span>
+                    <span>Integrate simulator-driven scenario planning into quarterly business reviews for data-backed quota and budget allocation.</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Production Scalability Architecture */}
+              <div className="p-6 rounded-xl bg-[#0c1017] border border-violet-500/25">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-violet-500/15 border border-violet-500/30 text-violet-300 text-[10px] font-mono mb-3">
+                  <span>PRODUCTION ROADMAP</span>
+                </div>
+                <h3 className="text-sm font-bold text-white font-mono mb-3 flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-violet-400" />
+                  <span>Enterprise Scalability (10x Horizon)</span>
+                </h3>
+                <div className="space-y-2.5 text-xs text-[#C5CAD3]">
+                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#161226] border border-violet-500/15">
+                    <span className="text-violet-400 font-bold font-mono">A.</span>
+                    <span><strong className="text-white">Cloud Data Lakehouse:</strong> Scale storage into Snowflake / BigQuery with dbt transformation models for zero-copy cloning and time-travel querying.</span>
+                  </div>
+                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#161226] border border-violet-500/15">
+                    <span className="text-violet-400 font-bold font-mono">B.</span>
+                    <span><strong className="text-white">Continuous Orchestration:</strong> Deploy Apache Airflow / Prefect DAGs with automated schema drift checks and Slack incident webhooks.</span>
+                  </div>
+                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#161226] border border-violet-500/15">
+                    <span className="text-violet-400 font-bold font-mono">C.</span>
+                    <span><strong className="text-white">MLOps Monitoring:</strong> Containerize inference via FastAPI & Docker, integrating Evidently AI for real-time concept drift monitoring.</span>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
