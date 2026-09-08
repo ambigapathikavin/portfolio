@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Project } from '../types';
 import { trackSimulatorAction } from '../utils/analytics';
+import { AdditionalProjectDashboards } from './AdditionalProjectDashboards';
 
 interface DashboardProps {
   project: Project;
@@ -1692,6 +1693,11 @@ export const ProjectInteractiveDashboard: React.FC<DashboardProps> = ({ project 
             })()}
           </div>
         </div>
+      )}
+
+      {/* Dynamic Simulators for Additional Machine Learning & Analytics Projects */}
+      {['flood', 'disease', 'security', 'chatbot', 'moderation', 'summarize', 'tomato', 'hospitality', 'diwali'].includes(project.dashboardType) && (
+        <AdditionalProjectDashboards project={project} />
       )}
 
     </div>

@@ -10,6 +10,7 @@ import { ProjectsShowcase } from './components/ProjectsShowcase';
 import { DataJourney } from './components/DataJourney';
 import { WhatIBring } from './components/WhatIBring';
 import { EducationCertifications } from './components/EducationCertifications';
+import { Testimonials } from './components/Testimonials';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { initGlobalTactileClicks } from './utils/sound';
@@ -206,6 +207,9 @@ export default function App() {
 
         {/* Work & Engineering Experience Timeline */}
         <ExperienceTimeline />
+
+        {/* Coworker Testimonials & Global AI Challenge Endorsements */}
+        <Testimonials />
 
         {/* Education & Verified Certifications */}
         <EducationCertifications />

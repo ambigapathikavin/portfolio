@@ -269,18 +269,21 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                   {/* Project Visual Thumbnail / Screenshot */}
                   <div 
                     onClick={() => handleProjectClick(project.id)}
-                    className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-[#181818] cursor-pointer group/img"
+                    className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-slate-100 dark:bg-[#181818] cursor-pointer group/img"
                   >
                     <img
                       src={project.imageUrl || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80'}
                       alt={project.imageCaption || project.title}
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80';
+                      }}
                       className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300 opacity-90 group-hover/img:opacity-100"
                       loading="lazy"
                     />
 
                     {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-black/40 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 dark:from-[#0f0f0f] via-transparent to-black/30 pointer-events-none" />
 
                     {/* Top Badges */}
                     <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
@@ -524,19 +527,19 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleProjectClick(project.id)}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-cyan-950/60 hover:bg-cyan-500 hover:text-black text-cyan-300 text-[11px] font-semibold font-mono border border-cyan-500/35 hover:border-cyan-400 transition-all duration-150 shadow-sm cursor-pointer group/simbtn"
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/60 hover:bg-cyan-500 hover:text-black text-cyan-800 dark:text-cyan-300 text-[11px] font-semibold font-mono border border-cyan-500/30 dark:border-cyan-500/35 hover:border-cyan-400 transition-all duration-150 shadow-sm cursor-pointer group/simbtn"
                       title="Launch live interactive simulator"
                     >
-                      <Activity className="w-3.5 h-3.5 text-cyan-400 group-hover/simbtn:text-black animate-pulse" />
+                      <Activity className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 group-hover/simbtn:text-black animate-pulse" />
                       <span>Live Simulator</span>
                     </button>
                     <button
                       onClick={() => handleProjectClick(project.id)}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-[#181818] hover:bg-[#252525] text-[#e0e0e0] hover:text-white text-[11px] font-semibold font-mono border border-[#ffffff0a] hover:border-[#ffffff20] transition-all duration-150 shadow-sm cursor-pointer group/casebtn"
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-slate-100 dark:bg-[#181818] hover:bg-slate-200 dark:hover:bg-[#252525] text-slate-800 dark:text-[#e0e0e0] hover:text-slate-900 dark:hover:text-white text-[11px] font-semibold font-mono border border-slate-200 dark:border-[#ffffff0a] hover:border-slate-300 dark:hover:border-[#ffffff20] transition-all duration-150 shadow-sm cursor-pointer group/casebtn"
                       title="View full architectural case study"
                     >
                       <span>Case Study</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#888] group-hover/casebtn:text-white group-hover/casebtn:translate-x-0.5 group-hover/casebtn:-translate-y-0.5 transition-transform" />
+                      <ArrowUpRight className="w-3.5 h-3.5 text-slate-500 dark:text-[#888] group-hover/casebtn:text-slate-900 dark:group-hover/casebtn:text-white group-hover/casebtn:translate-x-0.5 group-hover/casebtn:-translate-y-0.5 transition-transform" />
                     </button>
                   </div>
                 </div>

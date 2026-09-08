@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import portfolioWebp from '../data/portfolio.webp';
 import portfolioPng from '../data/portfolio.png';
 import { Database, BrainCircuit, Activity, Cpu, Sparkles } from 'lucide-react';
@@ -42,23 +43,29 @@ export const AmbigapathiPortrait: React.FC<PortraitProps> = ({
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-violet-500/10 rounded-full blur-3xl pointer-events-none" />
 
         {!imageError ? (
-          <div className="relative w-full h-full flex items-center justify-center">
-            <picture className="w-full h-full">
-              <source srcSet="/portfolio-450.webp 450w, /portfolio.webp 900w" type="image/webp" sizes="(max-width: 640px) 360px, 450px" />
-              <source srcSet={portfolioWebp} type="image/webp" />
-              <img
-                src={portfolioPng || '/portfolio.jpg'}
-                alt="Ambigapathi V - Data Analyst & Data Scientist"
-                width={450}
-                height={562}
-                fetchPriority="high"
-                loading="eager"
-                decoding="async"
-                className="w-full h-full object-cover object-top filter brightness-[1.02] contrast-[1.03]"
-                draggable={false}
-                onError={() => setImageError(true)}
-              />
-            </picture>
+          <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+            <motion.div
+              animate={{ scale: [1, 1.02, 1] }}
+              transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-full h-full"
+            >
+              <picture className="w-full h-full">
+                <source srcSet="/portfolio-450.webp 450w, /portfolio.webp 900w" type="image/webp" sizes="(max-width: 640px) 360px, 450px" />
+                <source srcSet={portfolioWebp} type="image/webp" />
+                <img
+                  src={portfolioPng || '/portfolio.jpg'}
+                  alt="Ambigapathi V - Data Analyst & Data Scientist"
+                  width={450}
+                  height={562}
+                  fetchPriority="high"
+                  loading="eager"
+                  decoding="async"
+                  className="w-full h-full object-cover object-top filter brightness-[1.02] contrast-[1.03]"
+                  draggable={false}
+                  onError={() => setImageError(true)}
+                />
+              </picture>
+            </motion.div>
             {/* Subtle Gradient Overlay at bottom for seamless readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#07090e] via-transparent to-transparent opacity-80 pointer-events-none" />
           </div>

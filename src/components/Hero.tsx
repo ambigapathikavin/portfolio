@@ -185,20 +185,42 @@ export const Hero: React.FC<HeroProps> = ({
           <div className="lg:col-span-5 flex justify-center lg:justify-end relative items-center">
             <div className="relative w-full max-w-[290px] sm:max-w-[340px] lg:max-w-[360px] h-[380px] sm:h-[420px] lg:h-[450px] flex items-center justify-center">
               
-              {/* Outer Decorative Ambient Glow & Orbit Grids */}
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-cyan-500/10 via-transparent to-violet-500/15 blur-2xl pointer-events-none" />
+              {/* Outer Decorative Ambient Glow & Orbit Grids with Breathing Glow */}
+              <motion.div 
+                animate={{
+                  scale: [0.96, 1.04, 0.96],
+                  opacity: [0.4, 0.75, 0.4],
+                }}
+                transition={{
+                  duration: 5.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut'
+                }}
+                className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-cyan-500/15 via-transparent to-violet-500/20 blur-2xl pointer-events-none" 
+              />
               <div className="absolute -inset-2 rounded-3xl border border-cyan-500/15 pointer-events-none" />
               <div className="absolute -inset-6 rounded-full border border-cyan-500/10 border-dashed animate-[spin_80s_linear_infinite] pointer-events-none" />
 
-              {/* Main Portrait Frame - Expanded Generous Scale */}
-              <div className="relative z-10 w-full h-full rounded-2xl overflow-hidden p-1.5 bg-gradient-to-b from-[#1c2838] via-[#101722] to-[#0a0e17] shadow-2xl border border-cyan-500/35 hover:border-cyan-400/60 transition-all duration-300 group">
+              {/* Main Portrait Frame - Floating & Breathing Animation */}
+              <motion.div 
+                animate={{
+                  y: [-6, 6, -6],
+                  scale: [1, 1.012, 1],
+                }}
+                transition={{
+                  duration: 5.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut'
+                }}
+                className="relative z-10 w-full h-full rounded-2xl overflow-hidden p-1.5 bg-gradient-to-b from-[#1c2838] via-[#101722] to-[#0a0e17] shadow-2xl border border-cyan-500/35 hover:border-cyan-400/60 transition-colors duration-300 group"
+              >
                 <div className="w-full h-full rounded-[14px] overflow-hidden bg-[#07090e] relative flex flex-col items-center justify-center">
                   
                   {/* High-Fidelity Studio Portrait Representation with Full Fill */}
                   <AmbigapathiPortrait className="w-full h-full" />
 
                 </div>
-              </div>
+              </motion.div>
 
               {/* Floating Analytical Metric 1: Top Right */}
               <motion.div

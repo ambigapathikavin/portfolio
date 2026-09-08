@@ -66,29 +66,29 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
     <div className="min-h-screen bg-[#050505] text-[#E0E0E0] font-sans pt-16 sm:pt-20 pb-24 selection:bg-cyan-500/30 selection:text-cyan-200">
       
       {/* Clean Sticky Sub-Navigation Header docked below main fixed Navbar */}
-      <header className="sticky top-[56px] sm:top-[64px] z-30 bg-[#080808]/95 backdrop-blur-md border-b border-[#ffffff10] px-4 sm:px-6 lg:px-8 py-2.5 shadow-lg shadow-black/70">
+      <header className="sticky top-[56px] sm:top-[64px] z-30 bg-white/95 dark:bg-[#080808]/95 backdrop-blur-md border-b border-slate-200 dark:border-[#ffffff10] px-4 sm:px-6 lg:px-8 py-2.5 shadow-md shadow-slate-200/50 dark:shadow-black/70 transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
           {/* Back Action & Breadcrumbs */}
           <div className="flex items-center gap-3">
             <button
               onClick={onBack}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-cyan-950/60 hover:bg-cyan-900/80 border border-cyan-500/40 text-xs font-mono text-cyan-300 font-semibold shadow-sm transition-all cursor-pointer group"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/60 hover:bg-cyan-100 dark:hover:bg-cyan-900/80 border border-cyan-500/30 dark:border-cyan-500/40 text-xs font-mono text-cyan-700 dark:text-cyan-300 font-semibold shadow-sm transition-all cursor-pointer group"
             >
               <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
               <span>Back to Overview</span>
             </button>
 
-            <div className="hidden md:flex items-center gap-2 text-xs font-mono text-[#666]">
+            <div className="hidden md:flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-[#666]">
               <span>/</span>
               <button 
                 onClick={onBack}
-                className="text-[#888] hover:text-white transition-colors cursor-pointer"
+                className="text-slate-600 dark:text-[#888] hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
               >
                 Projects
               </button>
               <span>/</span>
-              <span className="text-cyan-400 font-semibold truncate max-w-[240px]">{project.title}</span>
+              <span className="text-cyan-600 dark:text-cyan-400 font-semibold truncate max-w-[240px]">{project.title}</span>
             </div>
           </div>
 
@@ -99,12 +99,12 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                 href={project.liveDemoUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/40 text-xs font-mono text-emerald-300 font-bold transition-all shadow-sm"
+                className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/80 border border-emerald-500/40 text-xs font-mono text-emerald-800 dark:text-emerald-300 font-bold transition-all shadow-sm"
                 title="Launch Live Application / Streamlit"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Live Demo</span>
-                <ExternalLink className="w-3 h-3 text-emerald-400" />
+                <ExternalLink className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
               </a>
             )}
 
@@ -113,10 +113,10 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                 href={project.githubUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#141414] hover:bg-[#202020] border border-[#ffffff15] hover:border-cyan-500/40 text-xs font-mono text-[#ccc] hover:text-white transition-all shadow-sm"
+                className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#141414] hover:bg-slate-100 dark:hover:bg-[#202020] border border-slate-200 dark:border-[#ffffff15] hover:border-cyan-500/40 text-xs font-mono text-slate-700 dark:text-[#ccc] hover:text-slate-900 dark:hover:text-white transition-all shadow-sm"
                 title="View Source Repository on GitHub"
               >
-                <Github className="w-3 h-3 text-cyan-400" />
+                <Github className="w-3 h-3 text-cyan-500 dark:text-cyan-400" />
                 <span>GitHub</span>
               </a>
             )}
@@ -129,18 +129,18 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 40);
               }}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cyan-950/70 hover:bg-cyan-900/90 border border-cyan-500/40 text-xs font-mono text-cyan-300 font-semibold transition-all cursor-pointer shadow-sm group/sim"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/70 hover:bg-cyan-100 dark:hover:bg-cyan-900/90 border border-cyan-500/30 dark:border-cyan-500/40 text-xs font-mono text-cyan-700 dark:text-cyan-300 font-semibold transition-all cursor-pointer shadow-sm group/sim"
               title="Launch Interactive Simulator & Live Metrics"
             >
-              <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+              <Activity className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400 animate-pulse" />
               <span>Simulator</span>
             </button>
 
-            <div className="h-4 w-[1px] bg-[#ffffff15] hidden sm:block mx-0.5" />
+            <div className="h-4 w-[1px] bg-slate-200 dark:bg-[#ffffff15] hidden sm:block mx-0.5" />
 
             <button
               onClick={handleShare}
-              className="px-2.5 py-1.5 rounded-lg bg-[#141414] hover:bg-[#202020] border border-[#ffffff15] text-xs font-mono text-[#aaa] hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
+              className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#141414] hover:bg-slate-100 dark:hover:bg-[#202020] border border-slate-200 dark:border-[#ffffff15] text-xs font-mono text-slate-600 dark:text-[#aaa] hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
               title="Share this project link"
             >
               <Share2 className="w-3 h-3" />
@@ -149,7 +149,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
 
             <button
               onClick={() => onSelectProject(prevProject.id)}
-              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-[#141414] hover:bg-[#202020] border border-[#ffffff15] text-xs font-mono text-[#aaa] hover:text-white flex items-center gap-1 transition-all cursor-pointer"
+              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-white dark:bg-[#141414] hover:bg-slate-100 dark:hover:bg-[#202020] border border-slate-200 dark:border-[#ffffff15] text-xs font-mono text-slate-600 dark:text-[#aaa] hover:text-slate-900 dark:hover:text-white flex items-center gap-1 transition-all cursor-pointer"
               title={`Previous: ${prevProject.title}`}
             >
               <ArrowLeft className="w-3.5 h-3.5" />
@@ -158,7 +158,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
 
             <button
               onClick={() => onSelectProject(nextProject.id)}
-              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-[#141414] hover:bg-[#202020] border border-[#ffffff15] text-xs font-mono text-[#aaa] hover:text-white flex items-center gap-1 transition-all cursor-pointer"
+              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-white dark:bg-[#141414] hover:bg-slate-100 dark:hover:bg-[#202020] border border-slate-200 dark:border-[#ffffff15] text-xs font-mono text-slate-600 dark:text-[#aaa] hover:text-slate-900 dark:hover:text-white flex items-center gap-1 transition-all cursor-pointer"
               title={`Next: ${nextProject.title}`}
             >
               <span className="hidden sm:inline">Next</span>
@@ -285,6 +285,32 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                   </span>
                 ))}
               </div>
+
+              {/* Visual Project Image Showcase Banner */}
+              {project.imageUrl && (
+                <div className="mt-6 rounded-xl overflow-hidden border border-slate-200 dark:border-[#ffffff12] relative aspect-[21/9] sm:aspect-[24/9] w-full bg-slate-100 dark:bg-[#141414] group shadow-inner">
+                  <img
+                    src={project.imageUrl}
+                    alt={project.imageCaption || project.title}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=1200&q=80';
+                    }}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    loading="eager"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
+                  <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none">
+                    <span className="text-xs font-mono text-white font-medium bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/15">
+                      📸 {project.imageCaption || project.title}
+                    </span>
+                    <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950/90 backdrop-blur-md px-2.5 py-1 rounded-md border border-cyan-500/40 hidden sm:inline-flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                      <span>Visual Field Asset</span>
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
           </div>
@@ -296,16 +322,16 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
             {project.metrics.map((metric, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-xl bg-[#0f0f0f] border border-[#ffffff0a] hover:border-cyan-500/30 transition-all flex flex-col justify-between"
+                className="p-4 rounded-xl bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-[#ffffff0a] hover:border-cyan-500/30 transition-all flex flex-col justify-between shadow-sm"
               >
-                <div className="text-[10px] font-mono text-[#888] uppercase tracking-wider mb-1">
+                <div className="text-[10px] font-mono text-slate-500 dark:text-[#888] uppercase tracking-wider mb-1">
                   {metric.label}
                 </div>
-                <div className="text-2xl sm:text-3xl font-extrabold font-mono text-white tracking-tight">
+                <div className="text-2xl sm:text-3xl font-extrabold font-mono text-slate-900 dark:text-white tracking-tight">
                   {metric.value}
                 </div>
                 {metric.subtext && (
-                  <div className="text-[10px] font-mono text-cyan-400/80 mt-1">
+                  <div className="text-[10px] font-mono text-cyan-600 dark:text-cyan-400/80 mt-1 font-medium">
                     {metric.subtext}
                   </div>
                 )}
@@ -315,10 +341,10 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
         )}
 
         {/* 6-Layer Architecture Quick Indicator Bar */}
-        <div className="mb-6 p-3 sm:p-3.5 rounded-xl bg-[#090e17] border border-cyan-500/25 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs font-mono shadow-sm">
+        <div className="mb-6 p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-[#090e17] border border-slate-200 dark:border-cyan-500/25 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs font-mono shadow-sm">
           <div className="flex items-center gap-2 shrink-0">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            <span className="text-white font-bold text-[11px] uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+            <span className="text-slate-900 dark:text-white font-bold text-[11px] uppercase tracking-wider">
               6-Layer Case Study Anatomy:
             </span>
           </div>
@@ -336,19 +362,19 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                   className={`px-2 py-1 rounded transition-all cursor-pointer whitespace-nowrap ${
                     activeTab === step.id
                       ? 'bg-cyan-500 text-black font-bold shadow-sm'
-                      : 'bg-[#101726] text-[#A0AEC0] hover:text-white hover:bg-[#162035] border border-cyan-500/20'
+                      : 'bg-white dark:bg-[#101726] text-slate-700 dark:text-[#A0AEC0] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#162035] border border-slate-200 dark:border-cyan-500/20'
                   }`}
                 >
                   {step.label}
                 </button>
-                {sIdx < arr.length - 1 && <span className="text-[#444] shrink-0">→</span>}
+                {sIdx < arr.length - 1 && <span className="text-slate-400 dark:text-[#444] shrink-0">→</span>}
               </React.Fragment>
             ))}
           </div>
         </div>
 
         {/* Navigation Tabs Bar */}
-        <div id="project-tabs-content" className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-6 border-b border-[#ffffff10] scroll-mt-20">
+        <div id="project-tabs-content" className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-6 border-b border-slate-200 dark:border-[#ffffff10] scroll-mt-20">
           {[
             { id: 'dashboard' as TabKey, label: '1. Interactive Simulator & KPIs', icon: BarChart2, isLive: true },
             { id: 'pipeline' as TabKey, label: '2. 9-Stage Pipeline Architecture', icon: Layers },
@@ -371,14 +397,14 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                 }}
                 className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-mono whitespace-nowrap transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold shadow-sm'
-                    : 'text-[#888] hover:text-white hover:bg-[#141414]'
+                    ? 'bg-cyan-50 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border border-cyan-500/40 font-bold shadow-sm'
+                    : 'text-slate-600 dark:text-[#888] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#141414]'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
                 <span>{tab.label}</span>
                 {tab.isLive && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-0.5" />
                 )}
               </button>
             );

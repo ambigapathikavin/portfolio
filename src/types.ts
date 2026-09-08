@@ -1,4 +1,4 @@
-export type ProjectCategory = 'ALL' | 'DATA ANALYTICS' | 'POWER BI' | 'MACHINE LEARNING' | 'NLP' | 'AI';
+export type ProjectCategory = 'ALL' | 'DATA ANALYTICS' | 'POWER BI' | 'MACHINE LEARNING' | 'NLP' | 'AI' | 'DATA SCIENCE';
 
 export interface ProjectPipelineStep {
   step: string;
@@ -50,7 +50,7 @@ export interface Project {
   results: string[];
   learnings: string[];
   accentColor?: string;
-  dashboardType?: 'sales' | 'cricket' | 'hr' | 'news' | 'prescription' | 'churn' | 'credit' | 'ecommerce' | 'healthcare' | 'premium';
+  dashboardType?: 'sales' | 'cricket' | 'hr' | 'news' | 'prescription' | 'churn' | 'credit' | 'ecommerce' | 'healthcare' | 'premium' | 'flood' | 'disease' | 'security' | 'chatbot' | 'moderation' | 'summarize' | 'tomato' | 'hospitality' | 'diwali';
   datasetStats?: {
     rows: string;
     features: string;
@@ -126,4 +126,16 @@ export interface JourneyStage {
   keyTools: string[];
   deliverable: string;
   codeSnippet?: string;
+}
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  title: string;
+  quote: string;
+  company?: string;
+  project?: string;
+  badge?: string;
+  rating?: number;
+  avatarUrl?: string;
 }

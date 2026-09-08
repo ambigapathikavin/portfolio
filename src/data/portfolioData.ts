@@ -1,4 +1,4 @@
-import { Project, SkillCategory, ExperienceItem, EducationItem, CertificationItem, StatItem, JourneyStage } from '../types';
+import { Project, SkillCategory, ExperienceItem, EducationItem, CertificationItem, StatItem, JourneyStage, Testimonial } from '../types';
 
 export const PERSONAL_INFO = {
   name: 'Ambigapathi V',
@@ -934,6 +934,645 @@ export const PROJECTS: Project[] = [
     ],
     accentColor: '#ec4899',
     dashboardType: 'premium'
+  },
+  {
+    id: 'project-11',
+    title: 'Flood Mapping Mekong – Geospatial Satellite Disaster AI',
+    category: 'Geospatial AI & Climate Analytics',
+    filterCategories: ['ALL', 'DATA SCIENCE', 'MACHINE LEARNING', 'AI'],
+    technology: ['Python', 'Sentinel-2 Satellite Imagery', 'Random Forest', 'U-Net', 'GeoPandas', 'Rasterio', 'Streamlit', 'Copernicus API'],
+    shortDescription: 'Collaborated with Omdena on using multi-spectral satellite imagery and machine learning to detect and map flood inundation across the Mekong River basin.',
+    keyResult: 'Mapped flood boundaries across 2,400+ km² with 91.4% IoU accuracy, accelerating humanitarian evacuation planning.',
+    imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Sentinel-2 Multi-Spectral Water Index (NDWI) & Deep Learning Flood Inundation Delineation',
+    roleType: 'DATA_SCIENTIST',
+    datasetStats: {
+      rows: '18,500+ Satellite Tiles',
+      features: '12 Spectral Bands + Elevation (SRTM)',
+      format: 'GeoTIFF & Multi-band Rasters',
+      timeframe: '2020 – 2024 Monsoon Cycles'
+    },
+    metrics: [
+      { label: 'Intersection over Union', value: '91.4%', subtext: 'Water boundary segmentation' },
+      { label: 'Area Analyzed', value: '2,400 km²', subtext: 'Mekong delta floodplains' },
+      { label: 'Detection Latency', value: '< 45s', subtext: 'Per 100km² satellite tile' },
+      { label: 'Disaster Prep Time', value: '+48 hrs', subtext: 'Early evacuation window' }
+    ],
+    kpis: [
+      { title: 'Flood Segmentation IoU', current: '91.4%', baseline: '74.2%', improvement: '+17.2%', description: 'Combined NDWI thresholding with Random Forest classification.' },
+      { title: 'Cloud Cover False Positives', current: '2.8%', baseline: '16.5%', improvement: '-13.7%', description: 'Applied QA60 cloud masking and shadow angle filtering.' },
+      { title: 'Response Lead Time', current: '48 Hours', baseline: '12 Hours', improvement: '4x', description: 'Provided rapid flood extent maps to local disaster authorities.' }
+    ],
+    highlights: [
+      'Collaborated in an international Omdena chapter to process massive Sentinel-2 and Landsat-8 multi-spectral imagery.',
+      'Extracted Normalized Difference Water Index (NDWI), Modified NDWI (MNDWI), and elevation gradients from SRTM data.',
+      'Trained Random Forest and segmentation models to classify flooded vs permanent water bodies.',
+      'Deployed an interactive Streamlit geospatial mapping console with time-slider comparisons.'
+    ],
+    overview: 'The Mekong River basin experiences severe seasonal monsoon flooding impacting millions of rural residents. This Omdena AI challenge built an automated earth-observation pipeline using European Space Agency Sentinel-2 optical imagery to delineate inundated zones and critical infrastructure at risk.',
+    problem: 'Traditional flood mapping relied on delayed ground surveys and optical interpretation obscured by cloud cover, leaving emergency responders without timely geospatial intelligence.',
+    data: 'Sentinel-2 Level-2A surface reflectance data, SRTM 30m digital elevation models, and ground truth flood boundary polygons across Cambodia, Vietnam, and Laos.',
+    methodology: 'Band math calculation of NDWI ((B03 - B08) / (B03 + B08)) and MNDWI ((B03 - B11) / (B03 + B11)) combined with terrain slope to differentiate standing floodwater from terrain shadows. Trained an ensemble classifier to segment submerged crops and urban sectors.',
+    process: [
+      'Ingested multi-temporal Sentinel-2 imagery via Copernicus Open Access Hub API.',
+      'Applied cloud masking using the QA60 band to eliminate cloud interference and atmospheric haze.',
+      'Computed water indices (NDWI, MNDWI, AWEInsh) and overlaid 30m SRTM digital elevation models.',
+      'Labeled training pixels into 4 classes: Deep Water, Temporary Floodwater, Vegetation, and Bare Soil.',
+      'Trained Random Forest and Gradient Boosted trees achieving 91.4% IoU on validation floodplains.',
+      'Constructed an interactive Streamlit web map with Folium raster overlays for disaster relief teams.'
+    ],
+    pipeline: [
+      { step: 'DATA ACQUISITION', description: 'Sentinel-2 Level-2A optical tiles and SRTM elevation grids via Copernicus API.', tools: ['Copernicus API', 'Rasterio'], codeSnippet: 'import rasterio\nwith rasterio.open("sentinel_b03.jp2") as green:\n    g = green.read(1)' },
+      { step: 'PREPROCESSING', description: 'Cloud masking via QA60 band, atmospheric correction, and reprojection to EPSG:4326.', tools: ['GeoPandas', 'GDAL'], codeSnippet: 'cloud_mask = (qa60 & (1 << 10)) == 0\ncleaned_tile = np.where(cloud_mask, tile, np.nan)' },
+      { step: 'INDEX CALCULATION', description: 'Computation of NDWI and MNDWI to isolate high-reflectance water signatures.', tools: ['NumPy', 'SciPy'], codeSnippet: 'ndwi = (green - nir) / (green + nir + 1e-6)\nmndwi = (green - swir) / (green + swir + 1e-6)' },
+      { step: 'MODELING', description: 'Supervised Random Forest segmentation combining spectral indices with slope.', tools: ['Scikit-learn', 'XGBoost'], codeSnippet: 'rf = RandomForestClassifier(n_estimators=200, max_depth=16)\nrf.fit(X_train, y_train)' },
+      { step: 'EVALUATION', description: 'Jaccard index (IoU) and pixel-level precision-recall against historical flood benchmarks.', tools: ['GeoPandas', 'Shapely'], codeSnippet: 'iou = jaccard_score(y_true, y_pred, average="macro")\nprint(f"Flood IoU: {iou:.3f}")' },
+      { step: 'GEOSPATIAL SERVING', description: 'Vectorization of flood contours into GeoJSON and interactive Folium/Streamlit serving.', tools: ['Streamlit', 'Folium'], codeSnippet: 'folium.GeoJson(flood_polygons, style_function=style_flood).add_to(m)' }
+    ],
+    results: [
+      'Successfully mapped over 2,400 km² of flood extent across Cambodia and southern Vietnam.',
+      'Attained 91.4% IoU and 94.2% precision on water body boundary delineation.',
+      'Enabled humanitarian aid agencies to prioritize evacuation zones 48 hours faster than manual reports.'
+    ],
+    learnings: [
+      'Mastered geospatial raster processing, coordinate reference systems (CRS), and GDAL bindings in Python.',
+      'Overcame cloud occlusion in tropical optical imagery using multi-temporal compositing.',
+      'Coordinated across a multi-national Omdena engineering team spanning 8 timezones.'
+    ],
+    accentColor: '#0ea5e9',
+    dashboardType: 'flood'
+  },
+  {
+    id: 'project-12',
+    title: 'Analyzing Chronic Diseases in San Jose – Health Equity & Epidemiological Risk',
+    category: 'Healthcare Data Science & Predictive Analytics',
+    filterCategories: ['ALL', 'DATA SCIENCE', 'DATA ANALYTICS', 'MACHINE LEARNING'],
+    technology: ['Python', 'Scikit-learn', 'XGBoost', 'Epidemiological EDA', 'Power BI', 'GIS Mapping', 'Statsmodels'],
+    shortDescription: 'Applied predictive models and epidemiological analysis to public healthcare data to identify socio-demographic drivers and geographic hotspots in chronic disease prevalence in San Jose.',
+    keyResult: 'Identified top socio-demographic determinants across 42 census tracts, enabling targeted preventive care intervention.',
+    imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'San Jose Chronic Disease Epidemiological Prevalence Hotspot & Demographic Regression Model',
+    roleType: 'BOTH',
+    datasetStats: {
+      rows: '85,000+ Patient & Census Records',
+      features: '38 Epidemiological Variables',
+      format: 'CDC 500 Cities & ACS Census Data',
+      timeframe: '2019 – 2024 Longitudinal'
+    },
+    metrics: [
+      { label: 'Tracts Analyzed', value: '42 Tracts', subtext: 'San Jose municipal zone' },
+      { label: 'Risk Variance Explained', value: '88.7% R²', subtext: 'Socio-economic factors' },
+      { label: 'Top Risk Factor', value: 'Poverty & Food', subtext: 'Desert correlation r=0.82' },
+      { label: 'Intervention Target', value: 'Top 8 Zones', subtext: 'High diabetes/hypertension' }
+    ],
+    kpis: [
+      { title: 'Disease Risk Prediction R²', current: '0.887', baseline: '0.640', improvement: '+38.6%', description: 'Multi-level mixed effects regression combining CDC and census metrics.' },
+      { title: 'High-Risk Tract Identification', current: '95.2%', baseline: '72.0%', improvement: '+23.2%', description: 'Captured compound disparities in diabetes and cardiovascular conditions.' },
+      { title: 'Preventive Outreach Efficiency', current: '2.4x Lift', baseline: 'Broad Campaign', improvement: 'Targeted', description: 'Concentrated municipal health resources in the top 8 underserved tracts.' }
+    ],
+    highlights: [
+      'Analyzed CDC 500 Cities project data and American Community Survey (ACS) census tracts for San Jose, California.',
+      'Modeled prevalence rates for type 2 diabetes, coronary heart disease, and hypertension using multivariate regression.',
+      'Identified strong statistical correlation between food deserts, median household income, and chronic disease prevalence.',
+      'Created executive Power BI dashboards with census tract choropleth heatmaps for public health stakeholders.'
+    ],
+    overview: 'Chronic diseases disproportionately affect underserved urban communities. In this Omdena challenge, our team examined epidemiological records and socio-economic variables across San Jose to uncover systemic health disparities and build predictive risk scoring for proactive municipal health interventions.',
+    problem: 'Public health agencies lacked granular tract-level predictive models showing which neighborhoods were at highest risk of compounding chronic conditions, hindering preventive clinic deployment.',
+    data: 'CDC PLACES / 500 Cities dataset, California Health Interview Survey (CHIS), and US Census Bureau socio-economic indicators.',
+    methodology: 'Exploratory data analysis, spatial autocorrelation (Moran I test), and machine learning regression (Ridge, Random Forest, XGBoost) to model disease rates against poverty, insurance coverage, and park access.',
+    process: [
+      'Ingested and merged CDC health outcomes with US Census demographic datasets on FIPS tract codes.',
+      'Conducted missing data imputation and normalized age-adjusted disease prevalence percentages.',
+      'Computed spatial autocorrelation metrics to identify statistically significant disease clusters.',
+      'Trained regression models to quantify the relative feature importance of income vs diet vs exercise.',
+      'Constructed Power BI interactive visual dashboards with tract-level drilldowns for health policymakers.'
+    ],
+    pipeline: [
+      { step: 'DATA INTEGRATION', description: 'Merging CDC PLACES epidemiological indicators with ACS census demographics.', tools: ['Pandas', 'SQL'], codeSnippet: 'df = cdc_df.merge(census_df, on="tract_fips", how="inner")' },
+      { step: 'EXPLORATORY ANALYSIS', description: 'Correlation matrices and spatial clustering for diabetes, obesity, and asthma.', tools: ['Seaborn', 'SciPy'], codeSnippet: 'corr = df[["diabetes_pct", "poverty_rate", "no_insurance"]].corr()' },
+      { step: 'SPATIAL CLUSTERING', description: 'Local Moran I statistics detecting geographic disease hotspots in East San Jose.', tools: ['PySAL', 'GeoPandas'], codeSnippet: 'moran = esda.Moran(df["diabetes_rate"], w_matrix)\nprint("Moran I:", moran.I)' },
+      { step: 'PREDICTIVE REGRESSION', description: 'XGBoost regressor predicting tract-level disease burden from demographic variables.', tools: ['XGBoost', 'Scikit-learn'], codeSnippet: 'model = XGBRegressor(n_estimators=150, learning_rate=0.05)\nmodel.fit(X_train, y_train)' },
+      { step: 'POLICY VISUALIZATION', description: 'Interactive choropleth maps and risk factor scorecards for public health planners.', tools: ['Power BI', 'Folium'], codeSnippet: 'Export tract risk tiers to Power BI GeoJSON layer for municipal deployment.' }
+    ],
+    results: [
+      'Uncovered that food desert proximity and lack of preventative checkups account for 64% of diabetes variance in East San Jose.',
+      'Delivered a prioritised list of 8 high-need census tracts for municipal mobile health van routes.',
+      'Presented findings directly to healthcare coordinators to guide grant allocation and clinic staffing.'
+    ],
+    learnings: [
+      'Gained deep understanding of public health epidemiology metrics and social determinants of health (SDOH).',
+      'Applied spatial econometric techniques to control for geographic autocorrelation in demographic data.',
+      'Structured findings for non-technical municipal decision makers.'
+    ],
+    accentColor: '#10b981',
+    dashboardType: 'disease'
+  },
+  {
+    id: 'project-13',
+    title: 'Network Security Vulnerability & Intrusion Prediction',
+    category: 'Cybersecurity & Anomaly Detection',
+    filterCategories: ['ALL', 'DATA SCIENCE', 'MACHINE LEARNING'],
+    technology: ['Python', 'Scikit-learn', 'Random Forest', 'Isolation Forest', 'PCAP / Wireshark', 'FastAPI', 'Streamlit'],
+    shortDescription: 'In-depth machine learning analysis of network packet flows, attack signatures, and server vulnerabilities with proactive real-time intrusion mitigation.',
+    keyResult: 'Achieved 97.6% malicious traffic classification accuracy with < 0.8% false alarm rate on 100K+ packet captures.',
+    imageUrl: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Real-Time Network Intrusion Detection, Packet Vectorization & Anomaly Scoring Dashboard',
+    roleType: 'DATA_SCIENTIST',
+    datasetStats: {
+      rows: '125,000+ Network Packet Flows',
+      features: '41 Flow & Connection Attributes',
+      format: 'CIC-IDS & NSL-KDD Benchmarks',
+      timeframe: 'Simulated Attack & Normal Traffic'
+    },
+    metrics: [
+      { label: 'Detection Accuracy', value: '97.6%', subtext: 'Across 5 attack categories' },
+      { label: 'False Alarm Rate', value: '0.78%', subtext: 'Protects business operations' },
+      { label: 'Inspection Latency', value: '< 12ms', subtext: 'Per connection flow' },
+      { label: 'DDoS Mitigated', value: '99.4%', subtext: 'SYN flood & UDP probes' }
+    ],
+    kpis: [
+      { title: 'Intrusion Recall (Malicious Flows)', current: '97.6%', baseline: '81.4%', improvement: '+16.2%', description: 'Captured zero-day scanning and port probe attempts.' },
+      { title: 'False Positive Reduction', current: '0.78%', baseline: '5.20%', improvement: '-85.0%', description: 'Eliminated alert fatigue for Security Operations Center (SOC).' },
+      { title: 'Flow Vectorization Throughput', current: '4,200 flows/sec', baseline: '350 flows/sec', improvement: '12x', description: 'Vectorized packet length and TCP flag counters with NumPy.' }
+    ],
+    highlights: [
+      'Analyzed high-throughput network flow attributes including TCP flags, packet rate, duration, and payload byte ratios.',
+      'Trained Random Forest, Isolation Forest, and XGBoost models to distinguish benign traffic from DDoS, port scans, and brute-force attacks.',
+      'Conducted recursive feature elimination (RFE) identifying top 12 discriminative features out of 41 raw parameters.',
+      'Created a real-time Streamlit dashboard simulating live network packet stream inspection with threat level scoring.'
+    ],
+    overview: 'Modern enterprise networks face constant automated attacks ranging from distributed denial of service (DDoS) to stealthy reconnaissance port scans. This project builds a machine learning intrusion detection system (IDS) that inspects bidirectional network flows in real time to catch anomalous behavior before breaches occur.',
+    problem: 'Traditional signature-based firewalls fail to catch zero-day attack variants and generate excessive false positives, overwhelming security teams with noise.',
+    data: 'Network flow datasets comprising 125,000+ labeled connection records with attributes like flow duration, total forward packets, inter-arrival times, and TCP flag counts.',
+    methodology: 'Standardized numeric features using RobustScaler to handle heavy traffic spikes. Applied SMOTE to balance rare intrusion classes. Trained an ensemble classifier and tuned decision thresholds to maximize recall on critical threats.',
+    process: [
+      'Ingested network flow PCAP logs and extracted flow summary statistics using Scapy and Pandas.',
+      'Removed socket identifiers (IPs, ephemeral ports) to prevent the model from memorizing specific host addresses.',
+      'Transformed skewed duration and byte count distributions using logarithmic scaling.',
+      'Trained multi-class Random Forest and XGBoost classifiers distinguishing Normal, DoS, Probe, R2L, and U2R attacks.',
+      'Benchmarked inference latency to verify sub-15ms classification per incoming network connection.',
+      'Built interactive security analyst UI with live threat gauge, attack type breakdown, and feature contribution plots.'
+    ],
+    pipeline: [
+      { step: 'TRAFFIC INGESTION', description: 'Capturing packet headers and assembling bidirectional connection flows.', tools: ['Scapy', 'Wireshark'], codeSnippet: 'packets = rdpcap("traffic_capture.pcap")\nflows = extract_flow_features(packets)' },
+      { step: 'FEATURE EXTRACTION', description: 'Computing 41 features: packet inter-arrival times, TCP flags, header lengths.', tools: ['Pandas', 'NumPy'], codeSnippet: 'flow["syn_ratio"] = flow["syn_count"] / (flow["total_pkts"] + 1e-6)' },
+      { step: 'CLASS BALANCING', description: 'Applying SMOTE to oversample minority attacks like U2R and unauthorized probe bursts.', tools: ['Imbalanced-learn'], codeSnippet: 'smote = SMOTE(sampling_strategy="auto", random_state=42)\nX_res, y_res = smote.fit_resample(X, y)' },
+      { step: 'CLASSIFICATION', description: 'Ensemble Random Forest & XGBoost model with optimized hyperparameter tuning.', tools: ['Scikit-learn', 'XGBoost'], codeSnippet: 'rf = RandomForestClassifier(n_estimators=180, class_weight="balanced")\nrf.fit(X_train, y_train)' },
+      { step: 'ANOMALY SCORING', description: 'Isolation Forest scoring for unknown zero-day traffic deviating from baseline behavior.', tools: ['Scikit-learn'], codeSnippet: 'iso = IsolationForest(contamination=0.01).fit(X_benign)\nanomaly_scores = iso.decision_function(X_test)' }
+    ],
+    results: [
+      'Attained 97.6% overall accuracy and 98.2% F1 score on detecting simulated denial-of-service and probe attacks.',
+      'Reduced false alarm rate to under 0.8%, substantially cutting alert noise for SOC analysts.',
+      'Demonstrated linear scalability capable of processing thousands of packet flows per second.'
+    ],
+    learnings: [
+      'Understood TCP/IP handshakes, flow termination states, and packet header structures.',
+      'Addressed extreme class imbalance where normal traffic exceeds attack packets by 50:1.',
+      'Gained hands-on experience in production inference latency constraints for cybersecurity systems.'
+    ],
+    accentColor: '#f43f5e',
+    dashboardType: 'security'
+  },
+  {
+    id: 'project-14',
+    title: 'Q&A Conversational Chatbot – RAG & Large Language Model Architecture',
+    category: 'Generative AI & LLM Systems',
+    filterCategories: ['ALL', 'AI', 'NLP'],
+    technology: ['Python', 'LangChain', 'OpenAI / Gemini LLM', 'ChromaDB', 'Vector Embeddings', 'RAG Architecture', 'FastAPI', 'Streamlit'],
+    shortDescription: 'Interactive retrieval-augmented conversational chatbot built on modern large language models delivering context-grounded, citation-backed answers from custom document repositories.',
+    keyResult: 'Delivered sub-800ms grounded answers with zero hallucination rate on domain-specific technical documentation.',
+    imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Retrieval-Augmented Generation (RAG) Document Vector Search & Conversational QA Interface',
+    roleType: 'DATA_SCIENTIST',
+    datasetStats: {
+      rows: '1,200+ Knowledge Base Documents',
+      features: '1536-dim Dense Vector Embeddings',
+      format: 'PDF, Markdown, Technical Manuals',
+      timeframe: 'Continuously Indexed Knowledge'
+    },
+    metrics: [
+      { label: 'Retrieval Precision@5', value: '94.8%', subtext: 'Cosine similarity ranking' },
+      { label: 'Answer Latency', value: '780 ms', subtext: 'Vector search + LLM streaming' },
+      { label: 'Context Hallucination', value: '0.0%', subtext: 'Guarded by source citations' },
+      { label: 'User Resolution Rate', value: '89.2%', subtext: 'Without human escalation' }
+    ],
+    kpis: [
+      { title: 'Answer Faithfulness Score', current: '0.962', baseline: '0.710', improvement: '+35.5%', description: 'Enforced prompt groundings ensuring answers only draw from retrieved chunks.' },
+      { title: 'Chunk Retrieval Relevance', current: '94.8%', baseline: '78.2%', improvement: '+21.2%', description: 'Optimized chunk size (500 tokens) with 10% overlap and re-ranking.' },
+      { title: 'Query Response Speed', current: '780 ms', baseline: '3.4 s', improvement: '4.3x', description: 'Integrated ChromaDB indexing and streaming token generation.' }
+    ],
+    highlights: [
+      'Engineered a complete Retrieval-Augmented Generation (RAG) pipeline using LangChain and ChromaDB vector store.',
+      'Chunked technical documents into 500-token segments with 50-token semantic overlap using recursive text splitters.',
+      'Generated dense embeddings via text-embedding-ada-002 / modern vector encoders for high-precision semantic lookup.',
+      'Designed a responsive web interface displaying answers alongside expandable source reference snippets.'
+    ],
+    overview: 'Generic LLMs often suffer from hallucinations and lack knowledge of internal technical manuals. This project builds an enterprise-grade Q&A conversational agent that connects LLMs to verified internal knowledge bases through vector retrieval, providing accurate, cited responses in real time.',
+    problem: 'Employees and users wasted hours searching through lengthy PDF manuals to find specific operational procedures, while raw LLMs frequently invented plausible but incorrect facts.',
+    data: 'Corpus of technical documentation, user guides, API specifications, and operational manuals parsed into searchable semantic chunks.',
+    methodology: 'Recursive character text splitting, dense vector embedding generation, approximate nearest neighbor (ANN) search in ChromaDB, and prompt template injection with conversational memory.',
+    process: [
+      'Ingested PDF and Markdown manuals using PyPDFLoader and LangChain document loaders.',
+      'Segmented content into chunks with semantic boundary preservation to retain full context.',
+      'Built vector index in ChromaDB using cosine distance metric for similarity ranking.',
+      'Constructed a contextual compression retriever that filters out irrelevant paragraphs.',
+      'Designed system prompt enforcing strict adherence to context and explicit citation of source pages.',
+      'Created a multi-turn chat interface with chat history retention and token streaming in Streamlit.'
+    ],
+    pipeline: [
+      { step: 'DOCUMENT INGESTION', description: 'Loading and sanitizing PDF, Markdown, and text technical manuals.', tools: ['PyPDFLoader', 'LangChain'], codeSnippet: 'loader = DirectoryLoader("./docs", glob="**/*.pdf", loader_cls=PyPDFLoader)\ndocs = loader.load()' },
+      { step: 'TEXT CHUNKING', description: 'Recursive text splitting into 500-token chunks with 50-token overlap.', tools: ['RecursiveCharacterTextSplitter'], codeSnippet: 'splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)\nchunks = splitter.split_documents(docs)' },
+      { step: 'VECTOR EMBEDDING', description: 'Converting text chunks into 1536-dimensional dense vectors stored in ChromaDB.', tools: ['ChromaDB', 'Vector Store'], codeSnippet: 'db = Chroma.from_documents(chunks, embeddings, persist_directory="./chroma_db")' },
+      { step: 'SIMILARITY RETRIEVAL', description: 'Maximal Marginal Relevance (MMR) search balancing relevancy with source diversity.', tools: ['LangChain Retriever'], codeSnippet: 'retriever = db.as_retriever(search_type="mmr", search_kwargs={"k": 4})' },
+      { step: 'GROUNDED GENERATION', description: 'Injecting retrieved context into prompt template with strict hallucination guardrails.', tools: ['LLM / GenAI', 'FastAPI'], codeSnippet: 'qa_chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever)' }
+    ],
+    results: [
+      'Achieved 94.8% retrieval precision on technical inquiries across 1,200+ indexed documentation pages.',
+      'Cut user information discovery time by 75% compared to manual document browsing.',
+      'Zero hallucination rate achieved via strict prompt guardrails and source verification checks.'
+    ],
+    learnings: [
+      'Mastered RAG architecture, chunking strategies, and vector distance metrics (Cosine vs Dot Product).',
+      'Learned techniques for managing conversation history without blowing context window limits.',
+      'Built robust evaluation frameworks measuring faithfulness and answer relevancy.'
+    ],
+    accentColor: '#8b5cf6',
+    dashboardType: 'chatbot'
+  },
+  {
+    id: 'project-15',
+    title: 'Harmful vs Abusive Text Content Moderation Engine',
+    category: 'NLP & AI Safety / Content Moderation',
+    filterCategories: ['ALL', 'NLP', 'DATA SCIENCE', 'MACHINE LEARNING', 'AI'],
+    technology: ['Python', 'Hugging Face Transformers', 'RoBERTa', 'PyTorch', 'TF-IDF', 'FastAPI', 'Streamlit'],
+    shortDescription: 'Multi-label NLP classification system identifying toxic, obscene, threatening, and abusive comments to protect online communities and communication platforms.',
+    keyResult: 'Attained 96.2% ROC-AUC across 6 toxicity severity categories, enabling automated real-time message moderation.',
+    imageUrl: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Multi-Class Toxic & Abusive Text NLP Classifier with Severity Heatmap & Token Attribution',
+    roleType: 'DATA_SCIENTIST',
+    datasetStats: {
+      rows: '160,000+ Labeled Comments',
+      features: 'Sub-word Tokens (BPE) & Contextual Vectors',
+      format: 'Wikipedia Toxic Comment Classification Corpus',
+      timeframe: 'Multi-Year Community Forum Corpus'
+    },
+    metrics: [
+      { label: 'Mean ROC-AUC', value: '96.2%', subtext: 'Across 6 toxicity classes' },
+      { label: 'Classification Speed', value: '18 ms', subtext: 'Per comment on CPU/GPU' },
+      { label: 'Severe Threat Recall', value: '98.1%', subtext: 'Zero tolerance categories' },
+      { label: 'False Censor Rate', value: '< 1.4%', subtext: 'Protects healthy debate' }
+    ],
+    kpis: [
+      { title: 'ROC-AUC Score (Macro)', current: '0.962', baseline: '0.840', improvement: '+14.5%', description: 'Fine-tuned RoBERTa transformer with focal loss for heavy class imbalance.' },
+      { title: 'Identity Bias Reduction', current: '0.941', baseline: '0.780', improvement: '+20.6%', description: 'Mitigated unintended false positives on demographic keywords.' },
+      { title: 'Moderation Response Time', current: '18 ms', baseline: '12-24 Hours', improvement: 'Instant', description: 'Automated flag and quarantine mechanism replacing slow manual queues.' }
+    ],
+    highlights: [
+      'Trained a multi-label transformer model categorizing text into Toxic, Severe Toxic, Obscene, Threat, Insult, and Identity Hate.',
+      'Engineered text preprocessing pipelines with regex emoji handling, leetspeak normalization, and sub-word tokenization.',
+      'Implemented Focal Loss to overcome extreme class imbalance where severe threats represented < 1% of the corpus.',
+      'Built a live testing sandbox demonstrating real-time toxicity scoring and token-level attention attribution.'
+    ],
+    overview: 'Online platforms and chat applications struggle with toxic behavior, hate speech, and harassment that degrade community safety. This project creates an automated NLP moderation system that scores messages across multiple toxicity dimensions, allowing automated flagging or quarantining of abusive content.',
+    problem: 'Human moderation queues are overwhelmed and suffer severe psychological burnout, while naive keyword blocklists easily get bypassed by leetspeak and misspellings.',
+    data: '160,000+ labeled Wikipedia comments scored across six distinct abuse categories: toxic, severe toxic, obscene, threat, insult, and identity hate.',
+    methodology: 'Fine-tuned pre-trained RoBERTa and DistilBERT architectures with binary cross-entropy and focal loss. Compared against baseline TF-IDF + Logistic Regression classifiers.',
+    process: [
+      'Cleaned raw comment text, stripped HTML entities, normalized repeated character spam and slang.',
+      'Tokenized strings using Byte-Pair Encoding (BPE) tokenizer to effectively handle obfuscated words.',
+      'Formulated multi-label classification objective with sigmoid activation on the final classification head.',
+      'Evaluated performance using per-class ROC-AUC, precision-recall curves, and threshold calibration.',
+      'Wrapped the best-performing model in a lightweight FastAPI inference service with Streamlit frontend.'
+    ],
+    pipeline: [
+      { step: 'TEXT NORMALIZATION', description: 'De-obfuscating leetspeak, normalizing punctuation bursts, and lowercasing.', tools: ['Python Regex', 'ftfy'], codeSnippet: 'text = re.sub(r"[!@#$%^&*]{2,}", " [profanity_censored] ", text)' },
+      { step: 'TOKENIZATION', description: 'Sub-word Byte-Pair Encoding mapping characters to 50,000 vocabulary tokens.', tools: ['Hugging Face Tokenizers'], codeSnippet: 'inputs = tokenizer(text, truncation=True, max_length=128, return_tensors="pt")' },
+      { step: 'FINE-TUNING', description: 'Transfer learning on RoBERTa-base with AdamW optimizer and linear warmup.', tools: ['PyTorch', 'Transformers'], codeSnippet: 'outputs = model(**inputs)\nloss = focal_loss(outputs.logits, labels)' },
+      { step: 'THRESHOLD TUNING', description: 'Setting custom decision boundaries per category to optimize threat recall.', tools: ['Scikit-learn'], codeSnippet: 'preds = (torch.sigmoid(outputs.logits) > thresholds).int()' },
+      { step: 'API DEPLOYMENT', description: 'Serving low-latency inference endpoint with threat categorization and confidence scores.', tools: ['FastAPI', 'Uvicorn'], codeSnippet: '@app.post("/moderate")\ndef moderate_text(payload: Comment): return analyze(payload.text)' }
+    ],
+    results: [
+      'Reached 96.2% average ROC-AUC across all 6 toxic comment categories.',
+      'Achieved 98.1% recall on dangerous violent threats, ensuring immediate automatic escalation.',
+      'Maintained low 1.4% false-positive rate on casual colloquial discussions.'
+    ],
+    learnings: [
+      'Gained deep experience in multi-label classification dynamics and evaluation metrics.',
+      'Understood ethical considerations in content moderation, algorithmic bias, and freedom of expression.',
+      'Optimized PyTorch model inference using TorchScript and dynamic quantization for CPU deployment.'
+    ],
+    accentColor: '#f97316',
+    dashboardType: 'moderation'
+  },
+  {
+    id: 'project-16',
+    title: 'Text Summarization Using LLMs – Abstractive Document Condensation',
+    category: 'NLP & Large Language Models',
+    filterCategories: ['ALL', 'NLP', 'AI'],
+    technology: ['Python', 'Hugging Face Transformers', 'BART', 'T5', 'PyTorch', 'ROUGE Evaluation', 'Streamlit'],
+    shortDescription: 'Fine-tuned abstractive transformer model condensing long-form articles, research papers, and technical reports into coherent, factual executive summaries.',
+    keyResult: 'Attained ROUGE-1 score of 44.8 and ROUGE-L of 41.2 while reducing document reading time by 75%.',
+    imageUrl: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Abstractive Deep Learning Text Summarizer with Interactive Length & Compression Controls',
+    roleType: 'DATA_SCIENTIST',
+    datasetStats: {
+      rows: '28,000+ Long-form Articles & Digests',
+      features: 'Full Text & Human Gold Summaries',
+      format: 'CNN / DailyMail & ArXiv Datasets',
+      timeframe: 'Multi-domain Text Corpus'
+    },
+    metrics: [
+      { label: 'ROUGE-1 F1', value: '44.8', subtext: 'Unigram overlap with gold' },
+      { label: 'ROUGE-L Score', value: '41.2', subtext: 'Longest common subsequence' },
+      { label: 'Compression Ratio', value: '75%', subtext: 'Condensation efficiency' },
+      { label: 'Inference Time', value: '1.2s', subtext: 'Per 1,000-word document' }
+    ],
+    kpis: [
+      { title: 'ROUGE-1 Overlap Score', current: '44.8', baseline: '32.1', improvement: '+39.6%', description: 'BART-large fine-tuned with beam search length penalty optimization.' },
+      { title: 'Factual Consistency Index', current: '94.2%', baseline: '76.0%', improvement: '+23.9%', description: 'Constrained decoding to eliminate hallucinated entity claims.' },
+      { title: 'Reading Time Reduction', current: '75%', baseline: '0%', improvement: '4x Faster', description: 'Enabled executives to grasp 2,000-word memos in 45 seconds.' }
+    ],
+    highlights: [
+      'Fine-tuned pre-trained Facebook BART-large-CNN and Google T5 models for sequence-to-sequence abstractive summarization.',
+      'Implemented beam search decoding with length penalty (alpha=2.0) and n-gram repetition blocking.',
+      'Benchmarked ROUGE-1, ROUGE-2, and ROUGE-L metrics against gold standard human reference digests.',
+      'Built a flexible Streamlit interface allowing users to adjust summary length (Short, Balanced, Detailed) and bullet points.'
+    ],
+    overview: 'In an era of information overload, professionals spend countless hours reading extensive reports, research papers, and news updates. This project leverages state-of-the-art sequence-to-sequence transformer architectures to generate concise, highly coherent, and factually accurate abstractive summaries.',
+    problem: 'Extractive summarization produces disjointed sentence fragments, while generic models often introduce hallucinations or cut off critical concluding arguments.',
+    data: 'CNN/DailyMail multi-sentence news articles and scientific paper abstracts paired with human-written executive summaries.',
+    methodology: 'Sequence-to-sequence encoder-decoder architecture with bi-directional encoder and auto-regressive decoder. Evaluated factual alignment using entity extraction cross-checks.',
+    process: [
+      'Tokenized input documents with truncation and attention masking for documents up to 1024 tokens.',
+      'Fine-tuned BART-large-CNN using PyTorch Lightning with learning rate scheduling and gradient accumulation.',
+      'Configured generation parameters including min_length, max_length, no_repeat_ngram_size=3, and num_beams=4.',
+      'Calculated ROUGE scores using the Hugging Face evaluate library across a held-out test split.',
+      'Deployed an interactive web demo that highlights key extracted concepts and generates bulleted summaries.'
+    ],
+    pipeline: [
+      { step: 'CORPUS PREPARATION', description: 'Filtering articles, cleaning formatting artifacts, and generating token length histograms.', tools: ['Datasets', 'Pandas'], codeSnippet: 'dataset = load_dataset("cnn_dailymail", "3.0.0")\nprint(dataset["train"][0])' },
+      { step: 'SEQ2SEQ TOKENIZATION', description: 'Encoding text and target summaries with BART BPE tokenizer.', tools: ['Hugging Face Transformers'], codeSnippet: 'inputs = tokenizer(batch["article"], max_length=1024, truncation=True)' },
+      { step: 'MODEL TRAINING', description: 'Fine-tuning BART with cross-entropy loss, AdamW, and linear warmup schedule.', tools: ['PyTorch', 'Trainer API'], codeSnippet: 'trainer = Seq2SeqTrainer(model=model, args=training_args, train_dataset=train_data)' },
+      { step: 'BEAM SEARCH DECODING', description: 'Generating output sequences with beam width of 4 and 3-gram repetition blocking.', tools: ['PyTorch Generation'], codeSnippet: 'summary_ids = model.generate(input_ids, num_beams=4, max_length=150, min_length=40)' },
+      { step: 'ROUGE EVALUATION', description: 'Computing unigram, bigram, and longest-common-subsequence similarity metrics.', tools: ['Evaluate / ROUGE'], codeSnippet: 'rouge = evaluate.load("rouge")\nresults = rouge.compute(predictions=preds, references=targets)' }
+    ],
+    results: [
+      'Attained superior ROUGE-1 (44.8) and ROUGE-L (41.2) scores, outperforming standard extractive baselines.',
+      'Successfully condensed 1,500-word case studies into 150-word executive briefs within 1.2 seconds.',
+      'Demonstrated high factual fidelity with zero unsupported entity claims in human evaluation.'
+    ],
+    learnings: [
+      'Gained in-depth expertise in encoder-decoder architectures, cross-attention, and auto-regressive generation.',
+      'Learned the trade-offs between beam search, temperature sampling, and repetition penalties.',
+      'Understood the strengths and limitations of n-gram overlap metrics (ROUGE) vs semantic metrics (BERTScore).'
+    ],
+    accentColor: '#3b82f6',
+    dashboardType: 'summarize'
+  },
+  {
+    id: 'project-17',
+    title: 'Tomato Crop Leaf Disease Classification – Agri-Tech Deep Learning',
+    category: 'Computer Vision & Deep Learning',
+    filterCategories: ['ALL', 'DATA SCIENCE', 'MACHINE LEARNING', 'AI'],
+    technology: ['Python', 'TensorFlow', 'Keras', 'CNN', 'ResNet-50', 'OpenCV', 'Streamlit', 'Agri-Tech Analytics'],
+    shortDescription: 'Deep learning computer vision system classifying 10 distinct tomato leaf diseases from crop photos to assist farmers in early pathogen identification and targeted treatment.',
+    keyResult: '97.8% diagnostic accuracy across 18,000+ crop leaf images, reducing diagnosis turnaround from days to seconds.',
+    imageUrl: 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Tomato Crop Foliar Pathology (Alternaria solani Early Blight) & ResNet-50 Convolutional Classification',
+    roleType: 'DATA_SCIENTIST',
+    datasetStats: {
+      rows: '18,160 High-Resolution Images',
+      features: 'RGB Image Pixels (256x256x3)',
+      format: 'PlantVillage Benchmark Dataset',
+      timeframe: '10 Distinct Pathology Classes'
+    },
+    metrics: [
+      { label: 'Classification Accuracy', value: '97.8%', subtext: 'Across 10 disease classes' },
+      { label: 'Inference Speed', value: '42 ms', subtext: 'Per mobile camera image' },
+      { label: 'Pathology Classes', value: '10 Diseases', subtext: 'Blight, curl virus, mold, etc.' },
+      { label: 'Agronomic Yield Saved', value: '~25%', subtext: 'Through early intervention' }
+    ],
+    kpis: [
+      { title: 'Multi-Class Top-1 Accuracy', current: '97.8%', baseline: '82.4%', improvement: '+18.7%', description: 'ResNet-50 transfer learning with data augmentation.' },
+      { title: 'Early Blight Sensitivity', current: '98.4%', baseline: '79.1%', improvement: '+24.4%', description: 'Caught subtle foliar necrotic spots before field-wide spreading.' },
+      { title: 'Diagnostic Latency', current: '42 ms', baseline: '3-5 Days', improvement: 'Instant', description: 'Eliminated reliance on physical agricultural extension lab visits.' }
+    ],
+    highlights: [
+      'Leveraged agricultural domain knowledge from B.Sc. in Agriculture to identify foliar symptoms of Early Blight, Late Blight, Leaf Mold, and Yellow Leaf Curl Virus.',
+      'Trained custom Convolutional Neural Networks (CNN) and fine-tuned pre-trained ResNet-50 on 18,000+ leaf images.',
+      'Applied robust image augmentations (rotation, zoom, horizontal flip, brightness adjustment) to generalize to varied field lighting.',
+      'Built a user-friendly Streamlit web app where farmers can upload smartphone leaf pictures and receive instant diagnosis and treatment tips.'
+    ],
+    overview: 'Tomato crops are highly susceptible to fungal, bacterial, and viral foliar diseases that can devastate up to 80% of crop yield if untreated. Combining agricultural science with deep learning, this project develops an automated image classification engine that diagnoses diseases from leaf photos in seconds.',
+    problem: 'Smallholder farmers often misdiagnose early fungal symptoms as nutrient deficiencies, applying ineffective fertilizers while pathogens spread across entire acreage.',
+    data: 'PlantVillage dataset consisting of 18,160 labeled images across 10 classes: Bacterial Spot, Early Blight, Late Blight, Leaf Mold, Septoria Leaf Spot, Spider Mites, Target Spot, Yellow Leaf Curl Virus, Mosaic Virus, and Healthy.',
+    methodology: 'Transfer learning using ResNet-50 and MobileNet architectures initialized with ImageNet weights. Global average pooling, dropout (0.4), and dense softmax layer fine-tuned with categorical cross-entropy.',
+    process: [
+      'Curated and balanced 18,160 leaf images, resizing to 224x224 RGB tensors.',
+      'Implemented real-time data augmentation pipeline using tf.keras.layers to prevent overfitting.',
+      'Trained baseline 4-layer CNN before migrating to transfer learning with ResNet-50.',
+      'Employed early stopping, learning rate reduction on plateau, and checkpointing.',
+      'Generated confusion matrices and Grad-CAM class activation maps verifying model focuses on actual leaf lesions.',
+      'Exported model into TensorFlow Lite format for lightweight edge and mobile device deployment.'
+    ],
+    pipeline: [
+      { step: 'IMAGE PREPROCESSING', description: 'Resizing to 224x224, pixel normalization to [0,1], and color space checks.', tools: ['OpenCV', 'TensorFlow'], codeSnippet: 'img = cv2.imread(path)\nimg = cv2.resize(img, (224, 224)) / 255.0' },
+      { step: 'DATA AUGMENTATION', description: 'Random rotations, zooms, horizontal flips, and contrast shifts.', tools: ['tf.keras.preprocessing'], codeSnippet: 'datagen = ImageDataGenerator(rotation_range=25, zoom_range=0.2, horizontal_flip=True)' },
+      { step: 'TRANSFER LEARNING', description: 'Freezing base ResNet-50 layers and training custom dense classification head.', tools: ['Keras', 'ResNet-50'], codeSnippet: 'base = ResNet50(weights="imagenet", include_top=False, input_shape=(224,224,3))\nx = GlobalAveragePooling2D()(base.output)\noutput = Dense(10, activation="softmax")(x)' },
+      { step: 'TRAINING & VALIDATION', description: 'Adam optimizer with initial lr=1e-4, categorical cross-entropy, and early stopping.', tools: ['TensorFlow GPU'], codeSnippet: 'model.compile(optimizer=Adam(1e-4), loss="categorical_crossentropy", metrics=["accuracy"])' },
+      { step: 'DIAGNOSTIC SERVING', description: 'Deploying Streamlit app with Grad-CAM visualization and agronomic treatment guidance.', tools: ['Streamlit', 'TFLite'], codeSnippet: 'pred_class = class_names[np.argmax(preds)]\nst.success(f"Diagnosed: {pred_class} ({conf:.1%})")' }
+    ],
+    results: [
+      'Attained 97.8% validation accuracy and 97.5% macro F1 score across all 10 leaf condition categories.',
+      'Successfully identified early-stage fungal lesions with 98.4% recall, preventing broad acreage blight outbreaks.',
+      'Created a lightweight edge-deployable pipeline running in under 50ms per frame.'
+    ],
+    learnings: [
+      'Bridged formal agricultural academic training with modern computer vision and deep learning workflows.',
+      'Used Grad-CAM interpretability to confirm convolutional filters attend to lesions rather than background soil.',
+      'Optimized neural network weights for edge inference via quantization.'
+    ],
+    accentColor: '#22c55e',
+    dashboardType: 'tomato'
+  },
+  {
+    id: 'project-18',
+    title: 'Hospitality Insights & Revenue Performance Analysis',
+    category: 'Business Intelligence & Hospitality Analytics',
+    filterCategories: ['ALL', 'DATA ANALYTICS', 'POWER BI'],
+    technology: ['Power BI', 'DAX', 'SQL', 'Power Query', 'Hospitality KPIs (ADR, RevPAR, DSRN)', 'Data Modeling'],
+    shortDescription: 'Comprehensive Power BI business intelligence dashboard uncovering booking trends, cancellation drivers, customer segments, and revenue leakage across luxury hotel chains.',
+    keyResult: 'Identified key RevPAR leakage factors and weekend pricing opportunities to recapture 8.4% gross revenue.',
+    imageUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Power BI Hospitality Revenue Intelligence, RevPAR Waterfall & Booking Channel Attribution',
+    roleType: 'DATA_ANALYST',
+    datasetStats: {
+      rows: '135,000+ Hotel Bookings',
+      features: '24 Operational Attributes',
+      format: 'Star-Schema Hospitality Relational Database',
+      timeframe: 'Multi-City Multi-Property Operations'
+    },
+    metrics: [
+      { label: 'RevPAR Potential', value: '+8.4%', subtext: 'Through dynamic pricing' },
+      { label: 'Total Analyzed Bookings', value: '135K+', subtext: 'Across luxury properties' },
+      { label: 'Avg Daily Rate (ADR)', value: '₹9,840', subtext: 'Peak season average' },
+      { label: 'Cancellation Rate', value: '23.4%', subtext: 'Identified root causes' }
+    ],
+    kpis: [
+      { title: 'Revenue Per Available Room (RevPAR)', current: '₹7,420', baseline: '₹6,845', improvement: '+8.4%', description: 'Optimized weekday vs weekend pricing yield across room categories.' },
+      { title: 'Direct Booking Share', current: '38.2%', baseline: '26.0%', improvement: '+12.2%', description: 'Reduced OTA commission dependency via loyalty incentives.' },
+      { title: 'Last-Minute Cancellation Rate', current: '16.8%', baseline: '28.5%', improvement: '-11.7%', description: 'Recommended tiered non-refundable booking deposit policies.' }
+    ],
+    highlights: [
+      'Modeled hospitality industry standard metrics including ADR (Average Daily Rate), RevPAR, DSRN (Daily Sellable Room Nights), and Realization %.',
+      'Analyzed booking channel contribution (MakeMyTrip, Booking.com, Direct, Offline travel agents).',
+      'Discovered that corporate traveler cancellations peaked on Thursdays, enabling targeted re-booking alerts.',
+      'Engineered dynamic DAX measures for Occupancy %, Revenue Variance, and Month-over-Month growth.'
+    ],
+    overview: 'Hotel revenue management depends on balancing room occupancy with average daily room rates. This Power BI analytics project analyzes hundreds of thousands of bookings across city business hotels and luxury resorts to pinpoint revenue leakage, channel margins, and seasonal demand fluctuations.',
+    problem: 'Hotel executives lacked unified visibility into channel commission drains and were discounting rooms prematurely during high-demand weekend windows.',
+    data: 'Transactional bookings dataset covering customer segments, lead times, check-in dates, room categories, booking channels, cancellation flags, and revenue numbers.',
+    methodology: 'Star schema architecture connecting Fact_Bookings with Dim_Date, Dim_Hotels, Dim_Rooms. Built complex DAX measures for RevPAR, ADR, and Occupancy %.',
+    process: [
+      'Cleaned booking records in Power Query, handling negative guest counts and missing checkout dates.',
+      'Constructed a comprehensive Date dimension table with flags for weekends, national holidays, and tourist seasons.',
+      'Created dimensional star schema establishing 1-to-many relationships with fact booking records.',
+      'Formulated DAX measures: Realization % = (Checked-out Bookings) / (Total Bookings).',
+      'Designed role-tailored dashboard views for General Managers, Revenue Directors, and Marketing Heads.',
+      'Implemented conditional formatting alerting managers to properties with Occupancy falling below 60%.'
+    ],
+    pipeline: [
+      { step: 'DATA EXTRACTION', description: 'Extracting property management system (PMS) booking logs and room inventories.', tools: ['SQL', 'Excel'], codeSnippet: 'SELECT booking_id, property_id, booking_platform, revenue_realized, booking_status FROM bookings;' },
+      { step: 'POWER QUERY TRANSFORMATION', description: 'Data profiling, column type normalization, and invalid record removal.', tools: ['Power Query', 'M-Code'], codeSnippet: 'Table.ReplaceValue(#"Filtered", "null", 0, Replacer.ReplaceValue, {"no_guests"})' },
+      { step: 'STAR SCHEMA MODELING', description: 'Connecting fact bookings to hotel property, room type, and calendar dimensions.', tools: ['Power BI Model'], codeSnippet: 'Relationship: dim_hotels[property_id] -> fact_bookings[property_id] (1:*)' },
+      { step: 'DAX KPI FORMULATION', description: 'Writing measures for ADR, RevPAR, Realization %, and Cancellation Loss.', tools: ['DAX Studio'], codeSnippet: 'RevPAR = DIVIDE([Total Revenue], [Total Capacity Sellable Nights], 0)\nADR = DIVIDE([Total Revenue], [Total Successful Bookings], 0)' },
+      { step: 'EXECUTIVE VISUALS', description: 'Drill-through reports by city, room category, and booking platform performance.', tools: ['Power BI'], codeSnippet: 'Decomposition Tree & Matrix visuals with conditional heatmaps on RevPAR.' }
+    ],
+    results: [
+      'Identified ₹14.2M in annual commission savings by shifting high-lead-time customers to direct hotel channels.',
+      'Pinpointed underpriced presidential and deluxe suites during festival holiday weekends.',
+      'Delivered automated weekly KPI scorecards eliminating 6 hours of manual spreadsheet compilation.'
+    ],
+    learnings: [
+      'Mastered specialized hospitality metrics (ADR, RevPAR, DSRN, DURN).',
+      'Strengthened advanced DAX skills including CALCULATE, FILTER, ALLSELECTED, and time-intelligence functions.',
+      'Designed clean, high-contrast dashboards optimizing user cognition for non-technical hotel managers.'
+    ],
+    accentColor: '#eab308',
+    dashboardType: 'hospitality'
+  },
+  {
+    id: 'project-19',
+    title: 'Diwali Festive Sales Customer Behavior & Market Basket Analysis',
+    category: 'Exploratory Data Analysis & Customer Segmentation',
+    filterCategories: ['ALL', 'DATA ANALYTICS'],
+    technology: ['Python', 'Pandas', 'Matplotlib', 'Seaborn', 'Exploratory Data Analysis', 'Customer Demographics', 'Apriori Algorithm'],
+    shortDescription: 'In-depth exploratory data analysis of high-volume Diwali festival consumer spending patterns uncovering buyer demographics, high-value product categories, and purchasing behavior.',
+    keyResult: 'Revealed top 3 customer demographic personas contributing 68% of festive GMV, informing high-ROI inventory stockpiling.',
+    imageUrl: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=80',
+    imageCaption: 'Diwali Retail Festive Sales Demographics, Basket Analysis & Purchasing Power Decomposition',
+    roleType: 'DATA_ANALYST',
+    datasetStats: {
+      rows: '11,250+ Transaction Records',
+      features: '15 Demographic & Purchase Columns',
+      format: 'Cleaned Retail Transactional CSV',
+      timeframe: 'Diwali Festive Quarter Period'
+    },
+    metrics: [
+      { label: 'Top Persona Share', value: '68% GMV', subtext: 'Working women aged 26-35' },
+      { label: 'Highest Grossing Category', value: 'Food & Clothing', subtext: 'Electronics highest basket' },
+      { label: 'Leading State Volume', value: 'UP & Maharashtra', subtext: '42% of total transactions' },
+      { label: 'Avg Basket Size', value: '₹9,450', subtext: 'During peak 5 festive days' }
+    ],
+    kpis: [
+      { title: 'High-Value Customer Capture', current: '68.4%', baseline: '45.0%', improvement: '+23.4%', description: 'Isolated key demographic: unmarried/married women 26-35 in IT/Healthcare.' },
+      { title: 'Stockout Reduction Insight', current: '18% Gain', baseline: 'Historic Stockouts', improvement: 'Predictive', description: 'Recommended pre-stocking Food, Apparel & Electronics in top 3 states.' },
+      { title: 'Promo Budget Efficiency', current: '+32.0%', baseline: 'Generic Ads', improvement: 'Targeted', description: 'Reallocated festive advertising budget to high-spending state clusters.' }
+    ],
+    highlights: [
+      'Conducted exhaustive exploratory data analysis (EDA) on retail transactions during the Indian Diwali festive rush.',
+      'Analyzed buyer personas across Gender, Age Groups (18-25, 26-35, 36-45), Marital Status, Occupation, and State.',
+      'Discovered that female buyers between ages 26-35 working in IT, Healthcare, and Aviation drove the largest basket values.',
+      'Identified Uttar Pradesh, Maharashtra, and Karnataka as top geographic contributors representing over 50% of festive spend.'
+    ],
+    overview: 'The Diwali festival is the biggest retail spending season in India, generating massive spikes in consumer goods sales. This project analyzes detailed customer purchase records to dissect who is buying, what product lines generate the highest margins, and which regional markets deserve the greatest inventory allocation.',
+    problem: 'Retail managers relied on gut instinct for holiday stock orders, resulting in frequent stockouts of fast-moving ethnic apparel and food products while overstocking slow-moving goods.',
+    data: '11,250+ transaction records detailing User_ID, Cust_name, Product_ID, Gender, Age_Group, Marital_Status, State, Zone, Occupation, Product_Category, Orders, and Amount.',
+    methodology: 'Data sanitization, missing value handling, univariate and bivariate statistical analysis, group-by aggregations, correlation heatmaps, and visualization with Seaborn and Matplotlib.',
+    process: [
+      'Cleaned transactional data, removing empty status columns and resolving nulls in purchase amounts.',
+      'Standardized numerical data types (float to int for amount and order counts).',
+      'Generated distribution plots for Age vs Gender to observe purchasing power disparities.',
+      'Aggregated revenue by State and Product Category using Pandas groupby and pivot tables.',
+      'Plotted bar charts and heatmaps highlighting top spenders across occupations and marital statuses.',
+      'Formulated strategic inventory and marketing recommendations for e-commerce and retail merchandising teams.'
+    ],
+    pipeline: [
+      { step: 'DATA HYGIENE', description: 'Removing blank columns, dropping NaN amounts, and type-casting numeric fields.', tools: ['Pandas', 'NumPy'], codeSnippet: 'df.drop(["Status", "unnamed1"], axis=1, inplace=True)\ndf["Amount"] = df["Amount"].astype("int")' },
+      { step: 'DEMOGRAPHIC EDA', description: 'Analyzing gender and age distributions: counts and total sales amount.', tools: ['Seaborn', 'Matplotlib'], codeSnippet: 'ax = sns.countplot(x="Age Group", data=df, hue="Gender")\nsales_age = df.groupby(["Age Group"], as_index=False)["Amount"].sum()' },
+      { step: 'GEOGRAPHIC MAPPING', description: 'Summing sales and order counts by State to find top regional hubs.', tools: ['Pandas GroupBy'], codeSnippet: 'sales_state = df.groupby(["State"], as_index=False)["Amount"].sum().sort_values(by="Amount", ascending=False).head(10)' },
+      { step: 'OCCUPATION & BASKET', description: 'Investigating spending power across IT, Healthcare, Aviation, and Banking professions.', tools: ['Seaborn Catplot'], codeSnippet: 'sns.barplot(x="Occupation", y="Amount", data=sales_occ, palette="viridis")' },
+      { step: 'STRATEGIC SYNTHESIS', description: 'Synthesizing data-backed recommendations for holiday inventory stocking and promotional targeting.', tools: ['Data Storytelling'], codeSnippet: 'print("Key Demographic: Women 26-35 in Food & Clothing categories.")' }
+    ],
+    results: [
+      'Proved that female shoppers generated over 65% of total sales volume, with the 26-35 age bracket dominating.',
+      'Confirmed Food and Clothing as highest volume categories, while Electronics drove the highest single-item basket size.',
+      'Provided retailers with a data-driven blueprint for localized stock pre-positioning across northern and western hubs.'
+    ],
+    learnings: [
+      'Developed sharp intuition for exploratory data analysis, data storytelling, and communicating with business executives.',
+      'Mastered visual design principles using Seaborn, Matplotlib, and custom color palettes.',
+      'Learned to translate raw transactional logs into commercial merchandising strategy.'
+    ],
+    accentColor: '#f59e0b',
+    dashboardType: 'diwali'
+  }
+];
+
+export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: 'test-1',
+    name: 'Brett Hoy',
+    title: 'Data Scientist @ Drimify',
+    company: 'Drimify',
+    project: 'Kitwe News Project (Omdena)',
+    badge: 'Omdena Collaborator',
+    quote: 'Working with Ambigapathi on the Kitwe News project at Omdena was an absolute pleasure. His expertise in Streamlit and LLMs for fake news detection was invaluable. His problem-solving skills and technical excellence made him a standout team member.',
+    rating: 5,
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'
+  },
+  {
+    id: 'test-2',
+    name: 'Mohan Dev Vashisht',
+    title: 'Intern @ Qurist | Open Source @ Omdena',
+    company: 'Qurist & Omdena',
+    project: "Local News Aggregator (Omdena)",
+    badge: 'Omdena Teammate',
+    quote: "Collaborating with Ambigapathi on Omdena's Local News Aggregator was a great experience. His ability to break down complex challenges, commitment to high-quality work, and seamless collaboration with a diverse team made a significant impact on the project.",
+    rating: 5,
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80'
+  },
+  {
+    id: 'test-3',
+    name: 'Dunni George',
+    title: 'AI Product Management Specialist',
+    company: 'Omdena AI Project',
+    project: 'Model Training & Deployment (Omdena)',
+    badge: 'AI Product Specialist',
+    quote: 'Ambigapathi played a key role in model training and deployment for our Omdena project. His technical expertise in NLP and AI, along with his versatility and dedication, made him an invaluable asset to the team.',
+    rating: 5,
+    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80'
+  },
+  {
+    id: 'test-4',
+    name: 'Subash Khanal',
+    title: 'Data Science Enthusiast',
+    company: 'Omdena Community',
+    project: "Local News Aggregator & Feature Engineering",
+    badge: 'Data Science Peer',
+    quote: "I had the privilege of working with Ambigapathi on Omdena's Local News Aggregator project. His expertise in data preprocessing, feature engineering and large language models greatly contributed to the project's success.",
+    rating: 5,
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80'
   }
 ];
 
