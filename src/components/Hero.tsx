@@ -12,6 +12,7 @@ import {
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { AmbigapathiPortrait } from './AmbigapathiPortrait';
 import { DataParticleBackground } from './DataParticleBackground';
+import { trackEvent, trackResumeInteraction, trackSkillPillClick } from '../utils/analytics';
 
 interface HeroProps {
   onOpenResume: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
@@ -83,9 +84,11 @@ export const Hero: React.FC<HeroProps> = ({
               ] : [
                 'SQL', 'Power BI', 'Tableau', 'Python', 'Machine Learning', 'BERT NLP', 'DAX', 'Business Analytics'
               ]).map((skill) => (
-                <span
+                <button
                   key={skill}
-                  className={`px-2.5 py-1 rounded-full text-xs font-mono transition-all ${
+                  type="button"
+                  onClick={() => trackSkillPillClick(skill, roleMode)}
+                  className={`px-2.5 py-1 rounded-full text-xs font-mono transition-all text-left cursor-pointer hover:scale-105 active:scale-95 ${
                     roleMode === 'DATA_ANALYST'
                       ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 font-semibold'
                       : roleMode === 'DATA_SCIENTIST'
@@ -94,7 +97,7 @@ export const Hero: React.FC<HeroProps> = ({
                   }`}
                 >
                   {skill}
-                </span>
+                </button>
               ))}
             </motion.div>
 
@@ -120,7 +123,10 @@ export const Hero: React.FC<HeroProps> = ({
               className="flex flex-wrap items-center gap-2.5 mb-8"
             >
               <button
-                onClick={onViewWork}
+                onClick={() => {
+                  trackEvent('hero_cta_click', { cta_name: 'view_projects' });
+                  onViewWork();
+                }}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs hover:bg-slate-100 transition-all cursor-pointer group shadow-[0_0_20px_rgba(255,255,255,0.18)] hover:shadow-[0_0_28px_rgba(255,255,255,0.3)]"
               >
                 <span>View Projects</span>
@@ -128,7 +134,10 @@ export const Hero: React.FC<HeroProps> = ({
               </button>
 
               <button
-                onClick={() => onOpenResume('DATA_ANALYST')}
+                onClick={() => {
+                  trackResumeInteraction('DATA_ANALYST', 'open_modal', 'hero_cta_button');
+                  onOpenResume('DATA_ANALYST');
+                }}
                 className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-[#0d121c] hover:bg-cyan-500/20 text-cyan-300 font-mono text-xs border border-cyan-500/40 hover:border-cyan-400 transition-all cursor-pointer shadow-sm group/btn"
                 title="View & Download Data Analyst Resume"
               >
@@ -137,7 +146,10 @@ export const Hero: React.FC<HeroProps> = ({
               </button>
 
               <button
-                onClick={() => onOpenResume('DATA_SCIENTIST')}
+                onClick={() => {
+                  trackResumeInteraction('DATA_SCIENTIST', 'open_modal', 'hero_cta_button');
+                  onOpenResume('DATA_SCIENTIST');
+                }}
                 className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-[#0d121c] hover:bg-violet-500/20 text-violet-300 font-mono text-xs border border-violet-500/40 hover:border-violet-400 transition-all cursor-pointer shadow-sm group/btn2"
                 title="View & Download Data Scientist Resume"
               >
@@ -146,7 +158,10 @@ export const Hero: React.FC<HeroProps> = ({
               </button>
 
               <button
-                onClick={onOpenContact}
+                onClick={() => {
+                  trackEvent('hero_cta_click', { cta_name: 'lets_connect' });
+                  onOpenContact();
+                }}
                 className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#12161f] hover:bg-[#1c2230] text-[#c0c0c0] hover:text-white border border-[#ffffff18] hover:border-[#ffffff35] text-xs font-mono transition-all cursor-pointer shadow-sm"
               >
                 <Mail className="w-3.5 h-3.5" />

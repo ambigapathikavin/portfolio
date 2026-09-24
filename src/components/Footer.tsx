@@ -9,7 +9,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
-import { trackExternalLink } from '../utils/analytics';
+import { trackProfileLink, trackContactAction, trackResumeInteraction, trackEvent } from '../utils/analytics';
 
 interface FooterProps {
   onOpenResume: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
@@ -17,6 +17,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
   const scrollToTop = () => {
+    trackEvent('scroll_to_top', { location: 'footer' });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -50,7 +51,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
               href={PERSONAL_INFO.linkedin}
               target="_blank"
               rel="noreferrer"
-              onClick={() => trackExternalLink('LinkedIn', PERSONAL_INFO.linkedin)}
+              onClick={() => trackProfileLink('LinkedIn', PERSONAL_INFO.linkedin, 'footer')}
               className="flex items-center gap-1 text-[#888] hover:text-cyan-400 transition-colors"
             >
               <Linkedin className="w-3.5 h-3.5" />
@@ -61,7 +62,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
               href={PERSONAL_INFO.github}
               target="_blank"
               rel="noreferrer"
-              onClick={() => trackExternalLink('GitHub', PERSONAL_INFO.github)}
+              onClick={() => trackProfileLink('GitHub', PERSONAL_INFO.github, 'footer')}
               className="flex items-center gap-1 text-[#888] hover:text-cyan-400 transition-colors"
             >
               <Github className="w-3.5 h-3.5" />
@@ -70,7 +71,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
 
             <a
               href={`mailto:${PERSONAL_INFO.email}`}
-              onClick={() => trackExternalLink('Email', `mailto:${PERSONAL_INFO.email}`)}
+              onClick={() => trackContactAction('click_email_mailto', { location: 'footer' })}
               className="flex items-center gap-1 text-[#888] hover:text-cyan-400 transition-colors"
             >
               <Mail className="w-3.5 h-3.5" />
@@ -78,7 +79,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
             </a>
 
             <button
-              onClick={() => onOpenResume('DATA_ANALYST')}
+              onClick={() => {
+                trackResumeInteraction('DATA_ANALYST', 'open_modal', 'footer');
+                onOpenResume('DATA_ANALYST');
+              }}
               className="flex items-center gap-1 text-cyan-400 hover:text-cyan-300 font-semibold transition-colors cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5" />
@@ -86,7 +90,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
             </button>
 
             <button
-              onClick={() => onOpenResume('DATA_SCIENTIST')}
+              onClick={() => {
+                trackResumeInteraction('DATA_SCIENTIST', 'open_modal', 'footer');
+                onOpenResume('DATA_SCIENTIST');
+              }}
               className="flex items-center gap-1 text-violet-400 hover:text-violet-300 font-semibold transition-colors cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5" />

@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { DATA_ANALYST_RESUME, DATA_SCIENTIST_RESUME, PERSONAL_INFO } from '../data/portfolioData';
 import { downloadResumePdf } from '../utils/resumePdf';
+import { trackResumeInteraction } from '../utils/analytics';
 
 interface ResumeModalProps {
   isOpen: boolean;
@@ -48,6 +49,7 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({
   const currentResume = selectedRole === 'DATA_ANALYST' ? DATA_ANALYST_RESUME : DATA_SCIENTIST_RESUME;
 
   const handlePrint = () => {
+    trackResumeInteraction(selectedRole, 'print', 'modal_action');
     window.print();
   };
 
@@ -146,6 +148,7 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
   const handleCopyText = () => {
     const text = generateResumeText();
     navigator.clipboard.writeText(text);
+    trackResumeInteraction(selectedRole, 'copy_text', 'modal_header');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -153,6 +156,7 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
   const handleDownload = () => {
     const text = generateResumeText();
     const roleSlug = selectedRole === 'DATA_ANALYST' ? 'Data_Analyst' : 'Data_Scientist';
+    trackResumeInteraction(selectedRole, 'download_txt', 'modal_header');
     const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -184,7 +188,10 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
             {/* Dual Resume Selector Tabs */}
             <div className="flex items-center gap-1.5 p-1 bg-[#080808] border border-[#ffffff10] rounded-lg">
               <button
-                onClick={() => setSelectedRole('DATA_ANALYST')}
+                onClick={() => {
+                  setSelectedRole('DATA_ANALYST');
+                  trackResumeInteraction('DATA_ANALYST', 'preview_tab', 'modal_tab');
+                }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer ${
                   selectedRole === 'DATA_ANALYST'
                     ? 'bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-semibold shadow-sm'
@@ -196,7 +203,10 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
               </button>
 
               <button
-                onClick={() => setSelectedRole('DATA_SCIENTIST')}
+                onClick={() => {
+                  setSelectedRole('DATA_SCIENTIST');
+                  trackResumeInteraction('DATA_SCIENTIST', 'preview_tab', 'modal_tab');
+                }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer ${
                   selectedRole === 'DATA_SCIENTIST'
                     ? 'bg-violet-500/20 border border-violet-500/40 text-violet-300 font-semibold shadow-sm'
@@ -220,7 +230,10 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
               </button>
 
               <button
-                onClick={() => downloadResumePdf(selectedRole)}
+                onClick={() => {
+                  trackResumeInteraction(selectedRole, 'download_pdf', 'modal_header_button');
+                  downloadResumePdf(selectedRole);
+                }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-[11px] font-mono font-bold text-black transition-all shadow-md cursor-pointer active:scale-95 ${
                   selectedRole === 'DATA_ANALYST' 
                     ? 'bg-cyan-400 hover:bg-cyan-300 shadow-cyan-500/20' 
@@ -247,7 +260,10 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
             
             {/* Visual Indicator 1: Data Analyst File */}
             <div 
-              onClick={() => setSelectedRole('DATA_ANALYST')}
+              onClick={() => {
+                setSelectedRole('DATA_ANALYST');
+                trackResumeInteraction('DATA_ANALYST', 'preview_tab', 'modal_card_click');
+              }}
               className={`p-3 rounded-lg border transition-all cursor-pointer relative flex flex-col justify-between gap-2.5 ${
                 selectedRole === 'DATA_ANALYST'
                   ? 'bg-cyan-950/35 border-cyan-400/60 shadow-md shadow-cyan-950/40 ring-1 ring-cyan-500/30'
@@ -291,6 +307,7 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+                    trackResumeInteraction('DATA_ANALYST', 'download_pdf', 'modal_card_button');
                     downloadResumePdf('DATA_ANALYST');
                   }}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-cyan-400 hover:bg-cyan-300 text-black text-xs font-mono font-bold transition-all shadow-md active:scale-95 cursor-pointer shrink-0"
@@ -304,7 +321,10 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
 
             {/* Visual Indicator 2: Data Scientist File */}
             <div 
-              onClick={() => setSelectedRole('DATA_SCIENTIST')}
+              onClick={() => {
+                setSelectedRole('DATA_SCIENTIST');
+                trackResumeInteraction('DATA_SCIENTIST', 'preview_tab', 'modal_card_click');
+              }}
               className={`p-3 rounded-lg border transition-all cursor-pointer relative flex flex-col justify-between gap-2.5 ${
                 selectedRole === 'DATA_SCIENTIST'
                   ? 'bg-violet-950/35 border-violet-400/60 shadow-md shadow-violet-950/40 ring-1 ring-violet-500/30'
@@ -348,6 +368,7 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+                    trackResumeInteraction('DATA_SCIENTIST', 'download_pdf', 'modal_card_button');
                     downloadResumePdf('DATA_SCIENTIST');
                   }}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-violet-400 hover:bg-violet-300 text-black text-xs font-mono font-bold transition-all shadow-md active:scale-95 cursor-pointer shrink-0"

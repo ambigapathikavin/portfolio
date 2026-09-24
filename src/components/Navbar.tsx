@@ -20,6 +20,7 @@ import { PERSONAL_INFO } from '../data/portfolioData';
 import { ThemeToggle } from './ThemeToggle';
 import { SoundToggle } from './SoundToggle';
 import { FloatingSideNav } from './FloatingSideNav';
+import { trackProfileLink, trackResumeInteraction, trackSectionScroll } from '../utils/analytics';
 
 interface NavbarProps {
   onOpenResume: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
@@ -97,6 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const handleNavClick = (href: string) => {
     setMobileMenuOpen(false);
+    trackSectionScroll(href.replace('#', ''));
     if (onNavigate) {
       onNavigate(href);
     } else {
@@ -258,7 +260,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Resume CTA with Glow */}
             <button
-              onClick={() => onOpenResume(roleMode === 'ALL' ? undefined : roleMode)}
+              onClick={() => {
+                trackResumeInteraction(roleMode === 'DATA_SCIENTIST' ? 'DATA_SCIENTIST' : 'DATA_ANALYST', 'open_modal', 'navbar_desktop_cta');
+                onOpenResume(roleMode === 'ALL' ? undefined : roleMode);
+              }}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono text-cyan-800 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-100 dark:hover:bg-cyan-900/50 border border-cyan-500/30 dark:border-cyan-500/40 hover:border-cyan-400 rounded-full transition-all shadow-sm group cursor-pointer whitespace-nowrap shrink-0"
               title="View & Download Resume"
             >
@@ -278,6 +283,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 target="_blank"
                 rel="noreferrer"
                 aria-label="LinkedIn Profile"
+                onClick={() => trackProfileLink('LinkedIn', PERSONAL_INFO.linkedin, 'navbar')}
                 className="p-1.5 rounded-lg text-[#A3A3A3] hover:text-cyan-400 hover:bg-[#161616] transition-colors"
                 title="LinkedIn"
               >
@@ -288,6 +294,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 target="_blank"
                 rel="noreferrer"
                 aria-label="GitHub Profile"
+                onClick={() => trackProfileLink('GitHub', PERSONAL_INFO.github, 'navbar')}
                 className="p-1.5 rounded-lg text-[#A3A3A3] hover:text-cyan-400 hover:bg-[#161616] transition-colors"
                 title="GitHub"
               >
@@ -301,7 +308,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <ThemeToggle id="navbar-theme-toggle-mobile" />
 
             <button
-              onClick={() => onOpenResume()}
+              onClick={() => {
+                trackResumeInteraction(roleMode === 'DATA_SCIENTIST' ? 'DATA_SCIENTIST' : 'DATA_ANALYST', 'open_modal', 'navbar_mobile_cta');
+                onOpenResume();
+              }}
               className="p-1.5 text-xs font-medium text-[#E0E0E0] bg-[#111111] border border-[#ffffff10] rounded-lg cursor-pointer"
               aria-label="View Resume"
             >

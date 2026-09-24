@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PERSONAL_INFO } from '../data/portfolioData';
-import { trackEvent } from '../utils/analytics';
+import { trackEvent, trackContactAction, trackProfileLink } from '../utils/analytics';
 
 export const ContactSection: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -43,7 +43,7 @@ export const ContactSection: React.FC = () => {
     }
     navigator.clipboard.writeText(PERSONAL_INFO.email);
     setCopiedEmail(true);
-    trackEvent('copy_email', { method: 'button_click' });
+    trackContactAction('copy_email');
     setTimeout(() => {
       setCopiedEmail(false);
     }, 2500);
@@ -56,7 +56,7 @@ export const ContactSection: React.FC = () => {
     }
     navigator.clipboard.writeText(PERSONAL_INFO.scheduleCallUrl);
     setCopiedScheduleLink(true);
-    trackEvent('copy_schedule_link', { method: 'button_click' });
+    trackContactAction('copy_calendly_link');
     setTimeout(() => {
       setCopiedScheduleLink(false);
     }, 2500);
@@ -72,9 +72,10 @@ export const ContactSection: React.FC = () => {
     }
 
     setIsSubmitting(true);
-    trackEvent('submit_contact_form', {
+    trackContactAction('submit_contact_form', {
       subject: formData.subject || 'Inquiry',
-      has_message: true,
+      sender_name: formData.name,
+      message_length: formData.message.length,
     });
 
     // Simulate sending message + trigger mailto link fallback
@@ -177,6 +178,7 @@ export const ContactSection: React.FC = () => {
                       href={PERSONAL_INFO.scheduleCallUrl}
                       target="_blank"
                       rel="noreferrer"
+                      onClick={() => trackContactAction('click_calendly_booking')}
                       className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs font-mono transition-all shadow-sm group/btn"
                     >
                       <Calendar className="w-3.5 h-3.5" />
@@ -188,6 +190,7 @@ export const ContactSection: React.FC = () => {
                       href={PERSONAL_INFO.googleMeetUrl}
                       target="_blank"
                       rel="noreferrer"
+                      onClick={() => trackContactAction('click_google_meet')}
                       className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-[#141e2e] hover:bg-[#1c2a3f] text-cyan-300 hover:text-white border border-cyan-500/30 text-xs font-semibold font-mono transition-all"
                     >
                       <Video className="w-3.5 h-3.5 text-emerald-400" />
@@ -199,6 +202,7 @@ export const ContactSection: React.FC = () => {
                 <div className="flex items-center justify-between p-3 rounded-lg bg-[#0a0a0a] border border-[#ffffff08] hover:border-cyan-500/40 hover:bg-[#141414] transition-all group">
                   <a
                     href={`mailto:${PERSONAL_INFO.email}`}
+                    onClick={() => trackContactAction('click_email_mailto', { email: PERSONAL_INFO.email })}
                     className="flex items-start gap-3 overflow-hidden flex-1 mr-2"
                   >
                     <div className="w-8 h-8 rounded-lg bg-[#181818] border border-[#ffffff0a] flex items-center justify-center text-cyan-400 shrink-0 group-hover:scale-105 transition-transform">
@@ -245,6 +249,7 @@ export const ContactSection: React.FC = () => {
 
                 <a
                   href={`tel:${PERSONAL_INFO.phone}`}
+                  onClick={() => trackContactAction('click_phone_call', { phone: PERSONAL_INFO.phone })}
                   className="flex items-start gap-3 p-3 rounded-lg bg-[#0a0a0a] border border-[#ffffff08] hover:border-cyan-500/40 hover:bg-[#141414] transition-all group"
                 >
                   <div className="w-8 h-8 rounded-lg bg-[#181818] border border-[#ffffff0a] flex items-center justify-center text-sky-400 shrink-0 group-hover:scale-105 transition-transform">
@@ -281,6 +286,7 @@ export const ContactSection: React.FC = () => {
                     href={PERSONAL_INFO.linkedin}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() => trackProfileLink('LinkedIn', PERSONAL_INFO.linkedin, 'contact')}
                     className="flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#181818] hover:bg-[#252525] text-xs font-semibold text-[#E0E0E0] border border-[#ffffff0a] hover:border-cyan-500/40 transition-all font-mono"
                   >
                     <Linkedin className="w-3.5 h-3.5 text-cyan-400" />
@@ -290,6 +296,7 @@ export const ContactSection: React.FC = () => {
                     href={PERSONAL_INFO.github}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() => trackProfileLink('GitHub', PERSONAL_INFO.github, 'contact')}
                     className="flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#181818] hover:bg-[#252525] text-xs font-semibold text-[#E0E0E0] border border-[#ffffff0a] hover:border-cyan-500/40 transition-all font-mono"
                   >
                     <Github className="w-3.5 h-3.5 text-cyan-400" />

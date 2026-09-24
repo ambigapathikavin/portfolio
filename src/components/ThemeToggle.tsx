@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { playTactileClick } from '../utils/sound';
+import { trackThemeToggle } from '../utils/analytics';
 
 interface ThemeToggleProps {
   id?: string;
@@ -21,6 +22,8 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     playTactileClick('switch');
+    const nextTheme = isDark ? 'light' : 'dark';
+    trackThemeToggle(nextTheme);
     toggleTheme();
   };
 

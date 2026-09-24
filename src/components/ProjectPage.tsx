@@ -10,7 +10,7 @@ import { Project } from '../types';
 import { PROJECTS } from '../data/portfolioData';
 import { ProjectInteractiveDashboard } from './ProjectInteractiveDashboard';
 import { PipelineFlowchart } from './PipelineFlowchart';
-import { trackEvent, trackExternalLink } from '../utils/analytics';
+import { trackEvent, trackExternalLink, trackProjectView, trackProjectTabSwitch, trackProfileLink } from '../utils/analytics';
 
 const getTechBadgeStyle = (tech: string) => {
   const lower = tech.toLowerCase();
@@ -48,16 +48,28 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
   const prevProject = projectIndex > 0 ? PROJECTS[projectIndex - 1] : PROJECTS[PROJECTS.length - 1];
   const nextProject = projectIndex < PROJECTS.length - 1 ? PROJECTS[projectIndex + 1] : PROJECTS[0];
 
-  // Scroll to top on project load
+  // Scroll to top on project load & track project view
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setActiveTab('dashboard');
+    if (project) {
+      trackProjectView(project.id, project.title, project.roleType, project.category);
+    }
   }, [projectId]);
+
+  const handleTabSwitch = (newTab: TabKey) => {
+    setActiveTab(newTab);
+    trackProjectTabSwitch(project.id, newTab);
+  };
 
   const handleShare = () => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href);
       setCopiedLink(true);
+      trackEvent('share_project', {
+        project_id: project.id,
+        project_title: project.title,
+      });
       setTimeout(() => setCopiedLink(false), 2000);
     }
   };
@@ -251,7 +263,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => trackExternalLink('Project_GitHub', project.githubUrl!)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1a1a1a] hover:bg-[#282828] border border-[#ffffff20] text-xs font-mono text-white font-semibold transition-all cursor-pointer shadow-sm hover:border-cyan-500/50"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#1a1a1a] hover:bg-slate-200 dark:hover:bg-[#282828] border border-slate-200 dark:border-[#ffffff20] text-xs font-mono text-slate-800 dark:text-white font-semibold transition-all cursor-pointer shadow-sm hover:border-cyan-500/50"
                   >
                     <Code2 className="w-3.5 h-3.5 text-cyan-400" />
                     <span>GitHub Code</span>
@@ -358,7 +370,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
             ].map((step, sIdx, arr) => (
               <React.Fragment key={step.id}>
                 <button
-                  onClick={() => setActiveTab(step.id)}
+                  onClick={() => handleTabSwitch(step.id)}
                   className={`px-2 py-1 rounded transition-all cursor-pointer whitespace-nowrap ${
                     activeTab === step.id
                       ? 'bg-cyan-500 text-black font-bold shadow-sm'

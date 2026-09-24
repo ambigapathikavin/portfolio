@@ -18,8 +18,11 @@ import {
   initGoogleAnalytics, 
   trackPageView, 
   trackProjectView, 
-  trackResumeDownload, 
-  trackSectionScroll 
+  trackResumeInteraction, 
+  trackSectionScroll,
+  initScrollDepthTracking,
+  initSectionDwellTracking,
+  trackRoleFilterChange
 } from './utils/analytics';
 import { PROJECTS } from './data/portfolioData';
 import { FileText } from 'lucide-react';
@@ -44,6 +47,8 @@ export default function App() {
   useEffect(() => {
     initGoogleAnalytics();
     const cleanupSounds = initGlobalTactileClicks();
+    const cleanupScrollDepth = initScrollDepthTracking();
+    const cleanupSectionDwell = initSectionDwellTracking();
 
     // Initial pageview
     if (activeProjectId) {
@@ -72,13 +77,20 @@ export default function App() {
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
       cleanupSounds();
+      cleanupScrollDepth();
+      cleanupSectionDwell();
     };
   }, []);
 
-  const handleOpenResume = (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => {
+  const handleRoleModeChange = (mode: 'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST') => {
+    setRoleMode(mode);
+    trackRoleFilterChange(mode, 'navbar');
+  };
+
+  const handleOpenResume = (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST', triggerSource: string = 'navbar') => {
     const selected = role || (roleMode === 'DATA_ANALYST' || roleMode === 'DATA_SCIENTIST' ? roleMode : 'DATA_ANALYST');
     setResumeRole(selected);
-    trackResumeDownload(selected, 'open_modal');
+    trackResumeInteraction(selected, 'open_modal', triggerSource);
     setIsResumeOpen(true);
   };
 
@@ -125,7 +137,7 @@ export default function App() {
         <Navbar 
           onOpenResume={handleOpenResume}
           roleMode={roleMode}
-          onRoleModeChange={setRoleMode}
+          onRoleModeChange={handleRoleModeChange}
           onNavigate={(href) => scrollToSection(href.replace('#', ''))}
           isProjectActive={true}
         />
@@ -168,7 +180,7 @@ export default function App() {
       <Navbar 
         onOpenResume={handleOpenResume}
         roleMode={roleMode}
-        onRoleModeChange={setRoleMode}
+        onRoleModeChange={handleRoleModeChange}
         onNavigate={(href) => scrollToSection(href.replace('#', ''))}
         isProjectActive={false}
       />
@@ -180,7 +192,7 @@ export default function App() {
           onOpenContact={() => scrollToSection('contact')}
           onViewWork={() => scrollToSection('projects')}
           roleMode={roleMode}
-          onRoleModeChange={setRoleMode}
+          onRoleModeChange={handleRoleModeChange}
         />
 
         {/* Quick Quantifiable Professional Stats */}

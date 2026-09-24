@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { EDUCATION, CERTIFICATIONS } from '../data/portfolioData';
 import { CertificationItem } from '../types';
+import { trackCertificateVerify, trackEvent } from '../utils/analytics';
 
 export const EducationCertifications: React.FC = () => {
   const [selectedCert, setSelectedCert] = useState<CertificationItem | null>(null);
@@ -27,6 +28,7 @@ export const EducationCertifications: React.FC = () => {
     }
     navigator.clipboard.writeText(id);
     setCopiedCertId(id);
+    trackEvent('copy_credential_id', { cert_id: id });
     setTimeout(() => {
       setCopiedCertId(null);
     }, 2500);
@@ -162,7 +164,14 @@ export const EducationCertifications: React.FC = () => {
                   variants={itemVariants}
                   whileHover={{ y: -4, scale: 1.015, transition: { duration: 0.2, ease: "easeOut" } }}
                   className="p-4 sm:p-5 rounded-xl bg-[#111111] border border-[#ffffff0e] hover:border-violet-500/50 hover:bg-[#141414] hover:shadow-[0_8px_24px_rgba(139,92,246,0.12)] transition-all flex flex-col justify-between group shadow-sm cursor-pointer relative"
-                  onClick={() => setSelectedCert(cert)}
+                  onClick={() => {
+                    trackEvent('view_certificate_modal', { 
+                      cert_id: cert.id, 
+                      cert_title: cert.title, 
+                      issuer: cert.issuer 
+                    });
+                    setSelectedCert(cert);
+                  }}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2.5">
@@ -243,7 +252,10 @@ export const EducationCertifications: React.FC = () => {
                         href={cert.credentialUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          trackCertificateVerify(cert.title, cert.issuer, cert.credentialUrl);
+                        }}
                         className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold text-cyan-300 hover:text-white px-3 py-1 rounded-full bg-cyan-950/60 hover:bg-cyan-600 border border-cyan-500/50 hover:border-cyan-400 transition-all shadow-sm group/btn"
                         title="Show credential in official portal"
                       >
@@ -350,6 +362,7 @@ export const EducationCertifications: React.FC = () => {
                     href={selectedCert.credentialUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackCertificateVerify(selectedCert.title, selectedCert.issuer, selectedCert.credentialUrl)}
                     className="flex-1 py-2 px-3 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-black font-bold text-xs font-mono transition-all flex items-center justify-center gap-2 shadow-sm"
                   >
                     <span>Show credential</span>

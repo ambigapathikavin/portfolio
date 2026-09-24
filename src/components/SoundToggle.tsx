@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { isSoundEnabled, toggleSound } from '../utils/sound';
+import { trackSoundToggle } from '../utils/analytics';
 
 interface SoundToggleProps {
   className?: string;
@@ -28,6 +29,7 @@ export const SoundToggle: React.FC<SoundToggleProps> = ({ className = '', showLa
     e.stopPropagation();
     const newState = toggleSound();
     setEnabled(newState);
+    trackSoundToggle(newState);
   };
 
   return (

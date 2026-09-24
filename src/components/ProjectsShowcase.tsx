@@ -16,11 +16,20 @@ import {
   Code2,
   Play,
   ExternalLink,
-  Activity
+  Activity,
+  Search,
+  X
 } from 'lucide-react';
 import { PROJECTS } from '../data/portfolioData';
 import { Project, ProjectCategory } from '../types';
-import { trackEvent, trackExternalLink } from '../utils/analytics';
+import { 
+  trackProjectCardClick, 
+  trackRoleFilterChange, 
+  trackCategoryFilterChange, 
+  trackProjectSearch, 
+  trackProfileLink,
+  trackExternalLink 
+} from '../utils/analytics';
 
 const FILTER_OPTIONS: { label: string; value: ProjectCategory }[] = [
   { label: 'ALL', value: 'ALL' },
@@ -61,11 +70,35 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
 }) => {
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>('ALL');
   const [roleFilter, setRoleFilter] = useState<'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST'>(roleMode);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Sync roleFilter with incoming roleMode prop changes
   React.useEffect(() => {
     setRoleFilter(roleMode);
   }, [roleMode]);
+
+  const handleRoleFilterSelect = (newRole: 'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST') => {
+    setRoleFilter(newRole);
+    trackRoleFilterChange(newRole, 'showcase');
+  };
+
+  const handleCategoryFilterSelect = (category: ProjectCategory) => {
+    setActiveFilter(category);
+    trackCategoryFilterChange(category);
+  };
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim().length >= 2) {
+      const q = query.trim().toLowerCase();
+      const matchCount = PROJECTS.filter(p => 
+        p.title.toLowerCase().includes(q) ||
+        p.shortDescription.toLowerCase().includes(q) ||
+        p.technology.some(t => t.toLowerCase().includes(q))
+      ).length;
+      trackProjectSearch(query, matchCount, 'projects');
+    }
+  };
 
   // Re-order and filter projects dynamically
   const filteredProjects = [...PROJECTS]
@@ -87,17 +120,30 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
         }
       }
       // Category filter
-      if (activeFilter === 'ALL') return true;
-      return project.filterCategories.includes(activeFilter);
+      if (activeFilter !== 'ALL' && !project.filterCategories.includes(activeFilter)) {
+        return false;
+      }
+      // Search query filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        const matchesTitle = project.title.toLowerCase().includes(q);
+        const matchesDesc = project.shortDescription.toLowerCase().includes(q);
+        const matchesTech = project.technology.some(t => t.toLowerCase().includes(q));
+        const matchesKeyResult = project.keyResult.toLowerCase().includes(q);
+        return matchesTitle || matchesDesc || matchesTech || matchesKeyResult;
+      }
+      return true;
     });
 
-  const handleProjectClick = (projectId: string) => {
+  const handleProjectClick = (projectId: string, index: number) => {
     const proj = PROJECTS.find(p => p.id === projectId);
-    trackEvent('select_project_card', {
-      project_id: projectId,
-      project_title: proj?.title || projectId,
-      role_track: proj?.roleType,
-    });
+    trackProjectCardClick(
+      projectId, 
+      proj?.title || projectId, 
+      proj?.roleType, 
+      proj?.category, 
+      index
+    );
     if (onSelectProject) {
       onSelectProject(projectId);
     }
@@ -178,67 +224,99 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
           </div>
         </motion.div>
 
-        {/* Filter Controls Row */}
+        {/* Filter & Search Controls Row */}
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.5, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-8 pb-4 border-b border-[#ffffff08]"
+          className="space-y-3 mb-8 pb-4 border-b border-[#ffffff08]"
         >
-          
-          {/* Track Filter */}
-          <div className="flex items-center gap-1 bg-[#0d0d0d] p-1 rounded-xl border border-[#ffffff10] self-start">
-            <span className="text-[10px] font-mono text-[#666] px-2 uppercase">Track:</span>
-            <button
-              onClick={() => setRoleFilter('ALL')}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
-                roleFilter === 'ALL'
-                  ? 'bg-white/10 text-white font-semibold'
-                  : 'text-[#888] hover:text-white'
-              }`}
-            >
-              All Roles ({PROJECTS.length})
-            </button>
-            <button
-              onClick={() => setRoleFilter('DATA_ANALYST')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
-                roleFilter === 'DATA_ANALYST'
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-semibold'
-                  : 'text-[#888] hover:text-cyan-300'
-              }`}
-            >
-              <BarChart3 className="w-3 h-3" />
-              <span>Data Analyst ({PROJECTS.filter(p => p.roleType === 'DATA_ANALYST' || p.roleType === 'BOTH').length})</span>
-            </button>
-            <button
-              onClick={() => setRoleFilter('DATA_SCIENTIST')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
-                roleFilter === 'DATA_SCIENTIST'
-                  ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40 font-semibold'
-                  : 'text-[#888] hover:text-violet-300'
-              }`}
-            >
-              <BrainCircuit className="w-3 h-3" />
-              <span>Data Scientist ({PROJECTS.filter(p => p.roleType === 'DATA_SCIENTIST' || p.roleType === 'BOTH').length})</span>
-            </button>
-          </div>
-
-          {/* Category Filter Pills */}
-          <div className="flex items-center gap-1 flex-wrap bg-[#0d0d0d] p-1 rounded-xl border border-[#ffffff08] self-start lg:self-auto">
-            {FILTER_OPTIONS.map(tab => (
+          {/* Top row: Track selector & Search bar */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            {/* Track Filter */}
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#0d0d0d] p-1 rounded-xl border border-slate-200 dark:border-[#ffffff10] self-start shadow-sm">
+              <span className="text-[10px] font-mono text-slate-500 dark:text-[#666] px-2 uppercase">Track:</span>
               <button
-                key={tab.value}
-                onClick={() => setActiveFilter(tab.value)}
-                className={`px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all cursor-pointer ${
-                  activeFilter === tab.value
-                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm font-semibold'
-                    : 'text-[#888] hover:text-white hover:bg-[#181818]'
+                onClick={() => handleRoleFilterSelect('ALL')}
+                className={`px-2.5 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
+                  roleFilter === 'ALL'
+                    ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white font-semibold shadow-sm'
+                    : 'text-slate-600 dark:text-[#888] hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                {tab.label}
+                All ({PROJECTS.length})
               </button>
-            ))}
+              <button
+                onClick={() => handleRoleFilterSelect('DATA_ANALYST')}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
+                  roleFilter === 'DATA_ANALYST'
+                    ? 'bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border border-cyan-500/40 font-semibold'
+                    : 'text-slate-600 dark:text-[#888] hover:text-cyan-700 dark:hover:text-cyan-300'
+                }`}
+              >
+                <BarChart3 className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
+                <span>Analyst ({PROJECTS.filter(p => p.roleType === 'DATA_ANALYST' || p.roleType === 'BOTH').length})</span>
+              </button>
+              <button
+                onClick={() => handleRoleFilterSelect('DATA_SCIENTIST')}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-mono transition-all cursor-pointer ${
+                  roleFilter === 'DATA_SCIENTIST'
+                    ? 'bg-violet-500/20 text-violet-800 dark:text-violet-300 border border-violet-500/40 font-semibold'
+                    : 'text-slate-600 dark:text-[#888] hover:text-violet-700 dark:hover:text-violet-300'
+                }`}
+              >
+                <BrainCircuit className="w-3 h-3 text-violet-600 dark:text-violet-400" />
+                <span>Scientist ({PROJECTS.filter(p => p.roleType === 'DATA_SCIENTIST' || p.roleType === 'BOTH').length})</span>
+              </button>
+            </div>
+
+            {/* Instant Project Search Input */}
+            <div className="relative flex-1 sm:max-w-xs">
+              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-[#666]">
+                <Search className="w-3.5 h-3.5" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                placeholder="Search projects (e.g. Tomato, BERT, Power BI)..."
+                className="w-full pl-8 pr-7 py-1.5 rounded-xl bg-slate-100 dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#ffffff10] text-xs font-mono text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#666] focus:outline-none focus:border-cyan-500 transition-colors"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => handleSearchChange('')}
+                  className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-white cursor-pointer"
+                  title="Clear search"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Bottom row: Category Filter Pills */}
+          <div className="flex items-center justify-between flex-wrap gap-2 pt-1">
+            <div className="flex items-center gap-1 flex-wrap bg-slate-100 dark:bg-[#0d0d0d] p-1 rounded-xl border border-slate-200 dark:border-[#ffffff08] shadow-sm">
+              {FILTER_OPTIONS.map(tab => (
+                <button
+                  key={tab.value}
+                  onClick={() => handleCategoryFilterSelect(tab.value)}
+                  className={`px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all cursor-pointer ${
+                    activeFilter === tab.value
+                      ? 'bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border border-cyan-500/40 shadow-sm font-semibold'
+                      : 'text-slate-600 dark:text-[#888] hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-[#181818]'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <span className="text-[11px] font-mono text-slate-500 dark:text-[#777]">
+              Showing <strong className="text-cyan-600 dark:text-cyan-400">{filteredProjects.length}</strong> of {PROJECTS.length} projects
+            </span>
           </div>
         </motion.div>
 
@@ -263,12 +341,12 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                   ease: [0.22, 1, 0.36, 1],
                   delay: (idx % 3) * 0.09 
                 }}
-                className="group flex flex-col justify-between rounded-xl bg-[#0f0f0f] border border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-cyan-950/20 transition-colors duration-200 relative"
+                className="group flex flex-col justify-between rounded-xl bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-cyan-950/20 transition-colors duration-200 relative"
               >
                 <div>
                   {/* Project Visual Thumbnail / Screenshot */}
                   <div 
-                    onClick={() => handleProjectClick(project.id)}
+                    onClick={() => handleProjectClick(project.id, idx)}
                     className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-slate-100 dark:bg-[#181818] cursor-pointer group/img"
                   >
                     <img
@@ -389,7 +467,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
 
                     {/* Title */}
                     <h3 
-                      onClick={() => handleProjectClick(project.id)}
+                      onClick={() => handleProjectClick(project.id, idx)}
                       className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors tracking-tight mb-1.5 cursor-pointer line-clamp-1"
                     >
                       {project.title}
@@ -493,10 +571,10 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                             e.stopPropagation();
                             trackExternalLink('Card_GitHub', project.githubUrl!);
                           }}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-[#141414] hover:bg-[#1f1f1f] border border-[#ffffff15] hover:border-[#ffffff30] text-[10px] font-mono text-[#d0d0d0] hover:text-white transition-all cursor-pointer shadow-sm group/git"
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-slate-100 dark:bg-[#141414] hover:bg-slate-200 dark:hover:bg-[#1f1f1f] border border-slate-200 dark:border-[#ffffff15] hover:border-slate-300 dark:hover:border-[#ffffff30] text-[10px] font-mono text-slate-700 dark:text-[#d0d0d0] hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer shadow-sm group/git"
                           title="View GitHub Repository"
                         >
-                          <Code2 className="w-3 h-3 text-cyan-400 group-hover/git:scale-110 transition-transform" />
+                          <Code2 className="w-3 h-3 text-cyan-600 dark:text-cyan-400 group-hover/git:scale-110 transition-transform" />
                           <span>GitHub</span>
                           <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover/git:opacity-100 transition-opacity" />
                         </a>
@@ -510,7 +588,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                             e.stopPropagation();
                             trackExternalLink('Card_LiveDemo', project.liveDemoUrl!);
                           }}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/40 hover:border-emerald-400/60 text-[10px] font-mono text-emerald-200 hover:text-emerald-100 font-semibold transition-all cursor-pointer shadow-[0_0_12px_rgba(16,185,129,0.12)] group/live"
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/80 border border-emerald-500/40 hover:border-emerald-500 text-[10px] font-mono text-emerald-800 dark:text-emerald-200 hover:text-emerald-950 dark:hover:text-emerald-100 font-semibold transition-all cursor-pointer shadow-sm group/live"
                           title="Open Live Streamlit Application"
                         >
                           <span className="relative flex h-2 w-2 shrink-0">
@@ -526,7 +604,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
 
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => handleProjectClick(project.id)}
+                      onClick={() => handleProjectClick(project.id, idx)}
                       className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/60 hover:bg-cyan-500 hover:text-black text-cyan-800 dark:text-cyan-300 text-[11px] font-semibold font-mono border border-cyan-500/30 dark:border-cyan-500/35 hover:border-cyan-400 transition-all duration-150 shadow-sm cursor-pointer group/simbtn"
                       title="Launch live interactive simulator"
                     >
@@ -534,7 +612,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                       <span>Live Simulator</span>
                     </button>
                     <button
-                      onClick={() => handleProjectClick(project.id)}
+                      onClick={() => handleProjectClick(project.id, idx)}
                       className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-slate-100 dark:bg-[#181818] hover:bg-slate-200 dark:hover:bg-[#252525] text-slate-800 dark:text-[#e0e0e0] hover:text-slate-900 dark:hover:text-white text-[11px] font-semibold font-mono border border-slate-200 dark:border-[#ffffff0a] hover:border-slate-300 dark:hover:border-[#ffffff20] transition-all duration-150 shadow-sm cursor-pointer group/casebtn"
                       title="View full architectural case study"
                     >
