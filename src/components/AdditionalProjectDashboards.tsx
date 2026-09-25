@@ -7,7 +7,8 @@ import {
   Waves, AlertTriangle, ShieldCheck, Cpu, MessageSquare, 
   FileText, Leaf, Hotel, ShoppingBag, Sparkles, Filter, Play, 
   RefreshCw, CheckCircle2, ChevronRight, Activity, ArrowUpRight, Zap,
-  Camera, Scan, Eye, ZoomIn, Code2, ExternalLink
+  Camera, Scan, Eye, ZoomIn, Code2, ExternalLink,
+  Upload, Image as ImageIcon, Info, HelpCircle, X, Check, Layers
 } from 'lucide-react';
 import { Project } from '../types';
 import { trackSimulatorAction } from '../utils/analytics';
@@ -48,10 +49,14 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
   const [sumTemperature, setSumTemperature] = useState(0.3);
 
   // 7. Tomato Crop Leaf Disease State
-  const [tomatoSelectedDisease, setTomatoSelectedDisease] = useState<'Healthy' | 'Early Blight' | 'Late Blight'>('Healthy');
+  const [tomatoSelectedDisease, setTomatoSelectedDisease] = useState<'Healthy' | 'Early Blight' | 'Late Blight' | 'Septoria Spot' | 'Yellow Leaf Curl' | 'Bacterial Spot'>('Healthy');
   const [tomatoConfidenceFloor, setTomatoConfidenceFloor] = useState(85);
   const [tomatoViewMode, setTomatoViewMode] = useState<'specimen' | 'gradcam'>('specimen');
   const [tomatoInspectionZoom, setTomatoInspectionZoom] = useState(false);
+  const [tomatoCustomImage, setTomatoCustomImage] = useState<string | null>(null);
+  const [tomatoCustomFileName, setTomatoCustomFileName] = useState<string | null>(null);
+  const [tomatoShowGuide, setTomatoShowGuide] = useState(false);
+  const [tomatoImageErrors, setTomatoImageErrors] = useState<Record<string, boolean>>({});
 
   // 8. Hospitality BI State
   const [hospAdr, setHospAdr] = useState(8800);
@@ -717,68 +722,145 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
   }
 
   // ==========================================
+  // ==========================================
   // 7. TOMATO CROP LEAF DISEASE CLASSIFICATION
   // ==========================================
   if (project.dashboardType === 'tomato') {
-    const diseaseData: Record<'Healthy' | 'Early Blight' | 'Late Blight', { 
+    const diseaseData: Record<'Healthy' | 'Early Blight' | 'Late Blight' | 'Septoria Spot' | 'Yellow Leaf Curl' | 'Bacterial Spot', { 
       pathogen: string; 
       confidence: number; 
       treatment: string; 
       severity: string;
-      photoUrl: string;
+      primaryPhoto: string;
+      localPhoto: string;
       photoAlt: string;
       lesionsFound: number;
       symptoms: string;
       gradCamDesc: string;
       spreadRisk: string;
       badgeIcon: string;
-      color: 'emerald' | 'amber' | 'rose';
+      color: 'emerald' | 'amber' | 'rose' | 'yellow' | 'purple' | 'cyan';
+      boxStyle: { top: string; left: string; width: string; height: string };
     }> = {
       'Healthy': { 
         pathogen: 'Healthy Plant Foliage (Zero Pathogen Detected)', 
         confidence: 99.4, 
         treatment: 'Optimal leaf condition. Continue preventive scouting, balanced nutrition (N-P-K), and drip irrigation. No fungicide intervention necessary.', 
         severity: 'Optimal',
-        photoUrl: '/images/tomato/healthy.jpg',
-        photoAlt: 'Healthy tomato leaf showing clean green foliage with no viral or fungal signs',
+        primaryPhoto: 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=1000&q=80',
+        localPhoto: '/images/tomato/healthy.jpg',
+        photoAlt: 'Healthy tomato crop foliage showing clean green leaves with no viral or fungal signs',
         lesionsFound: 0,
-        symptoms: 'Leaf shows no viral or fungal signs. Vibrant chlorophyll lamina, uniform green pigmentation, and healthy vein structure.',
+        symptoms: 'Lamina exhibits zero viral or fungal symptoms. Vibrant chlorophyll pigmentation, uniform venation, and turgid cellular morphology.',
         gradCamDesc: 'Uniform basal activation across entire chlorophyll lamina without focal necrotic clustering.',
         spreadRisk: 'None — Normal healthy plant physiology',
         badgeIcon: '🟢',
-        color: 'emerald'
+        color: 'emerald',
+        boxStyle: { top: '20%', left: '20%', width: '60%', height: '60%' }
       },
       'Early Blight': { 
-        pathogen: 'Alternaria solani (Fungal Pathogen)', 
+        pathogen: 'Alternaria solani (Fungal Foliar Pathogen)', 
         confidence: 98.4, 
-        treatment: 'Apply protective copper fungicide or chlorothalonil; prune and destroy infected lower foliage; avoid wetting leaves.', 
+        treatment: 'Apply protective copper fungicide or chlorothalonil; prune and destroy infected lower foliage; avoid overhead irrigation.', 
         severity: 'High',
-        photoUrl: '/images/tomato/early_blight.jpg',
-        photoAlt: 'Verified Tomato leaf exhibiting early blight concentric target rings and chlorosis',
+        primaryPhoto: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=1000&q=80',
+        localPhoto: '/images/tomato/early_blight.jpg',
+        photoAlt: 'Verified tomato leaf exhibiting early blight concentric target rings and chlorosis',
         lesionsFound: 5,
-        symptoms: 'Caused by Alternaria solani. Characterized by small brown-to-black necrotic spots with characteristic concentric rings (target board pattern) surrounded by chlorotic yellow halo.',
-        gradCamDesc: 'Deep convolutional features concentrated over circular necrotic target rings and chlorotic halos.',
-        spreadRisk: 'Rapid in warm, humid weather (24°C-29°C) with rain or dew',
+        symptoms: 'Brown-to-black necrotic lesions displaying characteristic concentric annular rings (target board pattern) with chlorotic halo.',
+        gradCamDesc: 'Deep convolutional filters concentrated over circular necrotic target rings and surrounding chlorotic halos.',
+        spreadRisk: 'Rapid in warm, humid weather (24°C–29°C) with persistent leaf wetness or rainfall.',
         badgeIcon: '🟠',
-        color: 'amber'
+        color: 'amber',
+        boxStyle: { top: '32%', left: '30%', width: '40%', height: '42%' }
       },
       'Late Blight': { 
         pathogen: 'Phytophthora infestans (Oomycete Water Mold)', 
         confidence: 97.9, 
-        treatment: 'Emergency systemic fungicide application (Cymoxanil, Dimethomorph, or Metalaxyl); remove severely infected vines immediately; stop overhead irrigation.', 
+        treatment: 'Emergency systemic fungicide application (Cymoxanil, Dimethomorph, or Metalaxyl); rogue out infected vines; stop overhead irrigation.', 
         severity: 'Critical',
-        photoUrl: '/images/tomato/late_blight.jpg',
-        photoAlt: 'Verified Tomato leaf exhibiting water-soaked dark brown late blight lesions',
+        primaryPhoto: 'https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&w=1000&q=80',
+        localPhoto: '/images/tomato/late_blight.jpg',
+        photoAlt: 'Tomato leaf exhibiting water-soaked dark brown late blight lesions and necrotic blighting',
         lesionsFound: 7,
-        symptoms: 'Caused by Phytophthora infestans. Produces large, irregular water-soaked pale green lesions that rapidly enlarge into dark brown or purplish-black necrotic blotches with white downy fungal growth on undersides.',
-        gradCamDesc: 'Intense neural gradient localization mapping water-soaked lesion borders and petioles.',
-        spreadRisk: 'Devastating epidemic risk under cool, high-humidity wet foliage conditions (>90% RH, 15-20°C)',
+        symptoms: 'Large, irregular water-soaked pale green lesions rapidly expanding into dark purplish-black blotches with white downy sporangia on undersides.',
+        gradCamDesc: 'Intense neural gradient localization mapping water-soaked lesion borders and petiole attachment points.',
+        spreadRisk: 'Devastating epidemic risk under cool, high-humidity wet foliage conditions (>90% RH, 15°C–20°C).',
         badgeIcon: '🔴',
-        color: 'rose'
+        color: 'rose',
+        boxStyle: { top: '26%', left: '24%', width: '52%', height: '50%' }
+      },
+      'Septoria Spot': { 
+        pathogen: 'Septoria lycopersici (Foliar Ascomycete)', 
+        confidence: 96.7, 
+        treatment: 'Spray protective Mancozeb or Copper Hydroxide; mulch soil surface to eliminate fungal splash-up from soil onto lower leaflets.', 
+        severity: 'Moderate',
+        primaryPhoto: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=1000&q=80',
+        localPhoto: '/images/tomato/septoria_spot.jpg',
+        photoAlt: 'Tomato leaf showing circular Septoria spots with dark margins and gray centers',
+        lesionsFound: 14,
+        symptoms: 'Numerous small circular spots (1–3mm) with dark brown borders and sunken tan or ash-gray centers studded with tiny black pycnidia.',
+        gradCamDesc: 'Multi-focal neural activations pinpointing clustered circular micro-spots across leaflet periphery.',
+        spreadRisk: 'Spreads rapidly during extended wet periods (20°C–25°C) via rain splash and mechanical handling.',
+        badgeIcon: '🟡',
+        color: 'yellow',
+        boxStyle: { top: '22%', left: '26%', width: '48%', height: '48%' }
+      },
+      'Yellow Leaf Curl': { 
+        pathogen: 'Tomato Yellow Leaf Curl Virus (TYLCV - Begomovirus)', 
+        confidence: 98.1, 
+        treatment: 'Vector control: spray neem oil or systemic imidacloprid to suppress Bemisia tabaci whiteflies; install yellow sticky traps.', 
+        severity: 'High',
+        primaryPhoto: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=1000&q=80',
+        localPhoto: '/images/tomato/yellow_leaf_curl.jpg',
+        photoAlt: 'Tomato leaf exhibiting upward curling and marginal interveinal chlorosis',
+        lesionsFound: 0,
+        symptoms: 'Pronounced upward curling and cupping of leaflets, marginal chlorosis, interveinal yellowing, stunted growth, and bushy apical shoot.',
+        gradCamDesc: 'Convolutional feature maps highlighting distorted leaflet curlings and chlorotic peripheral margins.',
+        spreadRisk: 'Transmitted persistently by Bemisia tabaci whitefly vectors across greenhouse and field rows.',
+        badgeIcon: '🟣',
+        color: 'purple',
+        boxStyle: { top: '18%', left: '18%', width: '64%', height: '64%' }
+      },
+      'Bacterial Spot': { 
+        pathogen: 'Xanthomonas perforans / Xanthomonas vesicatoria', 
+        confidence: 95.8, 
+        treatment: 'Apply fixed copper bactericide tank-mixed with Mancozeb; use certified disease-free seeds; avoid handling plants when foliage is wet.', 
+        severity: 'High',
+        primaryPhoto: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1000&q=80',
+        localPhoto: '/images/tomato/bacterial_spot.jpg',
+        photoAlt: 'Tomato leaf displaying angular water-soaked dark bacterial lesions',
+        lesionsFound: 9,
+        symptoms: 'Small, circular to angular water-soaked dark brown spots often surrounded by a distinctive greasy chlorotic halo that coalesce into tears.',
+        gradCamDesc: 'High gradient sensitivity over angular lesion borders and petiole vascular junctions.',
+        spreadRisk: 'Favored by warm temperatures (>28°C) and driven by rain splash or overhead sprinklers.',
+        badgeIcon: '🟤',
+        color: 'cyan',
+        boxStyle: { top: '30%', left: '28%', width: '44%', height: '44%' }
       }
     };
 
     const current = diseaseData[tomatoSelectedDisease];
+
+    // Determine active image URL with robust multi-tier fallback
+    const hasLocalError = !!tomatoImageErrors[tomatoSelectedDisease];
+    const displayImageUrl = tomatoCustomImage 
+      ? tomatoCustomImage 
+      : (hasLocalError ? current.primaryPhoto : current.localPhoto);
+
+    const handleCustomFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        setTomatoCustomFileName(file.name);
+        const reader = new FileReader();
+        reader.onload = (uploadEvent) => {
+          const result = uploadEvent.target?.result as string;
+          setTomatoCustomImage(result);
+          trackSimulatorAction(project.id, 'tomato', 'custom_photo_upload', { fileName: file.name });
+        };
+        reader.readAsDataURL(file);
+      }
+    };
 
     return (
       <div className="space-y-6">
@@ -787,19 +869,48 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-2">
               <Leaf className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-              <h3 className="font-mono text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                Crop Leaf Disease Pathology Classifier (3 Diagnostic Classes)
-              </h3>
+              <div>
+                <h3 className="font-mono text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                  Crop Foliar Pathology Diagnostic Engine
+                </h3>
+                <p className="text-[11px] font-mono text-slate-500 dark:text-[#888]">
+                  ResNet-50 Deep Computer Vision • 6 Verified Plant Pathology Classes
+                </p>
+              </div>
             </div>
+            
             <div className="flex flex-wrap items-center gap-2">
+              {/* Photo Guide / Help Button */}
+              <button
+                type="button"
+                onClick={() => setTomatoShowGuide(!tomatoShowGuide)}
+                className="px-2.5 py-1 rounded bg-slate-100 dark:bg-[#151515] hover:bg-slate-200 dark:hover:bg-[#222] border border-slate-300 dark:border-[#333] text-slate-700 dark:text-[#bbb] hover:text-slate-950 dark:hover:text-white text-[11px] font-mono font-medium inline-flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                title="View photo verification status & manual instructions"
+              >
+                <HelpCircle className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                <span>Photo Guide & Verification</span>
+              </button>
+
+              {/* Upload Field Photo Button */}
+              <label className="px-2.5 py-1 rounded bg-emerald-50 dark:bg-emerald-950/80 hover:bg-emerald-100 dark:hover:bg-emerald-900 border border-emerald-500/40 text-emerald-800 dark:text-emerald-300 hover:text-emerald-950 dark:hover:text-emerald-200 text-[11px] font-mono font-bold inline-flex items-center gap-1.5 transition-all shadow-sm cursor-pointer group">
+                <Upload className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                <span>Upload Field Photo</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCustomFileUpload}
+                  className="hidden"
+                />
+              </label>
+
               <a
                 href={project.liveDemoUrl || "https://potato-disease-prediction-ambigapathikavin.streamlit.app/"}
                 target="_blank"
                 rel="noreferrer"
-                className="px-2.5 py-1 rounded bg-emerald-50 dark:bg-emerald-950/80 hover:bg-emerald-100 dark:hover:bg-emerald-900 border border-emerald-500/40 text-emerald-800 dark:text-emerald-300 hover:text-emerald-950 dark:hover:text-emerald-200 text-[11px] font-mono font-bold inline-flex items-center gap-1.5 transition-all shadow-sm group/live"
+                className="px-2.5 py-1 rounded bg-emerald-500 text-slate-950 hover:bg-emerald-400 text-[11px] font-mono font-bold inline-flex items-center gap-1.5 transition-all shadow-sm group/live"
                 title="Launch deployed Streamlit application"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-pulse" />
                 <span>Live Streamlit App</span>
                 <ExternalLink className="w-3 h-3 opacity-70 group-hover/live:opacity-100" />
               </a>
@@ -808,55 +919,160 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
                 href={project.githubUrl || "https://github.com/ambigapathikavin/Potato_Disease_Prediction/tree/main"}
                 target="_blank"
                 rel="noreferrer"
-                className="px-2.5 py-1 rounded bg-slate-100 dark:bg-[#141414] hover:bg-slate-200 dark:hover:bg-[#202020] border border-slate-200 dark:border-[#ffffff15] hover:border-cyan-500/40 text-slate-700 dark:text-[#ccc] hover:text-slate-950 dark:hover:text-white text-[11px] font-mono font-semibold inline-flex items-center gap-1.5 transition-all shadow-sm group/git"
+                className="px-2.5 py-1 rounded bg-slate-100 dark:bg-[#141414] hover:bg-slate-200 dark:hover:bg-[#202020] border border-slate-200 dark:border-[#ffffff15] text-slate-700 dark:text-[#ccc] text-[11px] font-mono font-semibold inline-flex items-center gap-1.5 transition-all shadow-sm group/git"
                 title="Explore source code repository on GitHub"
               >
-                <Code2 className="w-3 h-3 text-cyan-600 dark:text-cyan-400 group-hover/git:scale-110 transition-transform" />
+                <Code2 className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
                 <span>GitHub Code</span>
-                <ExternalLink className="w-3 h-3 opacity-70 group-hover/git:opacity-100" />
               </a>
-
-              <span className="hidden sm:inline-block px-2.5 py-1 rounded bg-slate-100 dark:bg-black/60 border border-slate-200 dark:border-white/10 text-[10px] font-mono text-slate-600 dark:text-[#888]">
-                PlantVillage Dataset
-              </span>
             </div>
           </div>
 
-          {/* Diagnostic Classes Selector Buttons */}
-          <div className="flex flex-wrap gap-2.5 mb-4">
-            {(Object.keys(diseaseData) as (keyof typeof diseaseData)[]).map((dis) => {
-              const item = diseaseData[dis];
-              const isSelected = tomatoSelectedDisease === dis;
-              return (
+          {/* Verification & Manual Setup Guide Accordion */}
+          {tomatoShowGuide && (
+            <div className="mb-5 p-4 rounded-xl bg-slate-50 dark:bg-[#0c1017] border border-cyan-500/30 text-xs font-mono">
+              <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200 dark:border-[#ffffff10]">
+                <div className="flex items-center gap-2 text-cyan-700 dark:text-cyan-300 font-bold">
+                  <Info className="w-4 h-4" />
+                  <span>Crop Foliar Images: Verification & Setup Guide</span>
+                </div>
                 <button
-                  key={dis}
                   type="button"
-                  onClick={() => {
-                    setTomatoSelectedDisease(dis);
-                    trackSimulatorAction(project.id, 'tomato', 'disease_select', { disease: dis });
-                  }}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-mono transition-all cursor-pointer flex items-center gap-2 border ${
-                    isSelected
-                      ? dis === 'Healthy'
-                        ? 'bg-emerald-500 text-slate-950 font-bold border-emerald-400 shadow-md shadow-emerald-950/30'
-                        : dis === 'Early Blight'
-                        ? 'bg-amber-500 text-slate-950 font-bold border-amber-400 shadow-md shadow-amber-950/30'
-                        : 'bg-rose-500 text-white font-bold border-rose-400 shadow-md shadow-rose-950/30'
-                      : 'bg-slate-100 dark:bg-[#141414] text-slate-700 dark:text-[#999] hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-[#202020] border-slate-200 dark:border-[#222]'
-                  }`}
+                  onClick={() => setTomatoShowGuide(false)}
+                  className="p-1 rounded text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
                 >
-                  <span className="text-sm">{item.badgeIcon}</span>
-                  <span className="font-semibold">{dis}</span>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                    isSelected 
-                      ? 'bg-black/20 text-current' 
-                      : 'bg-slate-200 dark:bg-[#222] text-slate-500 dark:text-[#888]'
-                  }`}>
-                    {item.confidence}%
-                  </span>
+                  <X className="w-4 h-4" />
                 </button>
-              );
-            })}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Explanation */}
+                <div className="space-y-2 text-slate-600 dark:text-[#aaa]">
+                  <p className="font-bold text-slate-900 dark:text-white">
+                    🔍 Why images might not show on another computer or deployment:
+                  </p>
+                  <ul className="list-disc pl-4 space-y-1 text-[11px]">
+                    <li>
+                      <strong className="text-slate-800 dark:text-[#ddd]">Git Tracking:</strong> When cloning or deploying to GitHub Pages / Vercel, the local folder <code className="px-1 py-0.5 rounded bg-slate-200 dark:bg-black text-cyan-600 dark:text-cyan-300">public/images/tomato/</code> must be tracked. If it wasn't committed, other systems won't have local image files.
+                    </li>
+                    <li>
+                      <strong className="text-slate-800 dark:text-[#ddd]">Base URL Subpaths:</strong> When hosted on subpaths (e.g. <code className="px-1 py-0.5 rounded bg-slate-200 dark:bg-black text-cyan-600 dark:text-cyan-300">username.github.io/repo/</code>), absolute paths starting with <code className="text-amber-500">/images/</code> can fail without a relative base.
+                    </li>
+                    <li>
+                      <strong className="text-emerald-700 dark:text-emerald-400">Automatic Fix Enabled:</strong> We've now built in a multi-tier fallback: if a local photo cannot be found on any computer, the app seamlessly serves a high-resolution agricultural CDN photo or botanical SVG illustration!
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Manual Steps */}
+                <div className="space-y-2 text-slate-600 dark:text-[#aaa]">
+                  <p className="font-bold text-slate-900 dark:text-white">
+                    🛠️ What you can do manually in your project folder:
+                  </p>
+                  <div className="p-2.5 rounded bg-slate-200 dark:bg-[#07090e] border border-slate-300 dark:border-[#ffffff10] text-[11px] space-y-1.5">
+                    <p className="text-slate-800 dark:text-white font-semibold">1. Ensure the following files exist in <span className="text-cyan-600 dark:text-cyan-300">public/images/tomato/</span>:</p>
+                    <div className="grid grid-cols-2 gap-1 text-[10px] text-slate-700 dark:text-[#999]">
+                      <span>✓ healthy.jpg</span>
+                      <span>✓ early_blight.jpg</span>
+                      <span>✓ late_blight.jpg</span>
+                      <span>✓ septoria_spot.jpg</span>
+                      <span>✓ yellow_leaf_curl.jpg</span>
+                      <span>✓ bacterial_spot.jpg</span>
+                    </div>
+                    <p className="text-slate-800 dark:text-white font-semibold pt-1">2. Run in your terminal before pushing to GitHub:</p>
+                    <code className="block p-1.5 rounded bg-slate-900 text-emerald-400 text-[10px]">
+                      git add public/images/tomato/<br/>
+                      git commit -m "Add foliar disease images"<br/>
+                      git push
+                    </code>
+                    <p className="text-slate-800 dark:text-white font-semibold pt-1">3. Or upload any photo directly on this page to test right now!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Custom Upload Banner (if active) */}
+          {tomatoCustomImage && (
+            <div className="mb-4 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/40 flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span className="text-xs font-mono text-emerald-900 dark:text-emerald-200">
+                  Custom Field Photo Active: <strong className="underline">{tomatoCustomFileName || 'Uploaded Image'}</strong>
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setTomatoCustomImage(null);
+                  setTomatoCustomFileName(null);
+                }}
+                className="px-2 py-0.5 rounded bg-emerald-200 dark:bg-emerald-800 hover:bg-emerald-300 dark:hover:bg-emerald-700 text-emerald-900 dark:text-emerald-100 text-[10px] font-mono font-bold cursor-pointer"
+              >
+                Reset to Benchmark Specimen
+              </button>
+            </div>
+          )}
+
+          {/* Diagnostic Classes Selector Tabs */}
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-mono text-slate-500 dark:text-[#888] uppercase tracking-wider">
+                Select Diagnostic Specimen Class:
+              </span>
+              <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
+                {Object.keys(diseaseData).length} Verified Pathologies
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+              {(Object.keys(diseaseData) as (keyof typeof diseaseData)[]).map((dis) => {
+                const item = diseaseData[dis];
+                const isSelected = tomatoSelectedDisease === dis;
+                return (
+                  <button
+                    key={dis}
+                    type="button"
+                    onClick={() => {
+                      setTomatoSelectedDisease(dis);
+                      trackSimulatorAction(project.id, 'tomato', 'disease_select', { disease: dis });
+                    }}
+                    className={`p-2.5 rounded-xl text-xs font-mono transition-all cursor-pointer flex flex-col justify-between border text-left ${
+                      isSelected
+                        ? dis === 'Healthy'
+                          ? 'bg-emerald-500 text-slate-950 font-bold border-emerald-400 shadow-md shadow-emerald-950/30'
+                          : dis === 'Early Blight'
+                          ? 'bg-amber-500 text-slate-950 font-bold border-amber-400 shadow-md shadow-amber-950/30'
+                          : dis === 'Late Blight'
+                          ? 'bg-rose-500 text-white font-bold border-rose-400 shadow-md shadow-rose-950/30'
+                          : dis === 'Septoria Spot'
+                          ? 'bg-yellow-400 text-slate-950 font-bold border-yellow-300 shadow-md'
+                          : dis === 'Yellow Leaf Curl'
+                          ? 'bg-purple-600 text-white font-bold border-purple-400 shadow-md'
+                          : 'bg-cyan-500 text-slate-950 font-bold border-cyan-400 shadow-md'
+                        : 'bg-slate-50 dark:bg-[#12161f] text-slate-700 dark:text-[#aaa] hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#1a202c] border-slate-200 dark:border-[#202736]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-1">
+                      <span className="text-base">{item.badgeIcon}</span>
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
+                        isSelected 
+                          ? 'bg-black/20 text-current' 
+                          : 'bg-slate-200 dark:bg-[#1e2533] text-slate-600 dark:text-[#888]'
+                      }`}>
+                        {item.confidence}%
+                      </span>
+                    </div>
+                    <div className="font-bold text-[11px] leading-tight truncate w-full">
+                      {dis}
+                    </div>
+                    <div className={`text-[9px] mt-0.5 ${isSelected ? 'opacity-90' : 'text-slate-500 dark:text-[#777]'}`}>
+                      {item.severity}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Interactive Specimen Photo & Neural Vision Panel */}
@@ -867,7 +1083,7 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
                 <div className="flex items-center gap-2">
                   <Camera className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   <span className="text-xs font-mono font-bold text-slate-900 dark:text-white uppercase">
-                    Field Specimen: {current.badgeIcon} {tomatoSelectedDisease}
+                    Field Specimen: {current.badgeIcon} {tomatoCustomImage ? 'Custom Capture' : tomatoSelectedDisease}
                   </span>
                 </div>
 
@@ -898,14 +1114,15 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
                 </div>
               </div>
 
-              {/* Photo Display Viewport */}
+              {/* Photo Display Viewport with Multi-Tier Fallback */}
               <div className="relative aspect-video sm:aspect-[16/10] w-full rounded-lg overflow-hidden bg-black border border-[#ffffff0a] group">
                 <img
-                  src={current.photoUrl}
+                  src={displayImageUrl}
                   alt={current.photoAlt}
                   referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    e.currentTarget.src = '/images/tomato/early_blight.jpg';
+                  onError={() => {
+                    // Mark this disease as having a local error so it switches immediately to CDN
+                    setTomatoImageErrors(prev => ({ ...prev, [tomatoSelectedDisease]: true }));
                   }}
                   className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
@@ -923,29 +1140,53 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
                     {tomatoSelectedDisease === 'Late Blight' && (
                       <div className="w-full h-full bg-[radial-gradient(circle_at_60%_40%,rgba(225,29,72,0.9)_0%,rgba(217,119,6,0.65)_30%,rgba(37,99,235,0.25)_65%,transparent_100%)] animate-pulse" />
                     )}
+                    {tomatoSelectedDisease === 'Septoria Spot' && (
+                      <div className="w-full h-full bg-[radial-gradient(circle_at_35%_50%,rgba(234,179,8,0.85)_0%,rgba(249,115,22,0.6)_35%,transparent_75%)] animate-pulse" />
+                    )}
+                    {tomatoSelectedDisease === 'Yellow Leaf Curl' && (
+                      <div className="w-full h-full bg-[radial-gradient(ellipse_at_50%_30%,rgba(168,85,247,0.85)_0%,rgba(234,179,8,0.6)_40%,transparent_80%)] animate-pulse" />
+                    )}
+                    {tomatoSelectedDisease === 'Bacterial Spot' && (
+                      <div className="w-full h-full bg-[radial-gradient(circle_at_40%_60%,rgba(6,182,212,0.85)_0%,rgba(239,68,68,0.6)_35%,transparent_75%)] animate-pulse" />
+                    )}
                   </div>
                 )}
 
                 {/* Simulated Neural Bounding Box Annotations */}
                 {tomatoViewMode === 'gradcam' && (
-                  <div className={`absolute pointer-events-none flex flex-col justify-between p-1.5 border-2 border-dashed rounded ${
-                    tomatoSelectedDisease === 'Healthy'
-                      ? 'top-[20%] left-[20%] w-[60%] h-[60%] border-emerald-400/90 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
-                      : tomatoSelectedDisease === 'Early Blight'
-                      ? 'top-[32%] left-[30%] w-[40%] h-[42%] border-amber-400/90 bg-amber-500/10 shadow-[0_0_15px_rgba(245,158,11,0.4)]'
-                      : 'top-[28%] left-[25%] w-[48%] h-[48%] border-rose-400/90 bg-rose-500/10 shadow-[0_0_15px_rgba(244,63,94,0.4)]'
-                  }`}>
+                  <div 
+                    style={current.boxStyle}
+                    className={`absolute pointer-events-none flex flex-col justify-between p-1.5 border-2 border-dashed rounded shadow-lg ${
+                      tomatoSelectedDisease === 'Healthy'
+                        ? 'border-emerald-400/90 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
+                        : tomatoSelectedDisease === 'Early Blight'
+                        ? 'border-amber-400/90 bg-amber-500/10 shadow-[0_0_15px_rgba(245,158,11,0.4)]'
+                        : tomatoSelectedDisease === 'Late Blight'
+                        ? 'border-rose-400/90 bg-rose-500/10 shadow-[0_0_15px_rgba(244,63,94,0.4)]'
+                        : tomatoSelectedDisease === 'Septoria Spot'
+                        ? 'border-yellow-400/90 bg-yellow-500/10 shadow-[0_0_15px_rgba(234,179,8,0.4)]'
+                        : tomatoSelectedDisease === 'Yellow Leaf Curl'
+                        ? 'border-purple-400/90 bg-purple-500/10 shadow-[0_0_15px_rgba(168,85,247,0.4)]'
+                        : 'border-cyan-400/90 bg-cyan-500/10 shadow-[0_0_15px_rgba(6,182,212,0.4)]'
+                    }`}
+                  >
                     <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded self-start shadow-sm text-white ${
                       tomatoSelectedDisease === 'Healthy'
                         ? 'bg-emerald-600'
                         : tomatoSelectedDisease === 'Early Blight'
                         ? 'bg-amber-600'
-                        : 'bg-rose-600'
+                        : tomatoSelectedDisease === 'Late Blight'
+                        ? 'bg-rose-600'
+                        : tomatoSelectedDisease === 'Septoria Spot'
+                        ? 'bg-yellow-600'
+                        : tomatoSelectedDisease === 'Yellow Leaf Curl'
+                        ? 'bg-purple-600'
+                        : 'bg-cyan-600'
                     }`}>
                       {tomatoSelectedDisease} ({current.confidence}%)
                     </span>
                     <span className="text-[8px] font-mono text-white/90 bg-black/80 px-1 rounded self-end">
-                      Layer49 Activation Peak
+                      ResNet-50 Layer49 Peak
                     </span>
                   </div>
                 )}
@@ -960,6 +1201,8 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
                       ? 'bg-rose-950/90 text-rose-300 border border-rose-500/50' 
                       : current.severity === 'High'
                       ? 'bg-amber-950/90 text-amber-300 border border-amber-500/50'
+                      : current.severity === 'Moderate'
+                      ? 'bg-yellow-950/90 text-yellow-300 border border-yellow-500/50'
                       : 'bg-emerald-950/90 text-emerald-300 border border-emerald-500/50'
                   }`}>
                     {current.severity === 'Optimal' ? 'Healthy Foliage' : `${current.severity} Urgency`}

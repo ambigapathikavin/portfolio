@@ -453,6 +453,14 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
                     src={project.imageUrl}
                     alt={project.imageCaption || project.title}
                     referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const fallback = (project.dashboardType === 'tomato' || project.id === 'project-17')
+                        ? 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=1200&q=80'
+                        : 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80';
+                      if (e.currentTarget.src !== fallback) {
+                        e.currentTarget.src = fallback;
+                      }
+                    }}
                     className="w-full h-full object-cover object-center"
                     loading="lazy"
                   />

@@ -350,11 +350,16 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                     className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-slate-100 dark:bg-[#181818] cursor-pointer group/img"
                   >
                     <img
-                      src={project.imageUrl || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80'}
+                      src={project.imageUrl || (project.dashboardType === 'tomato' || project.id === 'project-17' ? 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=900&q=80' : 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80')}
                       alt={project.imageCaption || project.title}
                       referrerPolicy="no-referrer"
                       onError={(e) => {
-                        e.currentTarget.src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80';
+                        const fallbackUrl = (project.dashboardType === 'tomato' || project.id === 'project-17')
+                          ? 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=900&q=80'
+                          : 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80';
+                        if (e.currentTarget.src !== fallbackUrl) {
+                          e.currentTarget.src = fallbackUrl;
+                        }
                       }}
                       className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300 opacity-90 group-hover/img:opacity-100"
                       loading="lazy"
