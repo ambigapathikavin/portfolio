@@ -6,3 +6,10 @@ coverage/
 *.log
 .env*
 !.env.example
+.kilo
+
+# bun.lock is the committed lockfile (CI uses `bun install --frozen-lockfile`).
+# Ignore npm/pnpm/yarn lockfiles so there is only ever one dependency truth.
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

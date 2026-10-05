@@ -1,7 +1,24 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth dark">
   <head>
-    <!-- Google tag (gtag.js) -->
+    <!-- ============================================================
+         CANONICAL / SOCIAL PREVIEW
+         ------------------------------------------------------------
+         !! CHANGE SITE_URL + IMAGE URLs BELOW WHEN YOU MOVE DOMAINS !!
+         og:image and twitter:image MUST be absolute URLs (no leading
+         slash) or LinkedIn/Slack/X will render the share with no image.
+         ============================================================ -->
+    <meta property="og:url" content="https://ambigapathikavin.github.io/portfolio/" />
+    <meta property="og:image" content="https://ambigapathikavin.github.io/portfolio/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Ambigapathi V - Data Analyst &amp; Data Scientist" />
+    <meta name="twitter:image" content="https://ambigapathikavin.github.io/portfolio/og-image.png" />
+    <meta name="twitter:image:alt" content="Ambigapathi V - Data Analyst &amp; Data Scientist" />
+    <meta name="twitter:title" content="Ambigapathi V | Data Analyst &amp; Data Scientist" />
+    <meta name="twitter:description" content="Data Analyst and Data Scientist specializing in Python, SQL, Power BI, Machine Learning, NLP and AI." />
+
+    <!-- Google tag (gtag.js). Set VITE_GA_MEASUREMENT_ID to override; defaults to G-N2SWWDYJVP. -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-N2SWWDYJVP"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -13,41 +30,90 @@
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ambigapathi V | Data Analyst & Data Scientist Portfolio</title>
+    <title>Ambigapathi V | Data Analyst &amp; Data Scientist Portfolio</title>
     <meta name="description" content="Ambigapathi V is a Data Analyst and Data Scientist specializing in Python, SQL, Power BI, Machine Learning, NLP and AI." />
-    <meta property="og:title" content="Ambigapathi V | Data Analyst & Data Scientist Portfolio" />
+    <meta name="author" content="Ambigapathi V" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Ambigapathi V | Data Analyst &amp; Data Scientist Portfolio" />
     <meta property="og:description" content="Ambigapathi V is a Data Analyst and Data Scientist specializing in Python, SQL, Power BI, Machine Learning, NLP and AI." />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://ambigapathikavin.github.io/portfolio/" />
+
+    <!-- Icons: SVG for modern browsers, PNG for iOS/PWA (iOS ignores SVG) -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate icon" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
-    <meta name="theme-color" content="#06b6d4" />
-    
-    <!-- Critical Preload for LCP (Hero Portrait Image) -->
-    <link rel="preload" as="image" href="/portfolio.webp" type="image/webp" fetchpriority="high" />
+    <link rel="alternate icon" type="image/png" href="/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#080c14" />
+    <meta name="color-scheme" content="dark light" />
+
+    <!-- Critical Preload for LCP (Hero Portrait Image).
+         imagesrcset/imagesizes make the preloaded candidate MATCH what the
+         <picture> in AmbigapathiPortrait.tsx will actually request, so mobile
+         stops downloading the 900w file it never uses. -->
+    <link rel="preload" as="image" href="./portfolio.webp" type="image/webp"
+          imagesrcset="./portfolio-450.webp 450w, ./portfolio.webp 900w"
+          imagesizes="(max-width: 640px) 360px, 450px" fetchpriority="high" />
 
     <!-- Performance: DNS Prefetch & Preconnect for External Assets -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-    <link rel="dns-prefetch" href="https://www.google-analytics.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
-    <!-- Non-Render-Blocking Asynchronous Font Loading -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" media="print" onload="this.media='all'" />
+
+    <!-- Non-Render-Blocking Asynchronous Font Loading.
+         `crossorigin` is required on the preload, otherwise it is fetched
+         twice (CORS and non-CORS) and the browser warns it was "not used". -->
+    <link rel="preload" as="style" crossorigin
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" />
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+          media="print" onload="this.media='all'" />
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" />
     </noscript>
   </head>
-  <body class="bg-[#080c14] text-slate-100 font-sans antialiased selection:bg-cyan-500/30 selection:text-cyan-200 min-h-screen">
+  <body class="dark bg-[#080c14] text-slate-100 font-sans antialiased selection:bg-cyan-500/30 selection:text-cyan-200 min-h-screen">
+    <!-- ============================================================
+         Blocking theme bootstrap (must run before first paint).
+         index.css drives light mode off `body:not(.dark)`, so without
+         this the body has no `dark` class for one frame and every dark
+         visitor sees a white flash. Must stay the FIRST child of <body>.
+         Keep the storage key in sync with src/context/ThemeContext.tsx.
+         ============================================================ -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('portfolio_theme');
+          var theme =
+            saved === 'light' || saved === 'dark'
+              ? saved
+              : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches
+                  ? 'light'
+                  : 'dark');
+          var dark = theme === 'dark';
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.classList.toggle('light', !dark);
+          document.body.classList.toggle('dark', dark);
+          document.body.classList.toggle('light', !dark);
+        } catch (e) {
+          /* storage blocked - keep the default dark classes from the markup */
+        }
+      })();
+    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <!-- Cloudflare Web Analytics -->
+
+    <!-- Cloudflare Web Analytics.
+         GA4 is already loaded above; running both double-counts every
+         pageview. Set VITE_ENABLE_CLOUDFLARE_ANALYTICS=true in .env to
+         re-enable it, then also uncomment the script below. -->
+    <!--
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5a417b43f02e4b2aa3b91bb002574cf3"}'></script>
-    <!-- End Cloudflare Web Analytics -->
+    -->
   </body>
 </html>
-

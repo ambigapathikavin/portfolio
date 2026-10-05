@@ -42,6 +42,34 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [activeSection, setActiveSection] = useState('home');
   const [sectionDropdownOpen, setSectionDropdownOpen] = useState(false);
 
+  // Escape closes the mobile drawer / section dropdown.
+  React.useEffect(() => {
+    if (!mobileMenuOpen && !sectionDropdownOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      setMobileMenuOpen(false);
+      setSectionDropdownOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [mobileMenuOpen, sectionDropdownOpen]);
+
+  // Close the mobile drawer if the viewport grows past the md breakpoint,
+  // otherwise the drawer stays mounted and traps the page on resize/rotate.
+  React.useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const onChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      if (e.matches) setMobileMenuOpen(false);
+    };
+    onChange(mq);
+    if (typeof mq.addEventListener === 'function') {
+      mq.addEventListener('change', onChange);
+      return () => mq.removeEventListener('change', onChange);
+    }
+    mq.addListener(onChange);
+    return () => mq.removeListener(onChange);
+  }, []);
+
   const navLinks = [
     { name: 'Home', href: '#home', label: 'Overview' },
     { name: 'About', href: '#about', label: 'Profile & Tracks' },
@@ -318,9 +346,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               <FileText className="w-3.5 h-3.5 text-cyan-400" />
             </button>
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 rounded-lg text-[#E0E0E0] hover:text-white bg-[#111111] border border-[#ffffff10] focus:outline-none cursor-pointer"
+              type="button"
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              className="p-1.5 rounded-lg text-[#E0E0E0] hover:text-white bg-[#111111] border border-[#ffffff10] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50 cursor-pointer"
               aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-nav-drawer"
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -333,6 +364,9 @@ export const Navbar: React.FC<NavbarProps> = ({
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
+            id="mobile-nav-drawer"
+            role="dialog"
+            aria-label="Mobile navigation"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}

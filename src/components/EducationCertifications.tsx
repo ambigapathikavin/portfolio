@@ -17,10 +17,14 @@ import {
 import { EDUCATION, CERTIFICATIONS } from '../data/portfolioData';
 import { CertificationItem } from '../types';
 import { trackCertificateVerify, trackEvent } from '../utils/analytics';
+import { useDialogA11y } from '../hooks/useDialogA11y';
 
 export const EducationCertifications: React.FC = () => {
   const [selectedCert, setSelectedCert] = useState<CertificationItem | null>(null);
   const [copiedCertId, setCopiedCertId] = useState<string | null>(null);
+
+  // Escape / focus trap / focus restore / background scroll lock.
+  const certDialogRef = useDialogA11y(selectedCert !== null, () => setSelectedCert(null));
 
   const handleCopyId = (id: string, e?: React.MouseEvent) => {
     if (e) {
@@ -58,7 +62,7 @@ export const EducationCertifications: React.FC = () => {
   };
 
   return (
-    <section id="certifications" className="py-16 bg-[#050505] border-t border-[#ffffff08] relative">
+    <section id="certifications" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-[#050505] border-t border-[#ffffff08] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -279,6 +283,11 @@ export const EducationCertifications: React.FC = () => {
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
             <div className="fixed inset-0" onClick={() => setSelectedCert(null)} />
             <motion.div
+              ref={certDialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="cert-modal-title"
+              tabIndex={-1}
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
@@ -291,12 +300,14 @@ export const EducationCertifications: React.FC = () => {
                   </div>
                   <div>
                     <span className="text-[10px] font-mono text-violet-400 uppercase tracking-wider">Credential Verification</span>
-                    <h3 className="text-base font-bold text-white mt-0.5">{selectedCert.title}</h3>
+                    <h3 id="cert-modal-title" className="text-base font-bold text-white mt-0.5">{selectedCert.title}</h3>
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setSelectedCert(null)}
                   className="p-1 rounded-lg bg-[#181818] text-[#888] hover:text-white cursor-pointer"
+                  aria-label="Close certificate details"
                 >
                   <X className="w-4 h-4" />
                 </button>

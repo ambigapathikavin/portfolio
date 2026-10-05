@@ -21,6 +21,11 @@ declare global {
 
 export const GA_MEASUREMENT_ID = (import.meta.env.VITE_GA_MEASUREMENT_ID || 'G-N2SWWDYJVP').trim();
 
+// Verbose telemetry logging is dev-only: trackEvent fires on scroll, dwell and
+// pointer interactions, so leaving it on in production floods the console and
+// costs real main-thread time for every visitor.
+const IS_DEV = import.meta.env.DEV;
+
 // Session state memory for dwell time and scroll milestones
 let sessionStartTime = Date.now();
 const triggeredScrollMilestones = new Set<number>();
@@ -50,11 +55,11 @@ export const initGoogleAnalytics = (): void => {
       send_page_view: false, // Managed virtually via trackPageView
     });
 
-    console.info(
-      `%c[GA4 Active]%c Tracking ID: ${GA_MEASUREMENT_ID} (Granular Telemetry Loaded)`,
-      'color: #06b6d4; font-weight: bold;',
-      'color: #10b981;'
-    );
+    if (IS_DEV) {
+      console.info(
+        `[GA4 Active] Tracking ID: ${GA_MEASUREMENT_ID} (Granular Telemetry Loaded)`
+      );
+    }
   }
 };
 
@@ -82,8 +87,10 @@ export const trackEvent = (
     }
   }
 
-  // Developer console logger for instant verification
-  console.debug(`%c[GA4 Track]%c ${eventName}`, 'color: #38bdf8; font-weight: bold;', 'color: #e2e8f0;', enrichedParams);
+// Developer console logger for instant verification (dev builds only).
+if (IS_DEV) {
+    console.debug(`[GA4 Track] ${eventName}`, enrichedParams);
+  }
 
   // Check for recruiter high-intent conversion
   checkRecruiterIntentSignal();
@@ -105,7 +112,9 @@ export const trackPageView = (pagePath: string, pageTitle?: string): void => {
     });
   }
 
-  console.debug(`[GA4 PageView] ${pagePath} — "${title}"`);
+  if (IS_DEV) {
+      console.debug(`[GA4 PageView] ${pagePath} — "${title}"`);
+    }
 };
 
 // ============================================================================
@@ -186,34 +195,33 @@ export const trackResumeDownload = (
 export const trackProjectCardClick = (
   projectId: string,
   projectTitle: string,
-  roleTrack?: string,
-  category?: string,
-  cardPosition?: number
+  meta: { roleTrack?: string; category?: string; cardPosition?: number } = {}
 ): void => {
   projectsOpenedInSession += 1;
 
   trackEvent('select_project_card', {
     project_id: projectId,
     project_title: projectTitle,
-    role_track: roleTrack,
-    category,
-    card_grid_index: cardPosition,
+    role_track: meta.roleTrack,
+    project_category: meta.category,
+    card_grid_index: meta.cardPosition,
   });
 };
 
 export const trackProjectView = (
   projectId: string,
   projectTitle: string,
-  roleTrack?: string,
-  category?: string
+  meta: { roleTrack?: string; category?: string } = {}
 ): void => {
   projectsOpenedInSession += 1;
 
+  // Named options (not positional args) so a category can never be passed
+  // into role_track by accident.
   trackEvent('view_project_case_study', {
     project_id: projectId,
     project_title: projectTitle,
-    role_track: roleTrack,
-    project_category: category,
+    role_track: meta.roleTrack,
+    project_category: meta.category,
   });
   trackPageView(`/project/${projectId}`, `${projectTitle} | Case Study`);
 };

@@ -21,7 +21,7 @@ export const DataJourney: React.FC = () => {
   const currentStage = DATA_JOURNEY_STAGES[activeStep];
 
   return (
-    <section id="data-journey" className="py-16 bg-[#050505] border-t border-[#ffffff08] relative overflow-hidden">
+    <section id="data-journey" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-[#050505] border-t border-[#ffffff08] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}

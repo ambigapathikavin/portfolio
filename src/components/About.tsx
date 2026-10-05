@@ -20,7 +20,7 @@ interface AboutProps {
 
 export const About: React.FC<AboutProps> = ({ onOpenResume }) => {
   return (
-    <section id="about" className="py-16 relative bg-[#050505] overflow-hidden border-t border-[#ffffff08]">
+    <section id="about" className="scroll-mt-20 sm:scroll-mt-24 py-16 relative bg-[#050505] overflow-hidden border-t border-[#ffffff08]">
       {/* Subtle background gradient accents */}
       <div className="absolute top-1/2 left-0 w-80 h-80 bg-cyan-500/4 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-violet-500/4 rounded-full blur-3xl pointer-events-none" />

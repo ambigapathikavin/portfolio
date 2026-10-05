@@ -6,11 +6,12 @@ import {
   Sliders, ShieldCheck, Share2, HelpCircle, Briefcase, Award, BarChart2,
   GitBranch, Play, Code2, Github, Activity
 } from 'lucide-react';
-import { Project } from '../types';
-import { PROJECTS } from '../data/portfolioData';
+import { Project, ProjectTab } from '../types';
+import { PROJECTS, PROJECT_PLAYBOOK } from '../data/portfolioData';
 import { ProjectInteractiveDashboard } from './ProjectInteractiveDashboard';
 import { PipelineFlowchart } from './PipelineFlowchart';
 import { trackEvent, trackExternalLink, trackProjectView, trackProjectTabSwitch, trackProfileLink } from '../utils/analytics';
+import { resolveProjectImage, BROKEN_IMAGE_FALLBACK } from '../utils/assets';
 
 const getTechBadgeStyle = (tech: string) => {
   const lower = tech.toLowerCase();
@@ -32,47 +33,147 @@ const getTechBadgeStyle = (tech: string) => {
 interface ProjectPageProps {
   projectId: string;
   onBack: () => void;
-  onSelectProject: (projectId: string) => void;
+  onSelectProject: (projectId: string, initialTab?: ProjectTab) => void;
+  /** Section requested by the launcher (e.g. a card button deep link). */
+  initialTab?: ProjectTab;
+  /** Called once the requested section has been applied, so it isn't re-applied. */
+  onInitialTabConsumed?: () => void;
 }
 
-type TabKey = 'dashboard' | 'problem' | 'pipeline' | 'methodology' | 'roi';
+/** Single source of truth for the case-study sections and their order. */
+const CASE_STUDY_TABS: Array<{
+  id: ProjectTab;
+  step: string;
+  short: string;
+  icon: React.ComponentType<{ className?: string }>;
+  isLive?: boolean;
+}> = [
+  { id: 'dashboard', step: '1', short: 'Simulator & KPIs', icon: BarChart2, isLive: true },
+  { id: 'problem', step: '2', short: 'Problem & Scope', icon: Briefcase },
+  { id: 'pipeline', step: '3', short: 'Pipeline', icon: Layers },
+  { id: 'methodology', step: '4', short: 'Deep-Dive', icon: FileCode2 },
+  { id: 'roi', step: '5', short: 'ROI & Strategy', icon: Award },
+];
 
-export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onSelectProject }) => {
-  const [activeTab, setActiveTab] = useState<TabKey>('dashboard');
+export const ProjectPage: React.FC<ProjectPageProps> = ({
+  projectId,
+  onBack,
+  onSelectProject,
+  initialTab,
+  onInitialTabConsumed,
+}) => {
+  const [activeTab, setActiveTab] = useState<ProjectTab>('dashboard');
   const [copiedLink, setCopiedLink] = useState(false);
+  const [shareFailed, setShareFailed] = useState(false);
 
-  // Find project
+  // Find project. An unknown id (e.g. someone hand-edits the #project-99 hash)
+  // previously fell through to PROJECTS[0] and silently showed project 1 under
+  // the wrong URL, with prev/next computed from a -1 index. Treat it as missing.
   const projectIndex = PROJECTS.findIndex(p => p.id === projectId);
-  const project = projectIndex !== -1 ? PROJECTS[projectIndex] : PROJECTS[0];
+  const project = projectIndex !== -1 ? PROJECTS[projectIndex] : null;
 
-  const prevProject = projectIndex > 0 ? PROJECTS[projectIndex - 1] : PROJECTS[PROJECTS.length - 1];
-  const nextProject = projectIndex < PROJECTS.length - 1 ? PROJECTS[projectIndex + 1] : PROJECTS[0];
+  const prevProject =
+    projectIndex > 0 ? PROJECTS[projectIndex - 1] : PROJECTS[PROJECTS.length - 1];
+  const nextProject =
+    projectIndex >= 0 && projectIndex < PROJECTS.length - 1
+      ? PROJECTS[projectIndex + 1]
+      : PROJECTS[0];
+
+  // Per-project strategy copy. Absent entry => those two cards are not rendered.
+  const playbook = project ? PROJECT_PLAYBOOK[project.id] : undefined;
 
   // Scroll to top on project load & track project view
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setActiveTab('dashboard');
     if (project) {
-      trackProjectView(project.id, project.title, project.roleType, project.category);
+      trackProjectView(project.id, project.title, { roleTrack: project.roleType, category: project.category });
     }
   }, [projectId]);
 
-  const handleTabSwitch = (newTab: TabKey) => {
+  // Honour a deep-linked section once, then release it so a later manual tab
+  // click is not immediately overridden.
+  useEffect(() => {
+    if (!initialTab) return;
+    setActiveTab(initialTab);
+    onInitialTabConsumed?.();
+  }, [initialTab, onInitialTabConsumed]);
+
+  const handleTabSwitch = (newTab: ProjectTab) => {
     setActiveTab(newTab);
-    trackProjectTabSwitch(project.id, newTab);
+    if (project) trackProjectTabSwitch(project.id, newTab);
   };
 
-  const handleShare = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
+  // Left/Right/Home/End move between tabs, per the WAI-ARIA tabs pattern.
+  const handleTabKeyDown = (e: React.KeyboardEvent, current: ProjectTab) => {
+    const idx = CASE_STUDY_TABS.findIndex(t => t.id === current);
+    let nextIdx: number | null = null;
+    if (e.key === 'ArrowRight') nextIdx = (idx + 1) % CASE_STUDY_TABS.length;
+    else if (e.key === 'ArrowLeft') nextIdx = (idx - 1 + CASE_STUDY_TABS.length) % CASE_STUDY_TABS.length;
+    else if (e.key === 'Home') nextIdx = 0;
+    else if (e.key === 'End') nextIdx = CASE_STUDY_TABS.length - 1;
+    if (nextIdx === null) return;
+
+    e.preventDefault();
+    const target = CASE_STUDY_TABS[nextIdx];
+    handleTabSwitch(target.id);
+    document.getElementById(`tab-${target.id}`)?.focus();
+  };
+
+  const handleShare = async () => {
+    if (copiedLink) return;
+    const url = window.location.href;
+    try {
+      // Prefer the native share sheet on mobile - it is what a visitor expects.
+      if (navigator.share) {
+        await navigator.share({ title: project?.title ?? 'Portfolio', url });
+        return;
+      }
+      if (!navigator.clipboard) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(url);
       setCopiedLink(true);
       trackEvent('share_project', {
-        project_id: project.id,
-        project_title: project.title,
+        project_id: project?.id,
+        project_title: project?.title,
+        method: 'clipboard',
       });
       setTimeout(() => setCopiedLink(false), 2000);
+    } catch {
+      // AbortError = user dismissed the share sheet, which is not an error.
+      setShareFailed(true);
+      setTimeout(() => setShareFailed(false), 3000);
     }
   };
+
+  // Unknown project id: explain instead of silently rendering a different case study.
+  if (!project) {
+    return (
+      <div className="min-h-screen bg-[#050505] text-[#E0E0E0] font-sans pt-24 pb-24 flex items-center justify-center px-4">
+        <div className="max-w-md text-center space-y-4">
+          <h1 className="text-2xl font-extrabold text-white">Project not found</h1>
+          <p className="text-sm text-[#A0AEC0] font-mono">
+            No case study exists with the id{' '}
+            <span className="text-cyan-400 break-all">{projectId}</span>.
+          </p>
+          <div className="flex items-center justify-center gap-2 pt-2">
+            <button
+              type="button"
+              onClick={onBack}
+              className="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-mono font-bold cursor-pointer"
+            >
+              Back to Projects
+            </button>
+            <button
+              type="button"
+              onClick={() => onSelectProject(PROJECTS[0].id)}
+              className="px-4 py-2 rounded-lg bg-[#181818] hover:bg-[#252525] border border-[#ffffff15] text-xs font-mono text-[#D0D0D0] cursor-pointer"
+            >
+              Open first project
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#050505] text-[#E0E0E0] font-sans pt-16 sm:pt-20 pb-24 selection:bg-cyan-500/30 selection:text-cyan-200">
@@ -135,11 +236,14 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
 
             <button
               onClick={() => {
-                setActiveTab('dashboard');
-                setTimeout(() => {
-                  const el = document.getElementById('interactive-simulator-section') || document.getElementById('project-tabs-content');
-                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 40);
+                handleTabSwitch('dashboard');
+                // Wait for the panel to paint before scrolling, otherwise the
+                // anchor can land at the wrong offset.
+                window.requestAnimationFrame(() => {
+                  document
+                    .getElementById('interactive-simulator-section')
+                    ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
               }}
               className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/70 hover:bg-cyan-100 dark:hover:bg-cyan-900/90 border border-cyan-500/30 dark:border-cyan-500/40 text-xs font-mono text-cyan-700 dark:text-cyan-300 font-semibold transition-all cursor-pointer shadow-sm group/sim"
               title="Launch Interactive Simulator & Live Metrics"
@@ -154,9 +258,12 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
               onClick={handleShare}
               className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#141414] hover:bg-slate-100 dark:hover:bg-[#202020] border border-slate-200 dark:border-[#ffffff15] text-xs font-mono text-slate-600 dark:text-[#aaa] hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
               title="Share this project link"
+              aria-live="polite"
             >
               <Share2 className="w-3 h-3" />
-              <span className="hidden sm:inline">{copiedLink ? 'Copied' : 'Share'}</span>
+              <span className="hidden sm:inline">
+                {shareFailed ? 'Press Ctrl+C' : copiedLink ? 'Copied' : 'Share'}
+              </span>
             </button>
 
             <button
@@ -302,14 +409,18 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
               {project.imageUrl && (
                 <div className="mt-6 rounded-xl overflow-hidden border border-slate-200 dark:border-[#ffffff12] relative aspect-[21/9] sm:aspect-[24/9] w-full bg-slate-100 dark:bg-[#141414] group shadow-inner">
                   <img
-                    src={project.imageUrl}
+                    src={resolveProjectImage(project.imageUrl) || BROKEN_IMAGE_FALLBACK}
                     alt={project.imageCaption || project.title}
-                    referrerPolicy="no-referrer"
-                    onError={(e) => {
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=1200&q=80';
+                    width={1200}
+                    height={675}
+                    decoding="async"
+                    onError={e => {
+                      if (e.currentTarget.src !== BROKEN_IMAGE_FALLBACK) {
+                        e.currentTarget.src = BROKEN_IMAGE_FALLBACK;
+                      }
                     }}
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                    loading="eager"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
                   <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none">
@@ -352,77 +463,70 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
           </div>
         )}
 
-        {/* 6-Layer Architecture Quick Indicator Bar */}
-        <div className="mb-6 p-3 sm:p-3.5 rounded-xl bg-slate-50 dark:bg-[#090e17] border border-slate-200 dark:border-cyan-500/25 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs font-mono shadow-sm">
-          <div className="flex items-center gap-2 shrink-0">
+        {/* Case Study section navigation.
+            This used to be two stacked bars (a "6-Layer Anatomy" flow row plus a
+            second tab row) both driving the same state, with the label claiming
+            6 layers while only 5 tabs existed. One tab bar now, with the count
+            derived from the list so it can never drift again. */}
+        <div
+          className="mb-6 rounded-xl bg-slate-50 dark:bg-[#090e17] border border-slate-200 dark:border-cyan-500/25 shadow-sm overflow-hidden"
+        >
+          <div className="flex items-center gap-2 px-3 sm:px-3.5 pt-3 pb-2 shrink-0">
             <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
             <span className="text-slate-900 dark:text-white font-bold text-[11px] uppercase tracking-wider">
-              6-Layer Case Study Anatomy:
+              {CASE_STUDY_TABS.length}-Section Case Study
             </span>
           </div>
-          <div className="flex items-center gap-1.5 overflow-x-auto text-[10px] pb-1 md:pb-0">
-            {[
-              { id: 'dashboard' as TabKey, label: '1. Simulator' },
-              { id: 'pipeline' as TabKey, label: '2. Pipeline' },
-              { id: 'problem' as TabKey, label: '3. Problem & Context' },
-              { id: 'methodology' as TabKey, label: '4. Deep-Dive' },
-              { id: 'roi' as TabKey, label: '5. ROI & Strategy' }
-            ].map((step, sIdx, arr) => (
-              <React.Fragment key={step.id}>
+
+          <div
+            id="project-tabs-content"
+            role="tablist"
+            aria-label="Case study sections"
+            aria-orientation="horizontal"
+            className="flex items-center gap-1 overflow-x-auto px-2 pb-2 scroll-mt-20"
+          >
+            {CASE_STUDY_TABS.map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
                 <button
-                  onClick={() => handleTabSwitch(step.id)}
-                  className={`px-2 py-1 rounded transition-all cursor-pointer whitespace-nowrap ${
-                    activeTab === step.id
-                      ? 'bg-cyan-500 text-black font-bold shadow-sm'
-                      : 'bg-white dark:bg-[#101726] text-slate-700 dark:text-[#A0AEC0] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#162035] border border-slate-200 dark:border-cyan-500/20'
+                  key={tab.id}
+                  id={`tab-${tab.id}`}
+                  role="tab"
+                  type="button"
+                  aria-selected={isActive}
+                  aria-controls={`tabpanel-${tab.id}`}
+                  tabIndex={isActive ? 0 : -1}
+                  onKeyDown={e => handleTabKeyDown(e, tab.id)}
+                  onClick={() => handleTabSwitch(tab.id)}
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-mono whitespace-nowrap transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-cyan-50 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border border-cyan-500/40 font-bold shadow-sm'
+                      : 'text-slate-600 dark:text-[#888] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#141414] border border-transparent'
                   }`}
                 >
-                  {step.label}
+                  <Icon className="w-3.5 h-3.5" />
+                  <span>
+                    <span className="text-[9px] opacity-60 mr-1">{tab.step}</span>
+                    {tab.short}
+                  </span>
+                  {tab.isLive && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-0.5" title="Interactive" />
+                  )}
                 </button>
-                {sIdx < arr.length - 1 && <span className="text-slate-400 dark:text-[#444] shrink-0">→</span>}
-              </React.Fragment>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* Navigation Tabs Bar */}
-        <div id="project-tabs-content" className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-6 border-b border-slate-200 dark:border-[#ffffff10] scroll-mt-20">
-          {[
-            { id: 'dashboard' as TabKey, label: '1. Interactive Simulator & KPIs', icon: BarChart2, isLive: true },
-            { id: 'pipeline' as TabKey, label: '2. 9-Stage Pipeline Architecture', icon: Layers },
-            { id: 'problem' as TabKey, label: '3. Business Problem & Scope', icon: Briefcase },
-            { id: 'methodology' as TabKey, label: '4. Technical Deep-Dive & Schemas', icon: FileCode2 },
-            { id: 'roi' as TabKey, label: '5. Quantified ROI & Strategic Directives', icon: Award }
-          ].map(tab => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  setActiveTab(tab.id);
-                  trackEvent('switch_project_tab', {
-                    project_id: projectId,
-                    tab_id: tab.id,
-                    tab_label: tab.label
-                  });
-                }}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-mono whitespace-nowrap transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-cyan-50 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border border-cyan-500/40 font-bold shadow-sm'
-                    : 'text-slate-600 dark:text-[#888] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#141414]'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-                {tab.isLive && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-0.5" />
-                )}
-              </button>
-            );
-          })}
-        </div>
-
+        {/* TAB PANELS */}
+        <div
+          id={`tabpanel-${activeTab}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${activeTab}`}
+          tabIndex={-1}
+          className="focus:outline-none"
+        >
         {/* TAB 1: INTERACTIVE DASHBOARD */}
         {activeTab === 'dashboard' && (
           <motion.div
@@ -450,19 +554,18 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
 
                 <div className="relative aspect-[21/9] sm:aspect-[24/9] w-full rounded-lg overflow-hidden bg-[#161616] border border-[#ffffff08]">
                   <img
-                    src={project.imageUrl}
+                    src={resolveProjectImage(project.imageUrl) || BROKEN_IMAGE_FALLBACK}
                     alt={project.imageCaption || project.title}
-                    referrerPolicy="no-referrer"
-                    onError={(e) => {
-                      const fallback = (project.dashboardType === 'tomato' || project.id === 'project-17')
-                        ? 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=1200&q=80'
-                        : 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80';
-                      if (e.currentTarget.src !== fallback) {
-                        e.currentTarget.src = fallback;
+                    loading="lazy"
+                    decoding="async"
+                    width={1200}
+                    height={675}
+                    onError={e => {
+                      if (e.currentTarget.src !== BROKEN_IMAGE_FALLBACK) {
+                        e.currentTarget.src = BROKEN_IMAGE_FALLBACK;
                       }
                     }}
-                    className="w-full h-full object-cover object-center"
-                    loading="lazy"
+                    className="relative w-full h-full object-cover object-center"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
@@ -752,54 +855,46 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
             {/* Strategic Directives & Production Scalability Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Strategic Executive Directives */}
-              <div className="p-6 rounded-xl bg-[#0c1017] border border-cyan-500/25">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-[10px] font-mono mb-3">
-                  <span>EXECUTIVE ACTION PLAN</span>
+              {playbook.executiveActions.length > 0 && (
+                <div className="p-6 rounded-xl bg-[#0c1017] border border-cyan-500/25">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-[10px] font-mono mb-3">
+                    <span>EXECUTIVE ACTION PLAN</span>
+                  </div>
+                  <h3 className="text-sm font-bold text-white font-mono mb-3 flex items-center gap-2">
+                    <Briefcase className="w-4 h-4 text-cyan-400" />
+                    <span>Strategic Business Recommendations</span>
+                  </h3>
+                  <ol className="space-y-2.5 text-xs text-[#C5CAD3]">
+                    {playbook.executiveActions.map((action, i) => (
+                      <li key={i} className="flex items-start gap-2 p-2.5 rounded-lg bg-[#101726] border border-cyan-500/15">
+                        <span className="text-cyan-400 font-bold font-mono">{i + 1}.</span>
+                        <span>{action}</span>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
-                <h3 className="text-sm font-bold text-white font-mono mb-3 flex items-center gap-2">
-                  <Briefcase className="w-4 h-4 text-cyan-400" />
-                  <span>Strategic Business Recommendations</span>
-                </h3>
-                <div className="space-y-2.5 text-xs text-[#C5CAD3]">
-                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#101726] border border-cyan-500/15">
-                    <span className="text-cyan-400 font-bold font-mono">1.</span>
-                    <span>Establish automated threshold alerts to proactively trigger operational interventions before margin erosion or churn occurs.</span>
-                  </div>
-                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#101726] border border-cyan-500/15">
-                    <span className="text-cyan-400 font-bold font-mono">2.</span>
-                    <span>Adopt unified data dictionaries and dimensional models across sales, operations, and leadership to eliminate metric discrepancies.</span>
-                  </div>
-                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#101726] border border-cyan-500/15">
-                    <span className="text-cyan-400 font-bold font-mono">3.</span>
-                    <span>Integrate simulator-driven scenario planning into quarterly business reviews for data-backed quota and budget allocation.</span>
-                  </div>
-                </div>
-              </div>
+              )}
 
               {/* Production Scalability Architecture */}
-              <div className="p-6 rounded-xl bg-[#0c1017] border border-violet-500/25">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-violet-500/15 border border-violet-500/30 text-violet-300 text-[10px] font-mono mb-3">
-                  <span>PRODUCTION ROADMAP</span>
+              {playbook.productionRoadmap.length > 0 && (
+                <div className="p-6 rounded-xl bg-[#0c1017] border border-violet-500/25">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-violet-500/15 border border-violet-500/30 text-violet-300 text-[10px] font-mono mb-3">
+                    <span>PRODUCTION ROADMAP</span>
+                  </div>
+                  <h3 className="text-sm font-bold text-white font-mono mb-3 flex items-center gap-2">
+                    <Layers className="w-4 h-4 text-violet-400" />
+                    <span>Enterprise Scalability</span>
+                  </h3>
+                  <ol className="space-y-2.5 text-xs text-[#C5CAD3]">
+                    {playbook.productionRoadmap.map((stage, i) => (
+                      <li key={i} className="flex items-start gap-2 p-2.5 rounded-lg bg-[#161226] border border-violet-500/15">
+                        <span className="text-violet-400 font-bold font-mono">{String.fromCharCode(65 + i)}.</span>
+                        <span>{stage}</span>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
-                <h3 className="text-sm font-bold text-white font-mono mb-3 flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-violet-400" />
-                  <span>Enterprise Scalability (10x Horizon)</span>
-                </h3>
-                <div className="space-y-2.5 text-xs text-[#C5CAD3]">
-                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#161226] border border-violet-500/15">
-                    <span className="text-violet-400 font-bold font-mono">A.</span>
-                    <span><strong className="text-white">Cloud Data Lakehouse:</strong> Scale storage into Snowflake / BigQuery with dbt transformation models for zero-copy cloning and time-travel querying.</span>
-                  </div>
-                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#161226] border border-violet-500/15">
-                    <span className="text-violet-400 font-bold font-mono">B.</span>
-                    <span><strong className="text-white">Continuous Orchestration:</strong> Deploy Apache Airflow / Prefect DAGs with automated schema drift checks and Slack incident webhooks.</span>
-                  </div>
-                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-[#161226] border border-violet-500/15">
-                    <span className="text-violet-400 font-bold font-mono">C.</span>
-                    <span><strong className="text-white">MLOps Monitoring:</strong> Containerize inference via FastAPI & Docker, integrating Evidently AI for real-time concept drift monitoring.</span>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
           </motion.div>
         )}
@@ -821,6 +916,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId, onBack, onS
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
+        </div>
         </div>
 
       </main>

@@ -10,6 +10,11 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  # Cancel superseded in-flight deploys for the same branch.
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,10 +26,14 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
+      # bun.lock is the single source of truth. package-lock.json is gitignored
+      # so local npm/pnpm installs can never drift from what CI deploys.
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build
+      # `build` runs tsc --noEmit before vite build, so a type error fails CI
+      # instead of shipping to production.
+      - name: Typecheck and build
         run: bun run build
 
       - name: Setup Pages

@@ -1,5 +1,8 @@
 export type ProjectCategory = 'ALL' | 'DATA ANALYTICS' | 'POWER BI' | 'MACHINE LEARNING' | 'NLP' | 'AI' | 'DATA SCIENCE';
 
+/** Sections of a project case study, in the order they are presented. */
+export type ProjectTab = 'dashboard' | 'problem' | 'pipeline' | 'methodology' | 'roi';
+
 export interface ProjectPipelineStep {
   step: string;
   description: string;

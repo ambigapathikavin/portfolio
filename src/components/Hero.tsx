@@ -30,7 +30,7 @@ export const Hero: React.FC<HeroProps> = ({
   onRoleModeChange
 }) => {
   return (
-    <section id="home" className="relative min-h-[90vh] pt-24 pb-14 lg:pt-32 lg:pb-20 flex items-center bg-[#050505] bg-data-grid overflow-hidden">
+    <section id="home" className="scroll-mt-20 sm:scroll-mt-24 relative min-h-[90vh] pt-24 pb-14 lg:pt-32 lg:pb-20 flex items-center bg-[#050505] bg-data-grid overflow-hidden">
       {/* Interactive Data Science Neural/Particle Background */}
       <DataParticleBackground />
 

@@ -21,7 +21,7 @@ import {
   X
 } from 'lucide-react';
 import { PROJECTS } from '../data/portfolioData';
-import { Project, ProjectCategory } from '../types';
+import { Project, ProjectCategory, ProjectTab } from '../types';
 import { 
   trackProjectCardClick, 
   trackRoleFilterChange, 
@@ -30,6 +30,7 @@ import {
   trackProfileLink,
   trackExternalLink 
 } from '../utils/analytics';
+import { resolveProjectImage, BROKEN_IMAGE_FALLBACK, projectImageAccent } from '../utils/assets';
 
 const FILTER_OPTIONS: { label: string; value: ProjectCategory }[] = [
   { label: 'ALL', value: 'ALL' },
@@ -58,7 +59,7 @@ const getTechBadgeStyle = (tech: string) => {
 };
 
 interface ProjectsShowcaseProps {
-  onSelectProject?: (projectId: string) => void;
+  onSelectProject?: (projectId: string, initialTab?: ProjectTab) => void;
   onOpenResumeModal?: (role?: 'DATA_ANALYST' | 'DATA_SCIENTIST') => void;
   roleMode?: 'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST';
 }
@@ -71,6 +72,27 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>('ALL');
   const [roleFilter, setRoleFilter] = useState<'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST'>(roleMode);
   const [searchQuery, setSearchQuery] = useState('');
+  // Which project's KPI panel is open. Explicit state (rather than hover-only)
+  // so the panel is reachable on touch devices and via keyboard.
+  const [openKpiCard, setOpenKpiCard] = useState<string | null>(null);
+
+  // Dismiss an open KPI panel on Escape or an outside click.
+  React.useEffect(() => {
+    if (!openKpiCard) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpenKpiCard(null);
+    };
+    const onPointerDown = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && !target.closest('[data-kpi-trigger]')) setOpenKpiCard(null);
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onPointerDown);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('mousedown', onPointerDown);
+    };
+  }, [openKpiCard]);
 
   // Sync roleFilter with incoming roleMode prop changes
   React.useEffect(() => {
@@ -135,22 +157,22 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
       return true;
     });
 
-  const handleProjectClick = (projectId: string, index: number) => {
+  // `initialTab` lets the "Live Simulator" button land straight on the
+  // simulator instead of behaving identically to "Case Study".
+  const handleProjectClick = (projectId: string, index: number, initialTab?: ProjectTab) => {
     const proj = PROJECTS.find(p => p.id === projectId);
     trackProjectCardClick(
-      projectId, 
-      proj?.title || projectId, 
-      proj?.roleType, 
-      proj?.category, 
-      index
+      projectId,
+      proj?.title || projectId,
+      { roleTrack: proj?.roleType, category: proj?.category, cardPosition: index }
     );
     if (onSelectProject) {
-      onSelectProject(projectId);
+      onSelectProject(projectId, initialTab);
     }
   };
 
   return (
-    <section id="projects" className="py-16 bg-[#050505] border-t border-[#ffffff08] relative">
+    <section id="projects" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-[#050505] border-t border-[#ffffff08] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -344,25 +366,39 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                 className="group flex flex-col justify-between rounded-xl bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-cyan-950/20 transition-colors duration-200 relative"
               >
                 <div>
-                  {/* Project Visual Thumbnail / Screenshot */}
-                  <div 
-                    onClick={() => handleProjectClick(project.id, idx)}
-                    className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-slate-100 dark:bg-[#181818] cursor-pointer group/img"
+                  {/* Project Visual Thumbnail / Screenshot.
+                      A button, so the image is reachable by keyboard and
+                      announced as clickable, rather than a bare div with onClick. */}
+                  <button
+                    type="button"
+                    onClick={() => handleProjectClick(project.id, idx, 'problem')}
+                    className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-slate-100 dark:bg-[#181818] cursor-pointer group/img focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500/70"
+                    aria-label={`Open case study: ${project.title}`}
                   >
+                    {/* Fallback tile sits *behind* the image. If the file 404s
+                        the <img> is swapped for a 1x1 transparent GIF, so this
+                        label shows through instead of a broken-image icon. */}
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 flex items-center justify-center px-6 text-center font-mono text-xs font-bold leading-snug text-white/80 p-4"
+                      style={{ backgroundColor: `${projectImageAccent(project.accentColor)}1f` }}
+                    >
+                      {project.title}
+                    </span>
+
                     <img
-                      src={project.imageUrl || (project.dashboardType === 'tomato' || project.id === 'project-17' ? 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=900&q=80' : 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80')}
+                      src={resolveProjectImage(project.imageUrl) || BROKEN_IMAGE_FALLBACK}
                       alt={project.imageCaption || project.title}
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        const fallbackUrl = (project.dashboardType === 'tomato' || project.id === 'project-17')
-                          ? 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=900&q=80'
-                          : 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80';
-                        if (e.currentTarget.src !== fallbackUrl) {
-                          e.currentTarget.src = fallbackUrl;
+                      loading="lazy"
+                      decoding="async"
+                      width={1200}
+                      height={675}
+                      onError={e => {
+                        if (e.currentTarget.src !== BROKEN_IMAGE_FALLBACK) {
+                          e.currentTarget.src = BROKEN_IMAGE_FALLBACK;
                         }
                       }}
-                      className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300 opacity-90 group-hover/img:opacity-100"
-                      loading="lazy"
+                      className="relative w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300 opacity-90 group-hover/img:opacity-100"
                     />
 
                     {/* Gradient Overlay */}
@@ -392,7 +428,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                         <span>Open Project Case Study</span>
                       </span>
                     </div>
-                  </div>
+                  </button>
 
                   {/* Card Body */}
                   <div className="p-4 sm:p-5">
@@ -403,12 +439,22 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                         {project.category}
                       </div>
 
-                      {/* Small Interactive KPI Hover Tooltip Trigger */}
-                      <div className="relative group/tooltip shrink-0">
+                      {/* KPI tooltip.
+                          Hover alone left this unreachable on phones and
+                          tablets, where there is no pointer hover - the button
+                          simply did nothing. It is now an explicit
+                          open/close disclosure that also still opens on hover
+                          and on keyboard focus, and closes on Escape or an
+                          outside click. */}
+                      <div className="relative shrink-0 group/tooltip" data-kpi-trigger>
                         <button
                           type="button"
-                          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-950/50 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-300 text-[9px] font-mono transition-colors cursor-help focus:outline-none"
-                          aria-label="View KPI metrics"
+                          onClick={() => setOpenKpiCard(openKpiCard === project.id ? null : project.id)}
+                          onMouseEnter={() => setOpenKpiCard(project.id)}
+                          aria-expanded={openKpiCard === project.id}
+                          aria-controls={`kpi-panel-${project.id}`}
+                          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-950/50 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-300 text-[9px] font-mono transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/60"
+                          aria-label={`${openKpiCard === project.id ? 'Hide' : 'View'} KPI metrics for ${project.title}`}
                         >
                           <Target className="w-2.5 h-2.5 text-cyan-400 shrink-0" />
                           <span>KPIs</span>
@@ -416,7 +462,12 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                         </button>
 
                         {/* Floating Tooltip Card */}
-                        <div className="absolute bottom-full right-0 mb-2.5 w-72 sm:w-80 p-3.5 rounded-xl bg-[#0c1017] border border-cyan-500/40 shadow-2xl shadow-black/90 backdrop-blur-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible group-focus-within/tooltip:opacity-100 group-focus-within/tooltip:visible transition-all duration-200 z-50 pointer-events-none group-hover/tooltip:pointer-events-auto">
+                        <div
+                          id={`kpi-panel-${project.id}`}
+                          role="tooltip"
+                          onMouseLeave={() => setOpenKpiCard(cur => (cur === project.id ? null : cur))}
+                          className={`absolute bottom-full right-0 mb-2.5 w-72 sm:w-80 p-3.5 rounded-xl bg-[#0c1017] border border-cyan-500/40 shadow-2xl shadow-black/90 backdrop-blur-xl transition-all duration-200 z-50 ${openKpiCard === project.id ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
+                        >
                           
                           {/* Tooltip Header */}
                           <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-[#ffffff12]">
@@ -470,12 +521,20 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                       </div>
                     </div>
 
-                    {/* Title */}
-                    <h3 
-                      onClick={() => handleProjectClick(project.id, idx)}
-                      className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors tracking-tight mb-1.5 cursor-pointer line-clamp-1"
-                    >
-                      {project.title}
+                    {/* Title.
+                       The heading itself is not clickable - a clickable <h3> is
+                       invalid semantics and unreachable for keyboard/AT users.
+                       The title is a button and the thumbnail is a button, both
+                       pointing at the case study. */}
+                    <h3 className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors tracking-tight mb-1.5 line-clamp-1">
+                      <button
+                        type="button"
+                        onClick={() => handleProjectClick(project.id, idx, 'problem')}
+                        className="text-left hover:text-cyan-300 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/60 rounded-sm"
+                        title={`Open the case study: ${project.title}`}
+                      >
+                        {project.title}
+                      </button>
                     </h3>
 
                     {/* Dataset Scope Strip */}
@@ -494,41 +553,29 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                       {project.shortDescription}
                     </p>
 
-                    {/* Key Result Impact Callout with Interactive Tooltip Hover */}
-                    <div className="relative group/outcome p-2.5 rounded-lg bg-[#080808] hover:bg-[#0c1017] border border-cyan-500/20 hover:border-cyan-500/40 mb-3 flex items-start gap-2 transition-all cursor-help">
+                    {/* Key Outcome callout.
+                       This used to carry its own hover-only tooltip labelled
+                       "Hover for KPIs", which (a) did nothing on touch devices
+                       and (b) duplicated the KPI panel already reachable from
+                       the pill above. It is now a plain, always-visible
+                       highlight - the single KPI disclosure is the pill. */}
+                    <div className="p-2.5 rounded-lg bg-[#080808] hover:bg-[#0c1017] border border-cyan-500/20 hover:border-cyan-500/40 mb-3 flex items-start gap-2 transition-all">
                       <TrendingUp className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <div className="text-[9px] font-mono text-cyan-400 uppercase font-semibold">
-                            Key Outcome & KPI Result
-                          </div>
-                          <span className="text-[8px] font-mono text-[#666] group-hover/outcome:text-cyan-400 transition-colors">
-                            Hover for KPIs ⓘ
-                          </span>
+                        <div className="text-[9px] font-mono text-cyan-400 uppercase font-semibold mb-0.5">
+                          Key Outcome & KPI Result
                         </div>
-                        <div className="text-xs text-[#E0E0E0] mt-0.5 font-medium leading-snug line-clamp-2">
+                        <div className="text-xs text-[#E0E0E0] font-medium leading-snug line-clamp-2">
                           {project.keyResult}
                         </div>
-                      </div>
-
-                      {/* Tooltip on Key Outcome Box Hover */}
-                      <div className="absolute bottom-full left-0 right-0 mb-2 p-3 rounded-xl bg-[#0c1017] border border-cyan-500/40 shadow-2xl shadow-black/90 backdrop-blur-xl opacity-0 invisible group-hover/outcome:opacity-100 group-hover/outcome:visible transition-all duration-200 z-50 pointer-events-none">
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-cyan-300 mb-1.5 pb-1 border-b border-[#ffffff10]">
-                          <CheckCircle2 className="w-3 h-3 text-cyan-400 shrink-0" />
-                          <span>Measured Business & Technical Impact</span>
-                        </div>
-                        <p className="text-[11px] text-[#D1D5DB] leading-relaxed mb-2">
-                          {project.keyResult}
-                        </p>
                         {project.kpis && project.kpis.length > 0 && (
-                          <div className="pt-1.5 border-t border-[#ffffff0a] flex items-center justify-between text-[9px] font-mono text-[#9CA3AF]">
-                            <span>Primary KPI Lift:</span>
-                            <span className="text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/30">
+                          <div className="mt-1.5 pt-1.5 border-t border-[#ffffff0a] flex items-center justify-between gap-2 text-[9px] font-mono text-[#9CA3AF]">
+                            <span className="truncate">Primary KPI Lift:</span>
+                            <span className="text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/30 whitespace-nowrap">
                               {project.kpis[0].title} ({project.kpis[0].improvement})
                             </span>
                           </div>
                         )}
-                        <div className="absolute top-full left-6 -mt-1 border-4 border-transparent border-t-cyan-500/40" />
                       </div>
                     </div>
 
@@ -609,17 +656,23 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
 
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => handleProjectClick(project.id, idx)}
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleProjectClick(project.id, idx, 'dashboard');
+                      }}
                       className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/60 hover:bg-cyan-500 hover:text-black text-cyan-800 dark:text-cyan-300 text-[11px] font-semibold font-mono border border-cyan-500/30 dark:border-cyan-500/35 hover:border-cyan-400 transition-all duration-150 shadow-sm cursor-pointer group/simbtn"
-                      title="Launch live interactive simulator"
+                      title="Open the interactive simulator and live KPI panel"
                     >
                       <Activity className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 group-hover/simbtn:text-black animate-pulse" />
                       <span>Live Simulator</span>
                     </button>
                     <button
-                      onClick={() => handleProjectClick(project.id, idx)}
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleProjectClick(project.id, idx, 'problem');
+                      }}
                       className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-slate-100 dark:bg-[#181818] hover:bg-slate-200 dark:hover:bg-[#252525] text-slate-800 dark:text-[#e0e0e0] hover:text-slate-900 dark:hover:text-white text-[11px] font-semibold font-mono border border-slate-200 dark:border-[#ffffff0a] hover:border-slate-300 dark:hover:border-[#ffffff20] transition-all duration-150 shadow-sm cursor-pointer group/casebtn"
-                      title="View full architectural case study"
+                      title="Read the full architectural case study"
                     >
                       <span>Case Study</span>
                       <ArrowUpRight className="w-3.5 h-3.5 text-slate-500 dark:text-[#888] group-hover/casebtn:text-slate-900 dark:group-hover/casebtn:text-white group-hover/casebtn:translate-x-0.5 group-hover/casebtn:-translate-y-0.5 transition-transform" />

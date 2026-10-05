@@ -23,10 +23,14 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 800,
       rollupOptions: {
         output: {
+          // Recharts/d3 are deliberately NOT given a manual chunk. They are
+          // reachable only from the lazily-loaded ProjectPage route, and forcing
+          // them into a named chunk makes Rollup hoist shared modules into it,
+          // which then becomes a static dependency of the entry chunk. That put
+          // ~400 kB of charting code in the first-paint modulepreload list for
+          // every visitor. Letting them fall into the lazy chunk keeps them off
+          // the critical path until a project case study is actually opened.
           manualChunks(id) {
-            if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-') || id.includes('node_modules/victory-vendor')) {
-              return 'vendor-charts';
-            }
             if (id.includes('node_modules/motion')) {
               return 'vendor-motion';
             }

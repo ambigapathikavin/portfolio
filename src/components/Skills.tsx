@@ -81,7 +81,7 @@ export const Skills: React.FC<SkillsProps> = ({ roleMode = 'ALL' }) => {
   });
 
   return (
-    <section id="skills" className="py-16 bg-[#050505] border-t border-[#ffffff08] relative">
+    <section id="skills" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-[#050505] border-t border-[#ffffff08] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}

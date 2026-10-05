@@ -1,0 +1,24 @@
+{
+  "name": "Ambigapathi V | Data Analyst & Data Scientist",
+  "short_name": "Ambigapathi V",
+  "description": "Data Analyst and Data Scientist specializing in Python, SQL, Power BI, Machine Learning, NLP and AI.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#080c14",
+  "theme_color": "#080c14",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

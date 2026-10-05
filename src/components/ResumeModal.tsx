@@ -21,6 +21,7 @@ import {
 import { DATA_ANALYST_RESUME, DATA_SCIENTIST_RESUME, PERSONAL_INFO } from '../data/portfolioData';
 import { downloadResumePdf } from '../utils/resumePdf';
 import { trackResumeInteraction } from '../utils/analytics';
+import { useDialogA11y } from '../hooks/useDialogA11y';
 
 interface ResumeModalProps {
   isOpen: boolean;
@@ -37,6 +38,9 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({
     initialRole === 'DATA_SCIENTIST' ? 'DATA_SCIENTIST' : 'DATA_ANALYST'
   );
   const [copied, setCopied] = useState(false);
+
+  // Escape / focus trap / focus restore / background scroll lock.
+  const dialogRef = useDialogA11y(isOpen, onClose);
 
   React.useEffect(() => {
     if (isOpen) {
@@ -175,6 +179,11 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
 
         {/* Modal Content */}
         <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="resume-modal-title"
+          tabIndex={-1}
           initial={{ opacity: 0, scale: 0.96, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 15 }}
@@ -402,7 +411,7 @@ ${r.education.map(e => `${e.institution} - ${e.degree} (${e.period}), ${e.locati
             
             {/* Header / Contact Info */}
             <div className="border-b border-[#ffffff08] pb-4 text-center space-y-1.5">
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+              <h1 id="resume-modal-title" className="text-xl sm:text-2xl font-bold tracking-tight text-white">
                 {currentResume.name}
               </h1>
               <div className={`text-xs font-mono font-semibold ${

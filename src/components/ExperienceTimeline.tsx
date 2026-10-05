@@ -15,7 +15,7 @@ import { EXPERIENCES } from '../data/portfolioData';
 
 export const ExperienceTimeline: React.FC = () => {
   return (
-    <section id="experience" className="py-16 bg-[#050505] border-t border-[#ffffff08] relative">
+    <section id="experience" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-[#050505] border-t border-[#ffffff08] relative">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}

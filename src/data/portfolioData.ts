@@ -232,7 +232,7 @@ export const PROJECTS: Project[] = [
     technology: ['Power BI', 'SQL', 'DAX', 'Power Query', 'Data Modeling', 'MySQL'],
     shortDescription: "Interactive Power BI dashboard analyzing AtliQ Hardware's multi-regional sales trends, customer profitability, and revenue leaks.",
     keyResult: 'Identified strategic sales gaps & actionable insights to increase next-quarter revenue by ~7%.',
-    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-01.jpg',
     imageCaption: 'Power BI Retail & Hardware Sales Insights, Star-Schema ETL & Margin Waterfall Dashboard',
     roleType: 'DATA_ANALYST',
     datasetStats: {
@@ -302,7 +302,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'BERT', 'NLP', 'Transformers', 'PyTorch', 'FastAPI', 'MLflow', 'Docker'],
     shortDescription: 'AI-powered news classification system categorizing 50,000+ daily articles in real time with 98% accuracy.',
     keyResult: 'Achieved 98% classification accuracy on 50K+ daily articles with 40% reduction in training latency.',
-    imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-02.jpg',
     imageCaption: 'BERT NLP Multi-Topic Real-Time News Stream Classification & Topic Modeling Engine',
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
@@ -374,7 +374,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Web Scraping', 'Pandas', 'Power BI', 'BeautifulSoup', 'DAX'],
     shortDescription: 'Data-driven cricket analytics engine identifying the optimal tournament-winning Playing 11 through ball-by-ball scraping.',
     keyResult: 'Engineered performance-weighted algorithms to select an optimal tournament-winning Playing 11.',
-    imageUrl: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-03.jpg',
     imageCaption: 'T20 Cricket World Cup Match Analytics, Ball Tracking & ESPNcricinfo Scraping Dashboard',
     roleType: 'DATA_ANALYST',
     datasetStats: {
@@ -445,7 +445,7 @@ export const PROJECTS: Project[] = [
     technology: ['Power BI', 'Excel', 'DAX', 'Power Query', 'HR Metrics', 'ETL'],
     shortDescription: 'Enterprise HR intelligence dashboard tracking workforce presence, absenteeism trends, overtime, and leave patterns.',
     keyResult: 'Streamlined recurring HR reporting and saved approximately 3–4 hours of manual administrative work per day.',
-    imageUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-04.jpg',
     imageCaption: 'Power BI Enterprise HR Attendance, WFH Remote Utilization & Absenteeism Analytics',
     roleType: 'DATA_ANALYST',
     datasetStats: {
@@ -514,7 +514,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'NLP', 'NER', 'spaCy', 'Transformers', 'FastAPI', 'Regex'],
     shortDescription: 'Clinical NLP Named Entity Recognition model extracting drug names, dosage, frequency, and route from noisy doctor prescriptions.',
     keyResult: 'Automated entity extraction for drug names, dosage, frequency, and duration into standardized JSON records.',
-    imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-05.jpg',
     imageCaption: 'Clinical NER Medical Prescription Entity Extraction, EHR Pipeline & Dosage Normalization',
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
@@ -584,7 +584,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'XGBoost', 'Scikit-learn', 'SHAP', 'Pandas', 'Streamlit', 'Optuna'],
     shortDescription: 'Supervised ML model predicting subscriber churn probability with explainable SHAP feature attribution to prevent revenue leakage.',
     keyResult: 'Achieved 0.94 ROC-AUC score, identifying high-risk subscribers 60 days before contract termination.',
-    imageUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-06.jpg',
     imageCaption: 'XGBoost Customer Churn Predictive Classifier with SHAP Feature Attribution & Decile Lift',
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
@@ -655,7 +655,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Streamlit', 'Scikit-learn', 'XGBoost', 'Logistic Regression', 'Pandas', 'NumPy', 'Seaborn'],
     shortDescription: 'Credit risk scoring engine calculating Probability of Default (PD), credit score mapping, and automated underwriting tiers.',
     keyResult: 'Engineered calibrated ML risk models achieving 0.892 ROC-AUC and deployed a live interactive Streamlit loan assessment app.',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-07.jpg',
     imageCaption: 'Credit Risk Modelling, WoE Scorecard, Probability of Default (PD) & Streamlit Scoring App',
     githubUrl: 'https://github.com/ambigapathikavin/Credit-risk-modelling',
     liveDemoUrl: 'https://ambigapathi-credit-risk-modelling.streamlit.app/',
@@ -728,7 +728,7 @@ export const PROJECTS: Project[] = [
     technology: ['SQL', 'Tableau', 'Python', 'RFM Modeling', 'Cohort Analysis', 'Excel'],
     shortDescription: 'Multi-touch attribution, RFM customer segmentation, and cohort retention dashboard analyzing omnichannel sales.',
     keyResult: 'Optimized marketing channel spend to increase customer lifetime value (LTV) by 24%.',
-    imageUrl: 'https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-08.jpg',
     imageCaption: 'Omnichannel E-Commerce Cohort Retention Heatmap, RFM Segmentation & LTV Matrix',
     roleType: 'DATA_ANALYST',
     datasetStats: {
@@ -799,7 +799,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Geopandas', 'GIS', 'Pandas', 'Folium', 'Seaborn', 'OpenStreetMap'],
     shortDescription: 'Geospatial and socio-economic analytics uncovering healthcare access inequalities and facility deserts in Sudan.',
     keyResult: 'Mapped 1,400+ medical facilities against population density to identify 3.2M residents living in acute medical deserts.',
-    imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-09.jpg',
     imageCaption: 'Sudan GIS Healthcare Facility Buffer Analysis, Population Density & Spatial Deficit Map',
     roleType: 'BOTH',
     datasetStats: {
@@ -870,7 +870,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Streamlit', 'Scikit-learn', 'Random Forest', 'XGBoost', 'Pandas', 'NumPy', 'Seaborn'],
     shortDescription: 'Supervised regression ML model estimating individualized health insurance premium prices based on clinical, demographic, and lifestyle risk factors.',
     keyResult: 'Built regression pipeline achieving R² score of 0.912 with optimized RMSE, deployed to a live interactive Streamlit application.',
-    imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-10.jpg',
     imageCaption: 'Insurance Premium Prediction, Actuarial Risk Modeling, Feature Impact & Streamlit Web App',
     githubUrl: 'https://github.com/ambigapathikavin/ml-project-premium-prediction',
     liveDemoUrl: 'https://ml-project-premium-prediction-kyngwmqg9uu7agygo5qn36.streamlit.app/',
@@ -943,7 +943,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Sentinel-2 Satellite Imagery', 'Random Forest', 'U-Net', 'GeoPandas', 'Rasterio', 'Streamlit', 'Copernicus API'],
     shortDescription: 'Collaborated with Omdena on using multi-spectral satellite imagery and machine learning to detect and map flood inundation across the Mekong River basin.',
     keyResult: 'Mapped flood boundaries across 2,400+ km² with 91.4% IoU accuracy, accelerating humanitarian evacuation planning.',
-    imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-11.jpg',
     imageCaption: 'Sentinel-2 Multi-Spectral Water Index (NDWI) & Deep Learning Flood Inundation Delineation',
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
@@ -1010,7 +1010,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Scikit-learn', 'XGBoost', 'Epidemiological EDA', 'Power BI', 'GIS Mapping', 'Statsmodels'],
     shortDescription: 'Applied predictive models and epidemiological analysis to public healthcare data to identify socio-demographic drivers and geographic hotspots in chronic disease prevalence in San Jose.',
     keyResult: 'Identified top socio-demographic determinants across 42 census tracts, enabling targeted preventive care intervention.',
-    imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-12.jpg',
     imageCaption: 'San Jose Chronic Disease Epidemiological Prevalence Hotspot & Demographic Regression Model',
     roleType: 'BOTH',
     datasetStats: {
@@ -1075,7 +1075,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Scikit-learn', 'Random Forest', 'Isolation Forest', 'PCAP / Wireshark', 'FastAPI', 'Streamlit'],
     shortDescription: 'In-depth machine learning analysis of network packet flows, attack signatures, and server vulnerabilities with proactive real-time intrusion mitigation.',
     keyResult: 'Achieved 97.6% malicious traffic classification accuracy with < 0.8% false alarm rate on 100K+ packet captures.',
-    imageUrl: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-13.jpg',
     imageCaption: 'Real-Time Network Intrusion Detection, Packet Vectorization & Anomaly Scoring Dashboard',
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
@@ -1141,7 +1141,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'LangChain', 'OpenAI / Gemini LLM', 'ChromaDB', 'Vector Embeddings', 'RAG Architecture', 'FastAPI', 'Streamlit'],
     shortDescription: 'Interactive retrieval-augmented conversational chatbot built on modern large language models delivering context-grounded, citation-backed answers from custom document repositories.',
     keyResult: 'Delivered sub-800ms grounded answers with zero hallucination rate on domain-specific technical documentation.',
-    imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-14.jpg',
     imageCaption: 'Retrieval-Augmented Generation (RAG) Document Vector Search & Conversational QA Interface',
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
@@ -1207,7 +1207,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Hugging Face Transformers', 'RoBERTa', 'PyTorch', 'TF-IDF', 'FastAPI', 'Streamlit'],
     shortDescription: 'Multi-label NLP classification system identifying toxic, obscene, threatening, and abusive comments to protect online communities and communication platforms.',
     keyResult: 'Attained 96.2% ROC-AUC across 6 toxicity severity categories, enabling automated real-time message moderation.',
-    imageUrl: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-15.jpg',
     imageCaption: 'Multi-Class Toxic & Abusive Text NLP Classifier with Severity Heatmap & Token Attribution',
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
@@ -1272,7 +1272,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Hugging Face Transformers', 'BART', 'T5', 'PyTorch', 'ROUGE Evaluation', 'Streamlit'],
     shortDescription: 'Fine-tuned abstractive transformer model condensing long-form articles, research papers, and technical reports into coherent, factual executive summaries.',
     keyResult: 'Attained ROUGE-1 score of 44.8 and ROUGE-L of 41.2 while reducing document reading time by 75%.',
-    imageUrl: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-16.jpg',
     imageCaption: 'Abstractive Deep Learning Text Summarizer with Interactive Length & Compression Controls',
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
@@ -1337,7 +1337,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'TensorFlow', 'Keras', 'CNN', 'ResNet-50', 'OpenCV', 'Streamlit', 'Agri-Tech Analytics'],
     shortDescription: 'Deep learning computer vision system classifying 3 core foliar diagnostic classes: Healthy foliage, Early Blight (Alternaria solani), and Late Blight (Phytophthora infestans) to assist farmers in immediate field-level pathology diagnosis.',
     keyResult: '98.4% diagnostic sensitivity across foliar specimens, reducing diagnosis turnaround from 3-5 days to instantaneous smartphone inference.',
-    imageUrl: 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-17.jpg',
     imageCaption: 'Agricultural Crop Foliar Diagnostic System & Foliage Pathology Inspection (PlantVillage Benchmark)',
     githubUrl: 'https://github.com/ambigapathikavin/Potato_Disease_Prediction/tree/main',
     liveDemoUrl: 'https://potato-disease-prediction-ambigapathikavin.streamlit.app/',
@@ -1404,7 +1404,7 @@ export const PROJECTS: Project[] = [
     technology: ['Power BI', 'DAX', 'SQL', 'Power Query', 'Hospitality KPIs (ADR, RevPAR, DSRN)', 'Data Modeling'],
     shortDescription: 'Comprehensive Power BI business intelligence dashboard uncovering booking trends, cancellation drivers, customer segments, and revenue leakage across luxury hotel chains.',
     keyResult: 'Identified key RevPAR leakage factors and weekend pricing opportunities to recapture 8.4% gross revenue.',
-    imageUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-18.jpg',
     imageCaption: 'Power BI Hospitality Revenue Intelligence, RevPAR Waterfall & Booking Channel Attribution',
     roleType: 'DATA_ANALYST',
     datasetStats: {
@@ -1470,7 +1470,7 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Pandas', 'Matplotlib', 'Seaborn', 'Exploratory Data Analysis', 'Customer Demographics', 'Apriori Algorithm'],
     shortDescription: 'In-depth exploratory data analysis of high-volume Diwali festival consumer spending patterns uncovering buyer demographics, high-value product categories, and purchasing behavior.',
     keyResult: 'Revealed top 3 customer demographic personas contributing 68% of festive GMV, informing high-ROI inventory stockpiling.',
-    imageUrl: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: 'images/projects/project-19.jpg',
     imageCaption: 'Diwali Retail Festive Sales Demographics, Basket Analysis & Purchasing Power Decomposition',
     roleType: 'DATA_ANALYST',
     datasetStats: {
@@ -1529,6 +1529,257 @@ export const PROJECTS: Project[] = [
     dashboardType: 'diwali'
   }
 ];
+
+export interface ProjectPlaybook {
+  /** Concrete, project-specific next steps an interviewer can probe. */
+  executiveActions: string[];
+  /** Realistic scale-up path for this specific project. */
+  productionRoadmap: string[];
+}
+
+/**
+ * Per-project strategic recommendations.
+ *
+ * These used to be hard-coded strings inside ProjectPage.tsx, which meant every
+ * one of the 19 case studies displayed the exact same "Executive Action Plan"
+ * and "Production Roadmap" copy (project 1's margin/churn language showed up on
+ * the tomato-disease page). They live here now so each project can be
+ * discussed on its own terms.
+ *
+ * TO CUSTOMISE: find your project id below and edit only its entry.
+ * Add or remove items freely - the page renders whatever length you give it.
+ * Delete an entry entirely and the card is simply hidden.
+ */
+export const PROJECT_PLAYBOOK: Record<string, ProjectPlaybook> = {
+  'project-1': {
+    executiveActions: [
+      'Automate threshold alerts on gross-margin erosion by store and SKU so merchandising intervenes before margin loss compounds.',
+      'Publish one governed revenue data dictionary (star schema) so Finance, Sales and Operations stop reporting conflicting totals.',
+      'Bring this simulator into the quarterly business review so quota and budget allocation are decided against live what-if scenarios.'
+    ],
+    productionRoadmap: [
+      'Cloud Lakehouse: move the model to Snowflake with dbt transformations for versioned, testable revenue logic.',
+      'Continuous Orchestration: schedule the Power Query / SQL ETL with Airflow and add schema-drift webhooks to Slack.',
+      'Near Real-Time: stream POS events into the model so margin monitoring moves from daily refresh to hourly.'
+    ]
+  },
+  'project-2': {
+    executiveActions: [
+      'Route low-confidence classifier output to a human editorial queue instead of auto-publishing, which keeps accuracy high without losing throughput.',
+      'Add per-topic precision/recall dashboards so the newsroom can see exactly which classes still need labelled training data.',
+      'Version every training set in MLflow so a model regression can be bisected to the exact data change that caused it.'
+    ],
+    productionRoadmap: [
+      'Streaming Inference: move classification behind a FastAPI service with batching so new articles classify within seconds of publication.',
+      'Distributed Training: shard BERT fine-tuning across GPUs with DeepSpeed to cut iteration time on larger corpora.',
+      'Edge Deployment: containerise with Docker behind a load balancer and add drift monitoring so topic drift is caught before recall drops.'
+    ]
+  },
+  'project-3': {
+    executiveActions: [
+      'Automate the scrape on a schedule so match data lands before the first ball rather than being gathered manually each tournament.',
+      'Publish expected-versus-actual player performance deltas so coaches can see which projections failed and why.',
+      'Extend the model beyond T20 internationals to domestic franchises once the venue and boundary-parser edge cases are covered.'
+    ],
+    productionRoadmap: [
+      'Automated Ingestion: move BeautifulSoup scraping into an Airflow DAG with per-source alerting and retry logic.',
+      'Player Identity Model: resolve batter and bowler aliases into a single entity table before aggregating any metric.',
+      'Live Match Tracking: stream ball-by-ball data into a warehouse so in-progress match dashboards update mid-over.'
+    ]
+  },
+  'project-4': {
+    executiveActions: [
+      'Define and enforce a single absenteeism threshold per department so managers act on the same rule instead of personal judgement.',
+      'Cross-reference attendance with performance ratings to test whether WFH and absenteeism actually correlate with output.',
+      'Automate a monthly attrition-risk digest for People Ops so retention conversations happen before resignations, not after.'
+    ],
+    productionRoadmap: [
+      'HRIS Integration: replace file extracts with a scheduled connection to the HR system of record for daily freshness.',
+      'Governed Semantic Layer: publish attendance measures through a shared dataset so every team reads one definition of absence.',
+      'Forward-Looking Risk: move from descriptive attendance counts to a retention-propensity model per employee.'
+    ]
+  },
+  'project-5': {
+    executiveActions: [
+      'Route prescriptions with low entity-extraction confidence to a pharmacist review queue before the data reaches downstream analytics.',
+      'Standardise drug and dose vocabularies to RxNorm/NCI identifiers so the same medication is never split into two entities.',
+      'Add a de-identification checkpoint so free-text clinical notes never leave the environment in identifiable form.'
+    ],
+    productionRoadmap: [
+      'Clinical Validation: run the NER model against a labelled clinical corpus and publish per-specialty precision/recall.',
+      'FHIR Integration: emit normalised entities as FHIR MedicationAdministration resources instead of custom JSON.',
+      'Human-in-the-Loop: add an active-learning loop where pharmacist corrections retrain the extractor continuously.'
+    ]
+  },
+  'project-6': {
+    executiveActions: [
+      'Trigger retention offers from SHAP attributions, so the intervention targets the factor the customer actually cares about.',
+      'Set a review threshold on decile probability rather than raw score, since deciles are comparable across model refreshes.',
+      'A/B test every retention campaign and feed the lift back in as a training feature rather than assuming the model is right.'
+    ],
+    productionRoadmap: [
+      'Automated Retraining: schedule Optuna-driven retuning on a weekly cadence with an accuracy gate before promotion.',
+      'Online Scoring: replace batch inference with a low-latency scoring endpoint the CRM can call at signup.',
+      'Drift Monitoring: track population stability index per feature so concept drift raises an alert instead of silently degrading accuracy.'
+    ]
+  },
+  'project-7': {
+    executiveActions: [
+      'Automate scorecard monitoring so loans drifting toward default are reviewed before they miss, not after.',
+      'Publish Weight-of-Evidence per applicant so underwriters can see which factors moved a decision and challenge it.',
+      'Run regular backtests through the economic cycle to confirm the PD model still discriminates in a downturn.'
+    ],
+    productionRoadmap: [
+      'Basel III Alignment: extend WoE binning and scaling into a documented, auditable scorecard development process.',
+      'Model Governance: register the model with version control, approval workflow and a scheduled revalidation cadence.',
+      'Real-Time Decisioning: expose the scoring engine as a low-latency API for straight-through application decisions.'
+    ]
+  },
+  'project-8': {
+    executiveActions: [
+      'Target campaigns at the high-value RFM segments instead of broadcasting to the whole customer base.',
+      'Reconcile channel attribution so credit lands on the channel that genuinely drove the conversion, not the last click.',
+      'Automate a cohort retention alert so marketing sees a deteriorating cohort before the quarter closes.'
+    ],
+    productionRoadmap: [
+      'Warehouse Migration: move the analysis from flat files into a warehouse with proper surrogate keys and slowly changing dimensions.',
+      'Self-Serve Metrics: publish certified revenue and retention measures in Tableau so analysts stop rebuilding them.',
+      'Incrementality Testing: layer in holdout experiments so reported channel ROI is causal rather than correlational.'
+    ]
+  },
+  'project-9': {
+    executiveActions: [
+      'Prioritise new facility siting by the travel-time gap the analysis exposes, not by population density alone.',
+      'Publish the accessibility map to the ministry as an open dataset so it can inform budget allocation directly.',
+      'Add cost-of-travel and facility-capacity dimensions so a rural clinic proposal can be argued on more than distance.'
+    ],
+    productionRoadmap: [
+      'Remote Sensing: fuse satellite land-cover and nightlight layers to refine population estimates between censuses.',
+      'Network Accessibility: extend travel-time analysis to a full location-allocation model covering capacity constraints.',
+      'Live Displacement: hook the pipeline to displacement feeds so service gaps appear as events happen, not a year later.'
+    ]
+  },
+  'project-10': {
+    executiveActions: [
+      'Rebase premiums quarterly using this model instead of the current annual cycle, so pricing tracks real risk drift.',
+      'Segment by age band and claim channel to find where the model is over or under-pricing relative to actual loss.',
+      'Automate an actuarial review pack so underwriters can audit feature impact before approving a rate change.'
+    ],
+    productionRoadmap: [
+      'GLM Actuarial Core: validate the tree ensemble against a Tweedie GLM to satisfy actuarial standards before production.',
+      'Rate Filing Automation: generate regulator-ready rate filings from the model outputs to cut turnaround time.',
+      'Cohort Monitoring: track prediction-vs-actual loss ratios per policy cohort so mispricing surfaces within a quarter.'
+    ]
+  },
+  'project-11': {
+    executiveActions: [
+      'Publish the flood-risk layer to local authorities ahead of the monsoon season so evacuation routes are planned, not guessed.',
+      'Move alerting from post-flood analysis to forecast-triggered warnings with clear ownership per district.',
+      'Combine the flood layer with the healthcare access analysis to prioritise pre-positioning of clinics and supplies.'
+    ],
+    productionRoadmap: [
+      'Temporal Raster Pipeline: process Sentinel-2 imagery through a scheduled Rasterio/GDAL pipeline instead of one-off downloads.',
+      'U-Net Segmentation: fine-tune the segmentation network on locally-labelled flood extents to beat generic thresholds.',
+      'Forecast Integration: fuse rainfall forecast products with the model so the system predicts inundation, not just maps it.'
+    ]
+  },
+  'project-12': {
+    executiveActions: [
+      'Target screening capacity at the tracts the model flags, rather than distributing it evenly across the county.',
+      'Publish equity-stratified error rates so the model is never judged only on overall accuracy, which hides under-served groups.',
+      'Feed the tract-level risk back into community health outreach planning as a prioritisation input.'
+    ],
+    productionRoadmap: [
+      'Causal Analysis: move past correlation with a spatial causal model so intervention effects can be estimated.',
+      'Live Surveillance: connect to syndromic surveillance feeds for nowcasting rather than annual aggregates.',
+      'Equity Auditing: institutionalise per-group fairness monitoring with a hard accuracy floor per demographic.'
+    ]
+  },
+  'project-13': {
+    executiveActions: [
+      'Route high-risk alerts to the SOC queue with a triage priority instead of logging every anomaly equally.',
+      'Automate enrichment against a current CVE feed so an alert naming a known CVE is triaged before an unknown signature.',
+      'Publish mean-time-to-detect alongside accuracy, since an unusable alert rate is the real failure mode in security analytics.'
+    ],
+    productionRoadmap: [
+      'Streaming Pipeline: move analysis to a Kafka/Flume path so PCAP is scored as it is captured rather than after the fact.',
+      'Threat Intel Fusion: correlate detections with live indicator feeds and OTX to enrich every alert.',
+      'Response Automation: wire detections into SOAR playbooks for the highest-confidence intrusion classes.'
+    ]
+  },
+  'project-14': {
+    executiveActions: [
+      'Ship citation links in every answer so a user can verify the source rather than trusting the model blindly.',
+      'Route low-relevance retrievals to a clear "not in my documents" response instead of letting the model improvise.',
+      'Version the vector index with the source documents so an answer can always be traced to the exact corpus that produced it.'
+    ],
+    productionRoadmap: [
+      'Hybrid Retrieval: combine BM25 sparse search with ChromaDB dense vectors to lift recall on rare or exact-match queries.',
+      'Re-Ranking: add a cross-encoder re-ranker over the top-k retrievals to measurably improve answer grounding.',
+      'Evaluation Harness: build a question-answer test set and gate every prompt or index change on groundedness metrics.'
+    ]
+  },
+  'project-15': {
+    executiveActions: [
+      'Require a confidence threshold before any automated removal, with human review below it, so legitimate speech is not lost.',
+      'Publish per-language precision/recall so moderation quality is judged on every supported language, not just English.',
+      'Log moderator overrides and fold them into retraining so corrections improve the model instead of being discarded.'
+    ],
+    productionRoadmap: [
+      'Active Learning Loop: prioritise the least-confident predictions for labelling to improve the model with the least annotation.',
+      'Multi-Label Taxonomy: extend binary classification to the full harm taxonomy so overlapping categories are not forced apart.',
+      'Serving Hardening: containerise RoBERTa behind a FastAPI service with autoscaling and a strict moderation audit log.'
+    ]
+  },
+  'project-16': {
+    executiveActions: [
+      'Show extractive and abstractive output side by side for legal and medical readers who must verify every claim.',
+      'Publish ROUGE alongside human ratings so the model metric and actual usefulness are both visible.',
+      'Enforce a length-aware summary so output stays inside the reader budget instead of producing padded filler.'
+    ],
+    productionRoadmap: [
+      'Domain Fine-Tuning: continue pretraining on the target corpus so summarisation style matches the domain vocabulary.',
+      'Quality Gate: add a factual-consistency checker that flags summaries contradicting the source before they ship.',
+      'Structured Output: move beyond flat text to schema-driven summaries so downstream systems can consume them directly.'
+    ]
+  },
+  'project-17': {
+    executiveActions: [
+      'Keep Grad-CAM active during inference so an agronomist can see which leaf region drove the prediction before acting.',
+      'Collect field confirmations against each diagnosis so the model learns real-world error patterns, not just lab accuracy.',
+      'Add a severity threshold per crop so a low-confidence detection prompts scouting rather than a spray recommendation.'
+    ],
+    productionRoadmap: [
+      'Data Flywheel: pipe field-uploaded images with confirmed labels back into a retraining queue automatically.',
+      'Edge Deployment: export to TFLite for offline on-device inference, which is the only practical option in low-connectivity fields.',
+      'Multi-Crop Generalisation: retrain across additional crops and regions so one model serves more than tomato leaf blight.'
+    ]
+  },
+  'project-18': {
+    executiveActions: [
+      'Manage to RevPAR rather than occupancy alone, since a full hotel at a discount can destroy more value than an empty one.',
+      'Trigger dynamic rate recommendations from forward pickup data rather than last-minute manual overrides.',
+      'Rate DSRN against local competitor sets so pricing decisions account for the market a property actually competes in.'
+    ],
+    productionRoadmap: [
+      'PMS Integration: replace manual extracts with a scheduled connection to the property management system for daily freshness.',
+      'Revenue Forecasting: add a 12-month forecast model per property so revenue planning stops relying on last year alone.',
+      'Profit Optimisation: layer direct and indirect cost per available room so RevPAR decisions account for true profit.'
+    ]
+  },
+  'project-19': {
+    executiveActions: [
+      'Use the association rules to pre-position stock in the northern and western hubs before the festival window.',
+      'Run the basket analysis against the previous year to separate genuine festive behaviour from general growth.',
+      'Cap recommendation depth so the app does not push low-margin combinations just because the rules support them.'
+    ],
+    productionRoadmap: [
+      'Streaming Analysis: process point-of-sale baskets as they happen rather than in a nightly batch.',
+      'Recommendation Engine: convert the association rules into a basket-completion model served at checkout.',
+      'Holdout Measurement: run A/B tests on recommendation groups so uplift is measured rather than assumed.'
+    ]
+  }
+};
 
 export const TESTIMONIALS: Testimonial[] = [
   {

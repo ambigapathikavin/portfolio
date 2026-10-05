@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import portfolioWebp from '../data/portfolio.webp';
-import portfolioPng from '../data/portfolio.png';
-import { Database, BrainCircuit, Activity, Cpu, Sparkles } from 'lucide-react';
+import { publicAsset, publicImageSrcSet } from '../utils/assets';
+import { Database, BrainCircuit, Activity } from 'lucide-react';
+
+// Hero LCP image. These live in /public so they can be art-directed and
+// preloaded; publicAsset() keeps the paths correct on subpath deploys.
+const PORTRAIT_SRCSET = publicImageSrcSet([
+  { path: 'portfolio-450.webp', width: 450 },
+  { path: 'portfolio.webp', width: 900 },
+]);
+const PORTRAIT_SIZES = '(max-width: 640px) 360px, 450px';
+const PORTRAIT_FALLBACK = publicAsset('portfolio.jpg');
 
 interface PortraitProps {
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
 }
 
 export const AmbigapathiPortrait: React.FC<PortraitProps> = ({
@@ -50,10 +57,11 @@ export const AmbigapathiPortrait: React.FC<PortraitProps> = ({
               className="w-full h-full"
             >
               <picture className="w-full h-full">
-                <source srcSet="/portfolio-450.webp 450w, /portfolio.webp 900w" type="image/webp" sizes="(max-width: 640px) 360px, 450px" />
-                <source srcSet={portfolioWebp} type="image/webp" />
+                {/* Single webp source: a second <source> here would be dead code,
+                    since the browser never falls back past a matching `type`. */}
+                <source srcSet={PORTRAIT_SRCSET} type="image/webp" sizes={PORTRAIT_SIZES} />
                 <img
-                  src={portfolioPng || '/portfolio.jpg'}
+                  src={PORTRAIT_FALLBACK}
                   alt="Ambigapathi V - Data Analyst & Data Scientist"
                   width={450}
                   height={562}

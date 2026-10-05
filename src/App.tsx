@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { ProjectTab } from './types';
 import { ScrollProgressBar } from './components/ScrollProgressBar';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -42,6 +43,9 @@ export default function App() {
     }
     return null;
   });
+  // Section requested by the launcher (card button / in-page prev-next link).
+  // Consumed once by ProjectPage, then reset so a manual tab click sticks.
+  const [pendingTab, setPendingTab] = useState<ProjectTab | undefined>(undefined);
 
   // Initialize GA4 tracking & sync browser back/forward and hash changes
   useEffect(() => {
@@ -53,7 +57,7 @@ export default function App() {
     // Initial pageview
     if (activeProjectId) {
       const proj = PROJECTS.find(p => p.id === activeProjectId);
-      trackProjectView(activeProjectId, proj?.title || activeProjectId, proj?.category);
+      trackProjectView(activeProjectId, proj?.title || activeProjectId, { roleTrack: proj?.roleType, category: proj?.category });
     } else {
       trackPageView('/', 'Ambigapathi V | Data Analyst & Data Scientist Portfolio');
     }
@@ -64,7 +68,7 @@ export default function App() {
         const id = hash.replace('#', '');
         setActiveProjectId(id);
         const proj = PROJECTS.find(p => p.id === id);
-        trackProjectView(id, proj?.title || id, proj?.category);
+        trackProjectView(id, proj?.title || id, { roleTrack: proj?.roleType, category: proj?.category });
       } else if (hash === '' || hash === '#home' || hash === '#projects') {
         setActiveProjectId(null);
         trackPageView('/#projects', 'Ambigapathi V | Projects Showcase');
@@ -94,11 +98,16 @@ export default function App() {
     setIsResumeOpen(true);
   };
 
-  const handleSelectProject = (projectId: string) => {
+  // `initialTab` lets a card's "Live Simulator" / "Case Study" buttons deep-link
+  // to a specific section instead of always landing on the default tab.
+  const handleSelectProject = (projectId: string, initialTab?: ProjectTab) => {
+    setPendingTab(initialTab);
     setActiveProjectId(projectId);
     window.location.hash = projectId;
     const proj = PROJECTS.find(p => p.id === projectId);
-    trackProjectView(projectId, proj?.title || projectId, proj?.category);
+    if (proj) {
+      trackProjectView(projectId, proj.title, { roleTrack: proj.roleType, category: proj.category });
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -149,6 +158,8 @@ export default function App() {
         }>
           <ProjectPage
             projectId={activeProjectId}
+            initialTab={pendingTab}
+            onInitialTabConsumed={() => setPendingTab(undefined)}
             onBack={handleBackToOverview}
             onSelectProject={handleSelectProject}
           />

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Project } from '../types';
 import { trackSimulatorAction } from '../utils/analytics';
+import { publicAsset } from '../utils/assets';
 
 interface AdditionalDashboardProps {
   project: Project;
@@ -748,7 +749,7 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
         treatment: 'Optimal leaf condition. Continue preventive scouting, balanced nutrition (N-P-K), and drip irrigation. No fungicide intervention necessary.', 
         severity: 'Optimal',
         primaryPhoto: 'https://images.unsplash.com/photo-1592417817098-8f3d6ef23a48?auto=format&fit=crop&w=1000&q=80',
-        localPhoto: '/images/tomato/healthy.jpg',
+        localPhoto: publicAsset('images/tomato/healthy.jpg'),
         photoAlt: 'Healthy tomato crop foliage showing clean green leaves with no viral or fungal signs',
         lesionsFound: 0,
         symptoms: 'Lamina exhibits zero viral or fungal symptoms. Vibrant chlorophyll pigmentation, uniform venation, and turgid cellular morphology.',
@@ -764,7 +765,7 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
         treatment: 'Apply protective copper fungicide or chlorothalonil; prune and destroy infected lower foliage; avoid overhead irrigation.', 
         severity: 'High',
         primaryPhoto: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=1000&q=80',
-        localPhoto: '/images/tomato/early_blight.jpg',
+        localPhoto: publicAsset('images/tomato/early_blight.jpg'),
         photoAlt: 'Verified tomato leaf exhibiting early blight concentric target rings and chlorosis',
         lesionsFound: 5,
         symptoms: 'Brown-to-black necrotic lesions displaying characteristic concentric annular rings (target board pattern) with chlorotic halo.',
@@ -780,7 +781,7 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
         treatment: 'Emergency systemic fungicide application (Cymoxanil, Dimethomorph, or Metalaxyl); rogue out infected vines; stop overhead irrigation.', 
         severity: 'Critical',
         primaryPhoto: 'https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&w=1000&q=80',
-        localPhoto: '/images/tomato/late_blight.jpg',
+        localPhoto: publicAsset('images/tomato/late_blight.jpg'),
         photoAlt: 'Tomato leaf exhibiting water-soaked dark brown late blight lesions and necrotic blighting',
         lesionsFound: 7,
         symptoms: 'Large, irregular water-soaked pale green lesions rapidly expanding into dark purplish-black blotches with white downy sporangia on undersides.',
@@ -796,7 +797,7 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
         treatment: 'Spray protective Mancozeb or Copper Hydroxide; mulch soil surface to eliminate fungal splash-up from soil onto lower leaflets.', 
         severity: 'Moderate',
         primaryPhoto: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=1000&q=80',
-        localPhoto: '/images/tomato/septoria_spot.jpg',
+        localPhoto: publicAsset('images/tomato/septoria_spot.jpg'),
         photoAlt: 'Tomato leaf showing circular Septoria spots with dark margins and gray centers',
         lesionsFound: 14,
         symptoms: 'Numerous small circular spots (1–3mm) with dark brown borders and sunken tan or ash-gray centers studded with tiny black pycnidia.',
@@ -812,7 +813,7 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
         treatment: 'Vector control: spray neem oil or systemic imidacloprid to suppress Bemisia tabaci whiteflies; install yellow sticky traps.', 
         severity: 'High',
         primaryPhoto: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=1000&q=80',
-        localPhoto: '/images/tomato/yellow_leaf_curl.jpg',
+        localPhoto: publicAsset('images/tomato/yellow_leaf_curl.jpg'),
         photoAlt: 'Tomato leaf exhibiting upward curling and marginal interveinal chlorosis',
         lesionsFound: 0,
         symptoms: 'Pronounced upward curling and cupping of leaflets, marginal chlorosis, interveinal yellowing, stunted growth, and bushy apical shoot.',
@@ -828,13 +829,13 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
         treatment: 'Apply fixed copper bactericide tank-mixed with Mancozeb; use certified disease-free seeds; avoid handling plants when foliage is wet.', 
         severity: 'High',
         primaryPhoto: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1000&q=80',
-        localPhoto: '/images/tomato/bacterial_spot.jpg',
+        localPhoto: publicAsset('images/tomato/bacterial_spot.jpg'),
         photoAlt: 'Tomato leaf displaying angular water-soaked dark bacterial lesions',
         lesionsFound: 9,
         symptoms: 'Small, circular to angular water-soaked dark brown spots often surrounded by a distinctive greasy chlorotic halo that coalesce into tears.',
         gradCamDesc: 'High gradient sensitivity over angular lesion borders and petiole vascular junctions.',
         spreadRisk: 'Favored by warm temperatures (>28°C) and driven by rain splash or overhead sprinklers.',
-        badgeIcon: '🟤',
+        badgeIcon: '🔵',
         color: 'cyan',
         boxStyle: { top: '30%', left: '28%', width: '44%', height: '44%' }
       }
@@ -949,7 +950,7 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
                 {/* Explanation */}
                 <div className="space-y-2 text-slate-600 dark:text-[#aaa]">
                   <p className="font-bold text-slate-900 dark:text-white">
-                    🔍 Why images might not show on another computer or deployment:
+                    💡 Why images might not show on another computer or deployment:
                   </p>
                   <ul className="list-disc pl-4 space-y-1 text-[11px]">
                     <li>
@@ -972,12 +973,12 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
                   <div className="p-2.5 rounded bg-slate-200 dark:bg-[#07090e] border border-slate-300 dark:border-[#ffffff10] text-[11px] space-y-1.5">
                     <p className="text-slate-800 dark:text-white font-semibold">1. Ensure the following files exist in <span className="text-cyan-600 dark:text-cyan-300">public/images/tomato/</span>:</p>
                     <div className="grid grid-cols-2 gap-1 text-[10px] text-slate-700 dark:text-[#999]">
-                      <span>✓ healthy.jpg</span>
-                      <span>✓ early_blight.jpg</span>
-                      <span>✓ late_blight.jpg</span>
-                      <span>✓ septoria_spot.jpg</span>
-                      <span>✓ yellow_leaf_curl.jpg</span>
-                      <span>✓ bacterial_spot.jpg</span>
+                      <span> healthy.jpg</span>
+                      <span> early_blight.jpg</span>
+                      <span> late_blight.jpg</span>
+                      <span> septoria_spot.jpg</span>
+                      <span> yellow_leaf_curl.jpg</span>
+                      <span> bacterial_spot.jpg</span>
                     </div>
                     <p className="text-slate-800 dark:text-white font-semibold pt-1">2. Run in your terminal before pushing to GitHub:</p>
                     <code className="block p-1.5 rounded bg-slate-900 text-emerald-400 text-[10px]">
@@ -1098,7 +1099,7 @@ export const AdditionalProjectDashboards: React.FC<AdditionalDashboardProps> = (
                         : 'text-slate-600 dark:text-[#888] hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
-                    📷 Raw Photo
+                    🖼 Raw Photo
                   </button>
                   <button
                     type="button"

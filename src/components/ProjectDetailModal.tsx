@@ -19,6 +19,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { Project } from '../types';
+import { useDialogA11y } from '../hooks/useDialogA11y';
 
 interface ProjectDetailModalProps {
   project: Project | null;
@@ -27,6 +28,9 @@ interface ProjectDetailModalProps {
 
 export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, onClose }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'pipeline' | 'results'>('overview');
+
+  // Escape / focus trap / focus restore / background scroll lock.
+  const dialogRef = useDialogA11y(project !== null, onClose);
 
   if (!project) return null;
 
@@ -39,6 +43,11 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project,
 
         {/* Modal Window Container */}
         <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="project-modal-title"
+          tabIndex={-1}
           initial={{ opacity: 0, scale: 0.96, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 15 }}
@@ -55,7 +64,7 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project,
                 </span>
                 <span className="text-[#777] text-[10px] font-mono">• Production Case Study</span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              <h2 id="project-modal-title" className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                 {project.title}
               </h2>
             </div>

@@ -32,6 +32,8 @@ export const ContactSection: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [copiedBody, setCopiedBody] = useState('');
+  const [copiedMessage, setCopiedMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedScheduleLink, setCopiedScheduleLink] = useState(false);
@@ -62,28 +64,55 @@ export const ContactSection: React.FC = () => {
     }, 2500);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
 
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const message = formData.message.trim();
+
+    if (!name || !email || !message) {
       setErrorMessage('Please fill in all required fields (Name, Email, and Message).');
+      return;
+    }
+
+    // Reject obviously malformed addresses before handing off to the mail client.
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      setErrorMessage('Please enter a valid email address (e.g. name@company.com).');
       return;
     }
 
     setIsSubmitting(true);
     trackContactAction('submit_contact_form', {
       subject: formData.subject || 'Inquiry',
-      sender_name: formData.name,
-      message_length: formData.message.length,
+      sender_name: name,
+      message_length: message.length,
     });
 
-    // Simulate sending message + trigger mailto link fallback
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-      
-      // Fire confetti celebration
+    const subject = formData.subject.trim() || `Portfolio enquiry from ${name}`;
+    const body = `Hi Ambigapathi,\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
+
+    // This form has no backend, so nothing is "sent" by the site itself.
+    // Two things happen instead:
+    //   1. the composed message is copied to the clipboard (reliable, and it
+    //      means the message is never lost even if the visitor dismisses the
+    //      mail client without sending), and
+    //   2. their default mail client is pre-filled via a mailto: link.
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(`${subject}\n\n${body}`);
+      copied = true;
+    } catch {
+      // Clipboard blocked (insecure context / permission denied) - still fine,
+      // the mailto link below carries the full message.
+    }
+
+    setCopiedBody(copied ? `${subject}\n\n${body}` : '');
+    setIsSubmitting(false);
+    setSubmitted(true);
+
+    if (copied) {
       try {
         confetti({
           particleCount: 50,
@@ -91,24 +120,20 @@ export const ContactSection: React.FC = () => {
           origin: { y: 0.8 },
           colors: ['#06b6d4', '#38bdf8', '#8b5cf6']
         });
-      } catch (err) {
+      } catch {
         // Safe fallback
       }
+    }
 
-      // Prepopulate email client
-      const mailtoUrl = `mailto:${PERSONAL_INFO.email}?subject=${encodeURIComponent(
-        formData.subject || `Inquiry from ${formData.name}`
-      )}&body=${encodeURIComponent(
-        `Hi Ambigapathi,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-      )}`;
+    const mailtoUrl = `mailto:${PERSONAL_INFO.email}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
 
-      // Try opening mail client in new window/tab safely
-      window.location.href = mailtoUrl;
-    }, 600);
+    window.location.href = mailtoUrl;
   };
 
   return (
-    <section id="contact" className="py-16 bg-[#050505] border-t border-[#ffffff08] relative overflow-hidden">
+    <section id="contact" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-[#050505] border-t border-[#ffffff08] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
@@ -345,9 +370,9 @@ export const ContactSection: React.FC = () => {
               <h3 className="text-base font-bold text-white mb-0.5">
                 Send a Direct Message
               </h3>
-              <p className="text-[11px] text-[#777] mb-4">
-                Fill out the form below to initiate discussion on a project or role.
-              </p>
+<p className="text-[11px] text-[#777] mb-4">
+                  Fill this in and your email app opens with the message ready to send. A backup copy is kept on your clipboard.
+                </p>
 
               {errorMessage && (
                 <div className="mb-3 p-2.5 rounded-lg bg-red-950/40 border border-red-500/30 text-xs text-red-300 flex items-center gap-2">
@@ -361,31 +386,70 @@ export const ContactSection: React.FC = () => {
                   <div className="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mx-auto text-emerald-400">
                     <CheckCircle2 className="w-5 h-5" />
                   </div>
-                  <h4 className="text-base font-bold text-white">Thank You for Reaching Out!</h4>
+                  <h4 className="text-base font-bold text-white">One Last Step - Press Send</h4>
                   <p className="text-xs text-[#A3A3A3] max-w-md mx-auto leading-relaxed">
-                    Your message has been initiated. If your default email client opened, please press send. You can also email directly at <strong className="text-cyan-400">{PERSONAL_INFO.email}</strong>.
+                    This site has no server, so your email app should now be opening with the
+                    message pre-filled. Hit <strong className="text-cyan-400">Send</strong> in
+                    that window to deliver it. Nothing has been sent yet.
                   </p>
-                  <button
-                    onClick={() => {
-                      setSubmitted(false);
-                      setFormData({ name: '', email: '', subject: '', message: '' });
-                    }}
-                    className="mt-3 px-3 py-1.5 rounded-lg bg-[#181818] text-xs font-mono text-cyan-300 hover:bg-[#252525] cursor-pointer"
-                  >
-                    Send Another Message
-                  </button>
+
+                  {copiedBody && (
+                    <p className="text-xs text-[#A3A3A3] max-w-md mx-auto leading-relaxed">
+                      A copy is already on your clipboard as a backup, in case you closed the window.
+                    </p>
+                  )}
+
+                  <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                    <a
+                      href={`mailto:${PERSONAL_INFO.email}`}
+                      className="px-3 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-mono font-bold cursor-pointer"
+                    >
+                      Email Me Directly
+                    </a>
+                    {copiedBody && (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(copiedBody);
+                            setCopiedMessage(true);
+                            setTimeout(() => setCopiedMessage(false), 2500);
+                          } catch {
+                            setErrorMessage('Could not access the clipboard. Please select the text manually.');
+                          }
+                        }}
+                        className="px-3 py-1.5 rounded-lg bg-[#181818] text-xs font-mono text-cyan-300 hover:bg-[#252525] cursor-pointer"
+                      >
+                        {copiedMessage ? 'Copied!' : 'Copy Message Again'}
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSubmitted(false);
+                        setCopiedBody('');
+                        setFormData({ name: '', email: '', subject: '', message: '' });
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-[#181818] text-xs font-mono text-[#A3A3A3] hover:bg-[#252525] cursor-pointer"
+                    >
+                      Send Another Message
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-3">
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[10px] font-mono text-[#777] mb-1">
+                      <label htmlFor="contact-name" className="block text-[10px] font-mono text-[#777] mb-1">
                         Your Name *
                       </label>
                       <input
+                        id="contact-name"
+                        name="name"
                         type="text"
                         required
+                        autoComplete="name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="e.g. Alex Johnson"
@@ -394,12 +458,15 @@ export const ContactSection: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-[10px] font-mono text-[#777] mb-1">
+                      <label htmlFor="contact-email" className="block text-[10px] font-mono text-[#777] mb-1">
                         Your Email *
                       </label>
                       <input
+                        id="contact-email"
+                        name="email"
                         type="email"
                         required
+                        autoComplete="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="e.g. alex@company.com"
@@ -409,10 +476,12 @@ export const ContactSection: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-mono text-[#777] mb-1">
+                    <label htmlFor="contact-subject" className="block text-[10px] font-mono text-[#777] mb-1">
                       Subject / Role Title
                     </label>
                     <input
+                      id="contact-subject"
+                      name="subject"
                       type="text"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
@@ -422,10 +491,12 @@ export const ContactSection: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-mono text-[#777] mb-1">
+                    <label htmlFor="contact-message" className="block text-[10px] font-mono text-[#777] mb-1">
                       Message *
                     </label>
                     <textarea
+                      id="contact-message"
+                      name="message"
                       rows={4}
                       required
                       value={formData.message}

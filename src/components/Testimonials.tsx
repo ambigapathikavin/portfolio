@@ -26,7 +26,7 @@ export const Testimonials: React.FC = () => {
   });
 
   return (
-    <section id="testimonials" className="py-20 bg-[#050505] border-t border-[#ffffff08] relative overflow-hidden">
+    <section id="testimonials" className="scroll-mt-20 sm:scroll-mt-24 py-20 bg-[#050505] border-t border-[#ffffff08] relative overflow-hidden">
       {/* Subtle background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
 
