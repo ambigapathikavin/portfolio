@@ -30,7 +30,7 @@ export const Hero: React.FC<HeroProps> = ({
   onRoleModeChange
 }) => {
   return (
-    <section id="home" className="scroll-mt-20 sm:scroll-mt-24 relative min-h-[90vh] pt-24 pb-14 lg:pt-32 lg:pb-20 flex items-center bg-[#050505] bg-data-grid overflow-hidden">
+    <section id="home" className="scroll-mt-20 sm:scroll-mt-24 relative min-h-[90vh] pt-24 pb-14 lg:pt-32 lg:pb-20 flex items-center bg-white dark:bg-[#060608] bg-data-grid overflow-hidden">
       {/* Interactive Data Science Neural/Particle Background */}
       <DataParticleBackground />
 
@@ -49,7 +49,7 @@ export const Hero: React.FC<HeroProps> = ({
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#111111] border border-[#ffffff15] text-cyan-400 text-[10px] font-mono tracking-[0.2em] shadow-sm mb-5"
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-[#111111] border border-slate-300 dark:border-[#ffffff15] text-cyan-600 dark:text-cyan-400 text-[10px] font-mono tracking-[0.2em] shadow-sm mb-5"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
               <span>
@@ -60,11 +60,11 @@ export const Hero: React.FC<HeroProps> = ({
             </motion.div>
 
             {/* Large Main Heading - Immediate LCP Paint */}
-            <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-white leading-[1.12] mb-5">
+            <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.12] mb-5">
               Turning Data Into <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-violet-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-700 via-sky-700 to-violet-700 dark:from-cyan-400 dark:via-sky-300 dark:to-violet-400">
                 {roleMode === 'DATA_ANALYST' ? 'Actionable BI Insights' :
-                 roleMode === 'DATA_SCIENTIST' ? 'Production ML Models' :
+                 roleMode === 'DATA_SCIENTIST' ? 'Machine Learning Projects' :
                  'Insights, Predictions'}
               </span> <br />
               & Intelligent Solutions.
@@ -93,7 +93,7 @@ export const Hero: React.FC<HeroProps> = ({
                       ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 font-semibold'
                       : roleMode === 'DATA_SCIENTIST'
                       ? 'bg-violet-500/15 text-violet-300 border border-violet-500/40 font-semibold'
-                      : 'bg-[#111111] text-[#CCCCCC] border border-[#ffffff0a]'
+                      : 'bg-slate-100 dark:bg-[#111111] text-slate-700 dark:text-[#CCCCCC] border border-slate-300 dark:border-[#ffffff0a]'
                   }`}
                 >
                   {skill}
@@ -106,12 +106,12 @@ export const Hero: React.FC<HeroProps> = ({
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.16 }}
-              className="text-sm sm:text-base text-[#A3A3A3] leading-relaxed max-w-2xl mb-7"
+              className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mb-7"
             >
               {roleMode === 'DATA_ANALYST'
-                ? 'Data Analyst with hands-on expertise building executive Power BI dashboards, authoring complex SQL window queries & CTEs, and translating raw transactional metrics into bottom-line business strategies.'
+                ? 'Data Analyst building Power BI dashboards, writing SQL queries, and turning project datasets into clear business insights.'
                 : roleMode === 'DATA_SCIENTIST'
-                ? 'Data Scientist specializing in BERT NLP fine-tuning, automated Scikit-learn pipelines, predictive modeling, and scalable PyTorch training workflows deployed on real-world datasets.'
+                ? 'Data Scientist working on NLP, predictive modeling, and machine-learning workflows through hands-on projects.'
                 : PERSONAL_INFO.heroDescription}
             </motion.p>
 
@@ -138,7 +138,7 @@ export const Hero: React.FC<HeroProps> = ({
                   trackResumeInteraction('DATA_ANALYST', 'open_modal', 'hero_cta_button');
                   onOpenResume('DATA_ANALYST');
                 }}
-                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-[#0d121c] hover:bg-cyan-500/20 text-cyan-300 font-mono text-xs border border-cyan-500/40 hover:border-cyan-400 transition-all cursor-pointer shadow-sm group/btn"
+                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-cyan-50 dark:bg-[#0d121c] hover:bg-cyan-100 dark:hover:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 font-mono text-xs border border-cyan-300 dark:border-cyan-500/40 hover:border-cyan-400 transition-all cursor-pointer shadow-sm group/btn"
                 title="View & Download Data Analyst Resume"
               >
                 <Download className="w-3.5 h-3.5 text-cyan-400 group-hover/btn:scale-110 transition-transform" />
@@ -150,7 +150,7 @@ export const Hero: React.FC<HeroProps> = ({
                   trackResumeInteraction('DATA_SCIENTIST', 'open_modal', 'hero_cta_button');
                   onOpenResume('DATA_SCIENTIST');
                 }}
-                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-[#0d121c] hover:bg-violet-500/20 text-violet-300 font-mono text-xs border border-violet-500/40 hover:border-violet-400 transition-all cursor-pointer shadow-sm group/btn2"
+                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-violet-50 dark:bg-[#0d121c] hover:bg-violet-100 dark:hover:bg-violet-500/20 text-violet-700 dark:text-violet-300 font-mono text-xs border border-violet-300 dark:border-violet-500/40 hover:border-violet-400 transition-all cursor-pointer shadow-sm group/btn2"
                 title="View & Download Data Scientist Resume"
               >
                 <Download className="w-3.5 h-3.5 text-violet-400 group-hover/btn2:scale-110 transition-transform" />
@@ -162,7 +162,7 @@ export const Hero: React.FC<HeroProps> = ({
                   trackEvent('hero_cta_click', { cta_name: 'lets_connect' });
                   onOpenContact();
                 }}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#12161f] hover:bg-[#1c2230] text-[#c0c0c0] hover:text-white border border-[#ffffff18] hover:border-[#ffffff35] text-xs font-mono transition-all cursor-pointer shadow-sm"
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-slate-100 dark:bg-[#12161f] hover:bg-slate-200 dark:hover:bg-[#1c2230] text-slate-700 dark:text-[#c0c0c0] hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-[#ffffff18] hover:border-slate-400 dark:hover:border-[#ffffff35] text-xs font-mono transition-all cursor-pointer shadow-sm"
               >
                 <Mail className="w-3.5 h-3.5" />
                 <span>Let's Connect</span>
@@ -183,7 +183,7 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="flex flex-wrap items-center gap-1 font-mono text-[11px] text-[#A3A3A3]">
                 {PERSONAL_INFO.lifecycle.map((step, idx) => (
                   <React.Fragment key={step}>
-                    <span className="px-2 py-0.5 rounded bg-[#111111] border border-[#ffffff0a] text-[#D1D1D1] hover:border-cyan-500/40 hover:text-cyan-300 transition-colors">
+                    <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-[#111111] border border-slate-300 dark:border-[#ffffff0a] text-slate-700 dark:text-[#D1D1D1] hover:border-cyan-500/40 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">
                       {step}
                     </span>
                     {idx < PERSONAL_INFO.lifecycle.length - 1 && (
@@ -229,7 +229,7 @@ export const Hero: React.FC<HeroProps> = ({
                 }}
                 className="relative z-10 w-full h-full rounded-2xl overflow-hidden p-1.5 bg-gradient-to-b from-[#1c2838] via-[#101722] to-[#0a0e17] shadow-2xl border border-cyan-500/35 hover:border-cyan-400/60 transition-colors duration-300 group"
               >
-                <div className="w-full h-full rounded-[14px] overflow-hidden bg-[#07090e] relative flex flex-col items-center justify-center">
+                <div className="w-full h-full rounded-[14px] overflow-hidden bg-white dark:bg-[#07090e] relative flex flex-col items-center justify-center">
                   
                   {/* High-Fidelity Studio Portrait Representation with Full Fill */}
                   <AmbigapathiPortrait className="w-full h-full" />
@@ -247,8 +247,8 @@ export const Hero: React.FC<HeroProps> = ({
                   <BarChart2 className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[9px] text-[#8899ac] font-mono uppercase tracking-wider">Classification Precision</span>
-                  <span className="text-xs font-bold text-white font-mono">98.2% Accuracy</span>
+                  <span className="text-[9px] text-[#8899ac] font-mono uppercase tracking-wider">Model evaluation</span>
+                  <span className="text-xs font-bold text-white font-mono">Classification metrics</span>
                 </div>
               </motion.div>
 
@@ -262,8 +262,8 @@ export const Hero: React.FC<HeroProps> = ({
                   <Database className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[9px] text-[#8899ac] font-mono uppercase tracking-wider">Daily ETL Pipeline</span>
-                  <span className="text-xs font-bold text-white font-mono">50K+ Rows Ingestion</span>
+                  <span className="text-[9px] text-[#8899ac] font-mono uppercase tracking-wider">Data workflow</span>
+                  <span className="text-xs font-bold text-white font-mono">Ingestion & preparation</span>
                 </div>
               </motion.div>
 
@@ -274,7 +274,7 @@ export const Hero: React.FC<HeroProps> = ({
                 className="hidden sm:flex absolute top-1/2 -left-6 -translate-y-1/2 z-30 px-3 py-1.5 rounded-lg bg-[#0a0f18]/95 backdrop-blur-md border border-emerald-500/40 shadow-xl items-center gap-2"
               >
                 <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-[11px] font-mono text-emerald-300 font-bold">-40% Query Latency</span>
+                <span className="text-[11px] font-mono text-emerald-300 font-bold">Model monitoring</span>
               </motion.div>
 
             </div>

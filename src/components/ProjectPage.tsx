@@ -11,7 +11,6 @@ import { PROJECTS, PROJECT_PLAYBOOK } from '../data/portfolioData';
 import { ProjectInteractiveDashboard } from './ProjectInteractiveDashboard';
 import { PipelineFlowchart } from './PipelineFlowchart';
 import { trackEvent, trackExternalLink, trackProjectView, trackProjectTabSwitch, trackProfileLink } from '../utils/analytics';
-import { resolveProjectImage, BROKEN_IMAGE_FALLBACK } from '../utils/assets';
 
 const getTechBadgeStyle = (tech: string) => {
   const lower = tech.toLowerCase();
@@ -147,7 +146,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
   // Unknown project id: explain instead of silently rendering a different case study.
   if (!project) {
     return (
-      <div className="min-h-screen bg-[#050505] text-[#E0E0E0] font-sans pt-24 pb-24 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-white dark:bg-[#060608] text-slate-900 dark:text-[#d9d9e3] font-sans pt-24 pb-24 flex items-center justify-center px-4">
         <div className="max-w-md text-center space-y-4">
           <h1 className="text-2xl font-extrabold text-white">Project not found</h1>
           <p className="text-sm text-[#A0AEC0] font-mono">
@@ -176,7 +175,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-[#E0E0E0] font-sans pt-16 sm:pt-20 pb-24 selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="min-h-screen bg-white dark:bg-[#060608] text-slate-900 dark:text-[#d9d9e3] font-sans pt-16 sm:pt-20 pb-24 selection:bg-cyan-500/30 selection:text-cyan-200">
       
       {/* Clean Sticky Sub-Navigation Header docked below main fixed Navbar */}
       <header className="sticky top-[56px] sm:top-[64px] z-30 bg-white/95 dark:bg-[#080808]/95 backdrop-blur-md border-b border-slate-200 dark:border-[#ffffff10] px-4 sm:px-6 lg:px-8 py-2.5 shadow-md shadow-slate-200/50 dark:shadow-black/70 transition-colors">
@@ -405,35 +404,6 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                 ))}
               </div>
 
-              {/* Visual Project Image Showcase Banner */}
-              {project.imageUrl && (
-                <div className="mt-6 rounded-xl overflow-hidden border border-slate-200 dark:border-[#ffffff12] relative aspect-[21/9] sm:aspect-[24/9] w-full bg-slate-100 dark:bg-[#141414] group shadow-inner">
-                  <img
-                    src={resolveProjectImage(project.imageUrl) || BROKEN_IMAGE_FALLBACK}
-                    alt={project.imageCaption || project.title}
-                    width={1200}
-                    height={675}
-                    decoding="async"
-                    onError={e => {
-                      if (e.currentTarget.src !== BROKEN_IMAGE_FALLBACK) {
-                        e.currentTarget.src = BROKEN_IMAGE_FALLBACK;
-                      }
-                    }}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
-                  <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none">
-                    <span className="text-xs font-mono text-white font-medium bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/15">
-                      📸 {project.imageCaption || project.title}
-                    </span>
-                    <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950/90 backdrop-blur-md px-2.5 py-1 rounded-md border border-cyan-500/40 hidden sm:inline-flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                      <span>Visual Field Asset</span>
-                    </span>
-                  </div>
-                </div>
-              )}
             </div>
 
           </div>
@@ -463,19 +433,18 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
           </div>
         )}
 
-        {/* Case Study section navigation.
-            This used to be two stacked bars (a "6-Layer Anatomy" flow row plus a
-            second tab row) both driving the same state, with the label claiming
-            6 layers while only 5 tabs existed. One tab bar now, with the count
-            derived from the list so it can never drift again. */}
+        {/* Case Study section navigation */}
         <div
-          className="mb-6 rounded-xl bg-slate-50 dark:bg-[#090e17] border border-slate-200 dark:border-cyan-500/25 shadow-sm overflow-hidden"
+          className="mb-6 rounded-xl bg-slate-50 dark:bg-[#080808] border border-slate-200 dark:border-[#ffffff12] shadow-sm overflow-hidden"
         >
-          <div className="flex items-center gap-2 px-3 sm:px-3.5 pt-3 pb-2 shrink-0">
-            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-            <span className="text-slate-900 dark:text-white font-bold text-[11px] uppercase tracking-wider">
-              {CASE_STUDY_TABS.length}-Section Case Study
-            </span>
+          <div className="flex items-center justify-between px-3 sm:px-4 pt-2.5 pb-2">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              <span className="text-slate-900 dark:text-white font-bold text-[10px] uppercase tracking-[0.18em]">
+                Case Study
+              </span>
+            </div>
+            <span className="text-[9px] font-mono text-[#666]">{CASE_STUDY_TABS.length} sections</span>
           </div>
 
           <div
@@ -483,7 +452,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
             role="tablist"
             aria-label="Case study sections"
             aria-orientation="horizontal"
-            className="flex items-center gap-1 overflow-x-auto px-2 pb-2 scroll-mt-20"
+            className="flex items-center gap-1 overflow-x-auto px-2 pb-2"
           >
             {CASE_STUDY_TABS.map(tab => {
               const Icon = tab.icon;
@@ -499,19 +468,16 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                   tabIndex={isActive ? 0 : -1}
                   onKeyDown={e => handleTabKeyDown(e, tab.id)}
                   onClick={() => handleTabSwitch(tab.id)}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-mono whitespace-nowrap transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-mono whitespace-nowrap transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-cyan-50 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border border-cyan-500/40 font-bold shadow-sm'
-                      : 'text-slate-600 dark:text-[#888] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#141414] border border-transparent'
+                      ? 'bg-cyan-500/15 text-cyan-200 border border-cyan-400/40 font-semibold'
+                      : 'text-[#8a8a8a] hover:text-white hover:bg-[#151515] border border-transparent'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
-                  <span>
-                    <span className="text-[9px] opacity-60 mr-1">{tab.step}</span>
-                    {tab.short}
-                  </span>
+                  <span>{tab.short}</span>
                   {tab.isLive && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-0.5" title="Interactive" />
+                    <span className="w-1 h-1 rounded-full bg-emerald-400 ml-0.5" title="Interactive" />
                   )}
                 </button>
               );
@@ -535,51 +501,6 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
             transition={{ duration: 0.3 }}
             className="space-y-6"
           >
-            {/* Project Screenshot / Visual Banner */}
-            {project.imageUrl && (
-              <div className="p-4 sm:p-5 rounded-xl bg-[#0e0e0e] border border-[#ffffff10] overflow-hidden">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
-                      Visual System Asset & Architecture
-                    </span>
-                  </div>
-                  {project.imageCaption && (
-                    <span className="text-[11px] font-mono text-cyan-400">
-                      {project.imageCaption}
-                    </span>
-                  )}
-                </div>
-
-                <div className="relative aspect-[21/9] sm:aspect-[24/9] w-full rounded-lg overflow-hidden bg-[#161616] border border-[#ffffff08]">
-                  <img
-                    src={resolveProjectImage(project.imageUrl) || BROKEN_IMAGE_FALLBACK}
-                    alt={project.imageCaption || project.title}
-                    loading="lazy"
-                    decoding="async"
-                    width={1200}
-                    height={675}
-                    onError={e => {
-                      if (e.currentTarget.src !== BROKEN_IMAGE_FALLBACK) {
-                        e.currentTarget.src = BROKEN_IMAGE_FALLBACK;
-                      }
-                    }}
-                    className="relative w-full h-full object-cover object-center"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-                    <span className="px-2.5 py-1 rounded bg-black/80 backdrop-blur-sm border border-white/10 text-[10px] font-mono text-[#E0E0E0]">
-                      {project.category} • {project.title}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/30 text-[10px] font-mono text-cyan-300">
-                      Production Architecture
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* Live Interactive Simulator Wrapper */}
             <div id="interactive-simulator-section" className="scroll-mt-24 space-y-4">
               {project.liveDemoUrl && (

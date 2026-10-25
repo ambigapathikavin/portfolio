@@ -9,14 +9,12 @@ import { Skills } from './components/Skills';
 import { ExperienceTimeline } from './components/ExperienceTimeline';
 import { ProjectsShowcase } from './components/ProjectsShowcase';
 import { DataJourney } from './components/DataJourney';
-import { WhatIBring } from './components/WhatIBring';
 import { EducationCertifications } from './components/EducationCertifications';
-import { Testimonials } from './components/Testimonials';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { initGlobalTactileClicks } from './utils/sound';
 import { 
-  initGoogleAnalytics, 
+  initCookielessAnalytics,
   trackPageView, 
   trackProjectView, 
   trackResumeInteraction, 
@@ -47,9 +45,9 @@ export default function App() {
   // Consumed once by ProjectPage, then reset so a manual tab click sticks.
   const [pendingTab, setPendingTab] = useState<ProjectTab | undefined>(undefined);
 
-  // Initialize GA4 tracking & sync browser back/forward and hash changes
+  // Initialize interaction tracking & sync browser back/forward and hash changes
   useEffect(() => {
-    initGoogleAnalytics();
+    initCookielessAnalytics();
     const cleanupSounds = initGlobalTactileClicks();
     const cleanupScrollDepth = initScrollDepthTracking();
     const cleanupSectionDwell = initSectionDwellTracking();
@@ -141,7 +139,7 @@ export default function App() {
   // If a dedicated project page is active, display the standalone dedicated ProjectPage!
   if (activeProjectId) {
     return (
-      <div className="min-h-screen flex flex-col font-sans transition-colors duration-200">
+      <div className="min-h-screen flex flex-col font-sans transition-colors duration-200 bg-white dark:bg-[#060608] text-slate-900 dark:text-[#d9d9e3]">
         <ScrollProgressBar />
         <Navbar 
           onOpenResume={handleOpenResume}
@@ -168,7 +166,6 @@ export default function App() {
         <Footer 
           onOpenResume={handleOpenResume} 
         />
-        
         {isResumeOpen && (
           <Suspense fallback={null}>
             <ResumeModal
@@ -183,7 +180,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col font-sans transition-colors duration-200">
+    <div className="min-h-screen flex flex-col font-sans transition-colors duration-200 bg-white dark:bg-[#060608] text-slate-900 dark:text-[#d9d9e3]">
       {/* Scroll Depth Progress Bar */}
       <ScrollProgressBar />
 
@@ -206,33 +203,27 @@ export default function App() {
           onRoleModeChange={handleRoleModeChange}
         />
 
-        {/* Quick Quantifiable Professional Stats */}
-        <QuickStats />
-
-        {/* Executive Profile & Two Visual Specialization Tracks */}
-        <About onOpenResume={handleOpenResume} />
-
-        {/* Value Proposition Cards */}
-        <WhatIBring />
-
         {/* Interactive 5-Category Skills Section */}
         <Skills roleMode={roleMode} />
 
-        {/* Featured Projects Showcase with Dedicated Case Study Pages */}
+        {/* Portfolio counts and project overview */}
+        <QuickStats />
+
+        {/* Show project work early so visitors can quickly assess relevant experience. */}
         <ProjectsShowcase 
           onSelectProject={handleSelectProject} 
           onOpenResumeModal={handleOpenResume}
           roleMode={roleMode}
         />
 
-        {/* Interactive 9-Stage Data & AI Lifecycle Journey */}
-        <DataJourney />
+        {/* Executive Profile & Two Visual Specialization Tracks */}
+        <About onOpenResume={handleOpenResume} />
 
         {/* Work & Engineering Experience Timeline */}
         <ExperienceTimeline />
 
-        {/* Coworker Testimonials & Global AI Challenge Endorsements */}
-        <Testimonials />
+        {/* Interactive 9-Stage Data & AI Lifecycle Journey */}
+        <DataJourney />
 
         {/* Education & Verified Certifications */}
         <EducationCertifications />
@@ -245,7 +236,6 @@ export default function App() {
       <Footer 
         onOpenResume={handleOpenResume} 
       />
-
       {/* Mobile Floating Action Button (FAB) for Resume */}
       <div className="fixed bottom-5 right-4 z-40 md:hidden flex flex-col gap-2">
         <button

@@ -22,7 +22,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
   };
 
   return (
-    <footer className="bg-[#050505] border-t border-[#ffffff08] pt-12 pb-8 relative text-[#888] text-xs">
+    <footer className="bg-white dark:bg-[#060608] border-t border-slate-200 dark:border-[#ffffff08] pt-12 pb-8 relative text-slate-600 dark:text-[#888] text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-[#ffffff08]">
@@ -121,7 +121,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
           
           <div className="flex items-center gap-3">
             <span className="text-[#555]">
-              High Density Analytics & ML Architecture.
+              Privacy: Cloudflare Web Analytics provides aggregate traffic statistics without cookies or ad tracking.
             </span>
           </div>
         </div>
@@ -130,4 +130,3 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
     </footer>
   );
 };
-

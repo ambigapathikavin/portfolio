@@ -18,7 +18,8 @@ import {
   ExternalLink,
   Activity,
   Search,
-  X
+  X,
+  Star
 } from 'lucide-react';
 import { PROJECTS } from '../data/portfolioData';
 import { Project, ProjectCategory, ProjectTab } from '../types';
@@ -55,7 +56,7 @@ const getTechBadgeStyle = (tech: string) => {
   if (lower.includes('docker') || lower.includes('fastapi') || lower.includes('streamlit') || lower.includes('mlflow')) {
     return 'bg-emerald-950/40 border-emerald-500/25 text-emerald-300';
   }
-  return 'bg-[#161616] border-[#ffffff0a] text-[#A0A0A0]';
+  return 'bg-slate-100 dark:bg-[#161616] border-slate-300 dark:border-[#ffffff0a] text-slate-700 dark:text-[#A0A0A0]';
 };
 
 interface ProjectsShowcaseProps {
@@ -72,6 +73,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>('ALL');
   const [roleFilter, setRoleFilter] = useState<'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST'>(roleMode);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAllProjects, setShowAllProjects] = useState(false);
   // Which project's KPI panel is open. Explicit state (rather than hover-only)
   // so the panel is reachable on touch devices and via keyboard.
   const [openKpiCard, setOpenKpiCard] = useState<string | null>(null);
@@ -172,7 +174,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
   };
 
   return (
-    <section id="projects" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-[#050505] border-t border-[#ffffff08] relative">
+    <section id="projects" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-white dark:bg-[#060608] border-t border-slate-200 dark:border-[#ffffff08] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -184,15 +186,18 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
           className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4"
         >
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#111111] border border-[#ffffff15] text-cyan-400 text-[10px] font-mono tracking-[0.2em] mb-2.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-[#111111] border border-slate-300 dark:border-[#ffffff15] text-cyan-600 dark:text-cyan-400 text-[10px] font-mono tracking-[0.2em] mb-2.5">
               <FolderGit2 className="w-3 h-3" />
               <span>PROJECTS & VISUAL CASE STUDIES</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Visual Case Studies & Interactive Dashboards
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Projects & Case Studies
             </h2>
-            <p className="text-[#A3A3A3] text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
-              Explore hands-on projects featuring production BI dashboards, BERT NLP engines, predictive risk scorecards, and automated MLOps pipelines.
+            <p className="text-slate-600 dark:text-slate-300 text-sm mt-2 max-w-2xl leading-relaxed">
+              Browse practical work across data analytics, machine learning, NLP, and AI. Search or filter the projects to find relevant examples.
+            </p>
+            <p className="mt-2 max-w-2xl text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+              Project metrics may include estimates or simulated examples; they are not independently verified client outcomes.
             </p>
           </div>
 
@@ -201,49 +206,20 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
             <div className="flex items-center gap-2 self-start md:self-auto">
               <button
                 onClick={() => onOpenResumeModal('DATA_ANALYST')}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#111] hover:bg-cyan-500/20 border border-cyan-500/30 text-xs font-mono text-cyan-300 transition-all cursor-pointer shadow-sm"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#111] hover:bg-cyan-100 dark:hover:bg-cyan-500/20 border border-cyan-400 dark:border-cyan-500/30 text-xs font-mono text-cyan-700 dark:text-cyan-300 transition-all cursor-pointer shadow-sm"
               >
                 <BarChart3 className="w-3.5 h-3.5" />
                 <span>Data Analyst Resume</span>
               </button>
               <button
                 onClick={() => onOpenResumeModal('DATA_SCIENTIST')}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#111] hover:bg-violet-500/20 border border-violet-500/30 text-xs font-mono text-violet-300 transition-all cursor-pointer shadow-sm"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#111] hover:bg-violet-100 dark:hover:bg-violet-500/20 border border-violet-400 dark:border-violet-500/30 text-xs font-mono text-violet-700 dark:text-violet-300 transition-all cursor-pointer shadow-sm"
               >
                 <BrainCircuit className="w-3.5 h-3.5" />
                 <span>Data Scientist Resume</span>
               </button>
             </div>
           )}
-        </motion.div>
-
-        {/* 6-Layer Case Study Anatomy Blueprint */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="mb-6 p-3 sm:p-3.5 rounded-xl bg-[#0b1019] border border-cyan-500/20 flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs font-mono shadow-sm"
-        >
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            <span className="text-white font-bold text-[11px] uppercase tracking-wider">
-              Standardized Case Study Anatomy:
-            </span>
-          </div>
-          <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-[#A0AEC0]">
-            <span className="px-2 py-0.5 rounded bg-[#101726] text-cyan-300 border border-cyan-500/30">1. Problem Context</span>
-            <span className="text-[#555]">→</span>
-            <span className="px-2 py-0.5 rounded bg-[#101726] text-sky-300 border border-sky-500/30">2. 9-Stage Pipeline</span>
-            <span className="text-[#555]">→</span>
-            <span className="px-2 py-0.5 rounded bg-[#101726] text-indigo-300 border border-indigo-500/30">3. Star Schema / Features</span>
-            <span className="text-[#555]">→</span>
-            <span className="px-2 py-0.5 rounded bg-[#101726] text-violet-300 border border-violet-500/30">4. Interactive Simulator</span>
-            <span className="text-[#555]">→</span>
-            <span className="px-2 py-0.5 rounded bg-[#101726] text-emerald-300 border border-emerald-500/30">5. Benchmark KPIs</span>
-            <span className="text-[#555]">→</span>
-            <span className="px-2 py-0.5 rounded bg-[#101726] text-amber-300 border border-amber-500/30">6. Strategic ROI</span>
-          </div>
         </motion.div>
 
         {/* Filter & Search Controls Row */}
@@ -345,10 +321,10 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
         {/* Project Cards Grid with Visual Thumbnails */}
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          className="grid grid-cols-1 md:grid-cols-2 gap-5"
         >
           <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, idx) => (
+            {(showAllProjects ? filteredProjects : filteredProjects.slice(0, 5)).map((project, idx) => (
               <motion.div
                 key={project.id}
                 layout
@@ -432,7 +408,30 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
 
                   {/* Card Body */}
                   <div className="p-4 sm:p-5">
-                    
+                    {project.imageAttribution && (
+                      <p className="mb-2 text-[10px] leading-snug text-slate-500 dark:text-slate-400">
+                        Photo:{' '}
+                        <a
+                          href={project.imageAttribution.sourceUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="underline decoration-slate-400/50 underline-offset-2 hover:text-cyan-600 dark:hover:text-cyan-300"
+                        >
+                          {project.imageAttribution.creator}
+                        </a>
+                        {' · cropped to fit'}
+                        {' · '}
+                        <a
+                          href={project.imageAttribution.licenseUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="underline decoration-slate-400/50 underline-offset-2 hover:text-cyan-600 dark:hover:text-cyan-300"
+                        >
+                          {project.imageAttribution.license}
+                        </a>
+                      </p>
+                    )}
+
                     {/* Category & KPI Tooltip Trigger Pill */}
                     <div className="flex items-center justify-between gap-2 mb-1.5">
                       <div className="text-[10px] font-mono text-cyan-400 truncate">
@@ -596,7 +595,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                       {project.technology.slice(0, 3).map(tech => (
                         <span
                           key={tech}
-                          className={`px-2 py-0.5 rounded border text-[10px] font-mono font-medium transition-colors ${getTechBadgeStyle(tech)}`}
+                          className={`px-2 py-0.5 rounded border text-[10px] font-mono font-medium transition-colors bg-slate-100 dark:bg-[#161616] ${getTechBadgeStyle(tech)}`}
                         >
                           {tech}
                         </span>
@@ -684,6 +683,20 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
             ))}
           </AnimatePresence>
         </motion.div>
+
+        {filteredProjects.length > 4 && (
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              aria-expanded={showAllProjects}
+              onClick={() => setShowAllProjects((visible) => !visible)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 dark:bg-[#151515] hover:bg-slate-200 dark:hover:bg-[#1f1f1f] border border-slate-200 dark:border-[#ffffff15] text-xs font-mono text-slate-700 dark:text-[#d0d0d0] hover:text-slate-900 dark:hover:text-white transition-all"
+            >
+              <span>{showAllProjects ? 'Show featured projects' : `View all ${filteredProjects.length} matching projects`}</span>
+              <ArrowUpRight className={`w-3.5 h-3.5 transition-transform ${showAllProjects ? 'rotate-180' : ''}`} />
+            </button>
+          </div>
+        )}
 
       </div>
     </section>

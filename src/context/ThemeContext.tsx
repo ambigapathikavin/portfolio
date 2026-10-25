@@ -13,7 +13,12 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('portfolio_theme');
+      let saved: string | null = null;
+      try {
+        saved = window.localStorage.getItem('portfolio_theme');
+      } catch {
+        // Fall back to the system theme when browser storage is unavailable.
+      }
       if (saved === 'light' || saved === 'dark') {
         return saved;
       }

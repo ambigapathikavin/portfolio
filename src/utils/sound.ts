@@ -1,13 +1,25 @@
 // Professional subtle tactile sound engine using Web Audio API
 let audioCtx: AudioContext | null = null;
-let soundEnabled = typeof window !== 'undefined' ? localStorage.getItem('portfolio_sfx_enabled') !== 'false' : true;
+const readSoundPreference = (): boolean => {
+  if (typeof window === 'undefined') return true;
+  try {
+    return window.localStorage.getItem('portfolio_sfx_enabled') !== 'false';
+  } catch {
+    return true;
+  }
+};
+let soundEnabled = readSoundPreference();
 
 export const isSoundEnabled = () => soundEnabled;
 
 export const setSoundEnabled = (enabled: boolean) => {
   soundEnabled = enabled;
   if (typeof window !== 'undefined') {
-    localStorage.setItem('portfolio_sfx_enabled', enabled ? 'true' : 'false');
+    try {
+      window.localStorage.setItem('portfolio_sfx_enabled', enabled ? 'true' : 'false');
+    } catch {
+      // The setting still applies for this page session.
+    }
     window.dispatchEvent(new CustomEvent('sfx-toggle', { detail: { enabled } }));
   }
 };

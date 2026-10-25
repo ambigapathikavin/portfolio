@@ -1,7 +1,10 @@
-# Project card images
+# Project card photos
 
-One image per project case study: `project-01.jpg` … `project-19.jpg`
-(1200 × 675, ~85 KB each).
+One locally hosted photo per project case study: `project-01.jpg` …
+`project-19.jpg`. Images are downloaded from Openverse-indexed Flickr sources
+under CC BY 2.0 or CC0 licenses. The source and license links are shown on
+each project card. Photos are locally hosted and cropped to fit the card
+layout.
 
 ## How these are wired
 
@@ -16,25 +19,18 @@ These paths are resolved at runtime through `publicAsset()`
 the value must **not** start with `/` — a leading slash resolves to the domain
 root and breaks on GitHub Pages (`user.github.io/portfolio/`).
 
-## Replacing an image with your own screenshot
+## Replacing a photo with your own project screenshot
 
 1. Drop your file into this folder.
 2. Update that project's `imageUrl` in `src/data/portfolioData.ts`.
+3. Update or remove its `imageAttribution` entry in the same project record.
 
-Use a landscape image around 1200 × 675 (16:9) so it fills the card and the
-case-study banner without cropping. Recommended size under 200 KB.
+Use a landscape image around 1200 × 675 (16:9) so it fills the project card
+without excessive cropping. Recommended size under 200 KB.
 
 If `imageUrl` ever points at a file that does not exist, the card renders a
 tinted fallback tile with the project title instead of a broken-image icon —
 so a stale filename degrades gracefully rather than looking broken.
-
-## Regenerating the placeholder cards
-
-The current images are generated placeholders, styled with each project's own
-`accentColor`, `category` and `technology` list. They are deliberately neutral
-so nothing looks stock-photographed. Swap in your real dashboard screenshots as
-soon as you have them — that is the single biggest upgrade a reviewer will
-notice.
 
 ## The other image folder
 

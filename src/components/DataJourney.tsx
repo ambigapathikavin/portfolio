@@ -30,11 +30,11 @@ export const DataJourney: React.FC = () => {
             <GitBranch className="w-3 h-3" />
             <span>INTERACTIVE LIFECYCLE</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             The 9-Stage Data & AI Journey
           </h2>
-          <p className="text-[#A3A3A3] text-xs sm:text-sm mt-1 leading-relaxed">
-            Click through each operational phase to explore how raw data streams are methodically transformed into production models and executive intelligence.
+          <p className="text-slate-600 dark:text-slate-300 text-sm mt-2 leading-relaxed">
+            Explore a practical workflow for moving from raw data through analysis, modeling, evaluation, and communication.
           </p>
         </div>
 
@@ -99,11 +99,11 @@ export const DataJourney: React.FC = () => {
                   </span>
                 </div>
 
-                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">
                   {currentStage.title}: {currentStage.shortDesc}
                 </h3>
 
-                <p className="text-[#A3A3A3] text-xs sm:text-sm leading-relaxed mb-4">
+                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4">
                   {currentStage.detailedDesc}
                 </p>
               </div>

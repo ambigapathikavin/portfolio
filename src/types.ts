@@ -28,6 +28,13 @@ export interface ProjectKPI {
   description: string;
 }
 
+export interface ImageAttribution {
+  creator: string;
+  sourceUrl: string;
+  license: string;
+  licenseUrl: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -38,9 +45,12 @@ export interface Project {
   keyResult: string;
   imageUrl?: string;
   imageCaption?: string;
+  imageAttribution?: ImageAttribution;
   githubUrl?: string;
   liveDemoUrl?: string;
   roleType?: 'DATA_ANALYST' | 'DATA_SCIENTIST' | 'BOTH';
+  featured?: boolean;
+  priority?: number;
   metrics?: { label: string; value: string; subtext?: string }[];
   kpis?: ProjectKPI[];
   highlights: string[];

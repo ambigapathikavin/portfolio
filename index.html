@@ -18,16 +18,6 @@
     <meta name="twitter:title" content="Ambigapathi V | Data Analyst &amp; Data Scientist" />
     <meta name="twitter:description" content="Data Analyst and Data Scientist specializing in Python, SQL, Power BI, Machine Learning, NLP and AI." />
 
-    <!-- Google tag (gtag.js). Set VITE_GA_MEASUREMENT_ID to override; defaults to G-N2SWWDYJVP. -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N2SWWDYJVP"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-N2SWWDYJVP');
-    </script>
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ambigapathi V | Data Analyst &amp; Data Scientist Portfolio</title>
@@ -69,11 +59,11 @@
          twice (CORS and non-CORS) and the browser warns it was "not used". -->
     <link rel="preload" as="style" crossorigin
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" />
-    <link rel="stylesheet"
+    <link rel="stylesheet" crossorigin="anonymous"
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
           media="print" onload="this.media='all'" />
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" />
     </noscript>
   </head>
   <body class="dark bg-[#080c14] text-slate-100 font-sans antialiased selection:bg-cyan-500/30 selection:text-cyan-200 min-h-screen">
@@ -106,14 +96,39 @@
     </script>
 
     <div id="root"></div>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Ambigapathi V",
+      "jobTitle": ["Data Analyst", "Data Scientist"],
+      "url": "https://ambigapathikavin.github.io/portfolio/",
+      "sameAs": [
+        "https://www.linkedin.com/in/ambigapathi-v/",
+        "https://github.com/ambigapathikavin"
+      ],
+      "email": "ambigapathikavin2@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Salem",
+        "addressRegion": "Tamil Nadu",
+        "addressCountry": "IN"
+      }
+    }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Cloudflare Web Analytics.
-         GA4 is already loaded above; running both double-counts every
-         pageview. Set VITE_ENABLE_CLOUDFLARE_ANALYTICS=true in .env to
-         re-enable it, then also uncomment the script below. -->
-    <!--
-    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5a417b43f02e4b2aa3b91bb002574cf3"}'></script>
-    -->
+    <script>
+      (function(l) {
+        if (l.search && l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) {
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
   </body>
 </html>

@@ -72,11 +72,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navLinks = [
     { name: 'Home', href: '#home', label: 'Overview' },
-    { name: 'About', href: '#about', label: 'Profile & Tracks' },
     { name: 'Skills', href: '#skills', label: 'Tech Stack' },
-    { name: 'Projects', href: '#projects', label: '19 Projects' },
+    { name: 'Projects', href: '#projects', label: 'Project case studies' },
+    { name: 'About', href: '#about', label: 'Profile & Tracks' },
     { name: 'Experience', href: '#experience', label: 'Timeline' },
-    { name: 'Testimonials', href: '#testimonials', label: 'Endorsements' },
     { name: 'Data Lifecycle', href: '#data-journey', label: 'AI Pipeline' },
     { name: 'Certifications', href: '#certifications', label: 'Verified Badges' },
     { name: 'Contact', href: '#contact', label: 'Get in Touch' },
@@ -87,9 +86,8 @@ export const Navbar: React.FC<NavbarProps> = ({
       case 'home': return { name: 'Home', subtitle: 'Overview' };
       case 'about': return { name: 'About', subtitle: 'Profile & Dual Tracks' };
       case 'skills': return { name: 'Skills', subtitle: 'Tech Stack & Competencies' };
-      case 'projects': return { name: 'Projects', subtitle: '19 Live Case Studies' };
+      case 'projects': return { name: 'Projects', subtitle: 'Project Case Studies' };
       case 'experience': return { name: 'Experience', subtitle: 'Omdena & Career Timeline' };
-      case 'testimonials': return { name: 'Testimonials', subtitle: 'Coworker Endorsements' };
       case 'data-journey': return { name: 'Data Lifecycle', subtitle: '9-Stage AI Pipeline' };
       case 'certifications': return { name: 'Certifications', subtitle: 'Verified Credentials' };
       case 'contact': return { name: 'Contact', subtitle: 'Direct Channels' };

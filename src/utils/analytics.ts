@@ -1,30 +1,25 @@
 /**
- * Google Analytics 4 (GA4) Advanced Tracking Architecture
- * Measurement ID: G-N2SWWDYJVP
- * 
- * Provides granular event tracking for visitor actions:
- * - Profile links (LinkedIn, GitHub, Email, Phone, Calendly, Meet)
- * - Resume interactions (modal view, PDF download, plain text copy, print, role switch)
- * - Project exploration (card clicks, deep case study tabs, dwell time, GitHub & Live demos)
- * - Interactive ML/BI simulators (disease selection, Grad-CAM toggle, parameter adjustment)
- * - Skill & Certification evaluations (searches, category filters, verification links, copy ID)
- * - Navigation & UX behaviors (track filters, scroll depth milestones, theme & sound toggles)
- * - High-intent recruiter conversion signals
+ * Lightweight interaction helpers. Aggregate traffic statistics are provided
+ * by the cookieless Cloudflare Web Analytics beacon in index.html.
  */
-
-declare global {
-  interface Window {
-    dataLayer: any[];
-    gtag: (...args: any[]) => void;
-  }
-}
-
-export const GA_MEASUREMENT_ID = (import.meta.env.VITE_GA_MEASUREMENT_ID || 'G-N2SWWDYJVP').trim();
 
 // Verbose telemetry logging is dev-only: trackEvent fires on scroll, dwell and
 // pointer interactions, so leaving it on in production floods the console and
 // costs real main-thread time for every visitor.
 const IS_DEV = import.meta.env.DEV;
+const CLOUDFLARE_BEACON_TOKEN = '5a417b43f02e4b2aa3b91bb002574cf3';
+
+export const initCookielessAnalytics = (): void => {
+  if (!import.meta.env.PROD || typeof document === 'undefined') return;
+  if (document.querySelector('script[data-cloudflare-analytics]')) return;
+
+  const script = document.createElement('script');
+  script.defer = true;
+  script.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+  script.dataset.cloudflareAnalytics = 'true';
+  script.setAttribute('data-cf-beacon', JSON.stringify({ token: CLOUDFLARE_BEACON_TOKEN }));
+  document.head.appendChild(script);
+};
 
 // Session state memory for dwell time and scroll milestones
 let sessionStartTime = Date.now();
@@ -33,35 +28,6 @@ const activeSectionTimers: Record<string, number> = {};
 let highIntentFired = false;
 let projectsOpenedInSession = 0;
 let resumeInteractedInSession = false;
-
-/**
- * Initializes Google Analytics 4
- */
-export const initGoogleAnalytics = (): void => {
-  if (typeof window === 'undefined') return;
-
-  sessionStartTime = Date.now();
-  window.dataLayer = window.dataLayer || [];
-  if (!window.gtag) {
-    window.gtag = function () {
-      window.dataLayer.push(arguments);
-    };
-  }
-
-  if (window.gtag && GA_MEASUREMENT_ID) {
-    window.gtag('config', GA_MEASUREMENT_ID, {
-      page_title: document.title,
-      page_location: window.location.href,
-      send_page_view: false, // Managed virtually via trackPageView
-    });
-
-    if (IS_DEV) {
-      console.info(
-        `[GA4 Active] Tracking ID: ${GA_MEASUREMENT_ID} (Granular Telemetry Loaded)`
-      );
-    }
-  }
-};
 
 /**
  * Core event tracking function with debug output and error isolation
@@ -79,17 +45,9 @@ export const trackEvent = (
     session_elapsed_sec: Math.round((Date.now() - sessionStartTime) / 1000),
   };
 
-  if (window.gtag) {
-    try {
-      window.gtag('event', eventName, enrichedParams);
-    } catch (err) {
-      console.warn(`[GA4 Error] Failed to send ${eventName}:`, err);
-    }
-  }
-
 // Developer console logger for instant verification (dev builds only).
 if (IS_DEV) {
-    console.debug(`[GA4 Track] ${eventName}`, enrichedParams);
+    console.debug(`[Interaction] ${eventName}`, enrichedParams);
   }
 
   // Check for recruiter high-intent conversion
@@ -104,17 +62,9 @@ export const trackPageView = (pagePath: string, pageTitle?: string): void => {
 
   const title = pageTitle || document.title;
 
-  if (window.gtag) {
-    window.gtag('event', 'page_view', {
-      page_path: pagePath,
-      page_title: title,
-      page_location: window.location.href,
-    });
-  }
-
   if (IS_DEV) {
-      console.debug(`[GA4 PageView] ${pagePath} — "${title}"`);
-    }
+    console.debug(`[PageView] ${pagePath} — "${title}"`);
+  }
 };
 
 // ============================================================================
@@ -354,9 +304,7 @@ export const trackContactAction = (
   actionType: 
     | 'copy_email'
     | 'copy_phone'
-    | 'copy_calendly_link'
-    | 'click_calendly_booking'
-    | 'click_google_meet'
+    | 'click_google_calendar_booking'
     | 'click_phone_call'
     | 'click_email_mailto'
     | 'submit_contact_form',
@@ -431,12 +379,11 @@ export const initSectionDwellTracking = (): (() => void) => {
 
   const sectionIds = [
     'home',
-    'about',
-    'skills',
     'projects',
-    'data-journey',
+    'about',
     'experience',
-    'testimonials',
+    'skills',
+    'data-journey',
     'certifications',
     'contact',
   ];

@@ -6,7 +6,6 @@ import {
   Cpu, 
   Layers, 
   Briefcase, 
-  Quote, 
   Database, 
   Award, 
   Mail,
@@ -26,14 +25,13 @@ export interface FloatingSideNavProps {
 
 export const SIDE_NAV_ITEMS = [
   { index: '01', name: 'Home', href: '#home', id: 'home', icon: Home, label: 'Hero Overview' },
-  { index: '02', name: 'About', href: '#about', id: 'about', icon: User, label: 'Profile & Dual Track' },
-  { index: '03', name: 'Skills', href: '#skills', id: 'skills', icon: Cpu, label: 'Tech Stack & MLOps' },
-  { index: '04', name: 'Projects', href: '#projects', id: 'projects', icon: Layers, label: '19 Project Studies' },
-  { index: '05', name: 'Journey', href: '#data-journey', id: 'data-journey', icon: Database, label: 'AI Lifecycle' },
-  { index: '06', name: 'Experience', href: '#experience', id: 'experience', icon: Briefcase, label: 'Omdena Experience' },
-  { index: '07', name: 'Feedback', href: '#testimonials', id: 'testimonials', icon: Quote, label: 'Testimonials' },
-  { index: '08', name: 'Certs', href: '#certifications', id: 'certifications', icon: Award, label: 'Certifications' },
-  { index: '09', name: 'Contact', href: '#contact', id: 'contact', icon: Mail, label: 'Get in Touch' },
+  { index: '02', name: 'Skills', href: '#skills', id: 'skills', icon: Cpu, label: 'Tools & competencies' },
+  { index: '03', name: 'Projects', href: '#projects', id: 'projects', icon: Layers, label: 'Project case studies' },
+  { index: '04', name: 'About', href: '#about', id: 'about', icon: User, label: 'Profile & specializations' },
+  { index: '05', name: 'Experience', href: '#experience', id: 'experience', icon: Briefcase, label: 'Project contributions' },
+  { index: '06', name: 'Journey', href: '#data-journey', id: 'data-journey', icon: Database, label: 'AI lifecycle' },
+  { index: '07', name: 'Certs', href: '#certifications', id: 'certifications', icon: Award, label: 'Certifications' },
+  { index: '08', name: 'Contact', href: '#contact', id: 'contact', icon: Mail, label: 'Get in touch' },
 ];
 
 export const FloatingSideNav: React.FC<FloatingSideNavProps> = ({

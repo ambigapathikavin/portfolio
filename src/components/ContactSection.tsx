@@ -9,15 +9,12 @@ import {
   Send, 
   CheckCircle2, 
   Sparkles, 
-  Clock, 
   ArrowRight,
   MessageSquare,
   AlertCircle,
   Copy,
   Check,
-  Calendar,
-  Video,
-  ExternalLink
+  Calendar
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PERSONAL_INFO } from '../data/portfolioData';
@@ -36,37 +33,30 @@ export const ContactSection: React.FC = () => {
   const [copiedMessage, setCopiedMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [copiedScheduleLink, setCopiedScheduleLink] = useState(false);
+  const [copyError, setCopyError] = useState('');
 
-  const handleCopyEmail = (e?: React.MouseEvent) => {
+  const handleCopyEmail = async (e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    navigator.clipboard.writeText(PERSONAL_INFO.email);
-    setCopiedEmail(true);
-    trackContactAction('copy_email');
-    setTimeout(() => {
+    setCopyError('');
+    try {
+      if (!navigator.clipboard) throw new Error('Clipboard API unavailable');
+      await navigator.clipboard.writeText(PERSONAL_INFO.email);
+      setCopiedEmail(true);
+      trackContactAction('copy_email');
+      window.setTimeout(() => setCopiedEmail(false), 2500);
+    } catch {
       setCopiedEmail(false);
-    }, 2500);
-  };
-
-  const handleCopyScheduleLink = (e?: React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
+      setCopyError('Could not copy the email address. Select and copy it manually.');
     }
-    navigator.clipboard.writeText(PERSONAL_INFO.scheduleCallUrl);
-    setCopiedScheduleLink(true);
-    trackContactAction('copy_calendly_link');
-    setTimeout(() => {
-      setCopiedScheduleLink(false);
-    }, 2500);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
+    setCopyError('');
 
     const name = formData.name.trim();
     const email = formData.email.trim();
@@ -77,7 +67,7 @@ export const ContactSection: React.FC = () => {
       return;
     }
 
-    // Reject obviously malformed addresses before handing off to the mail client.
+    // Reject obviously malformed addresses before submitting to the form service.
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
       setErrorMessage('Please enter a valid email address (e.g. name@company.com).');
       return;
@@ -90,29 +80,38 @@ export const ContactSection: React.FC = () => {
       message_length: message.length,
     });
 
-    const subject = formData.subject.trim() || `Portfolio enquiry from ${name}`;
-    const body = `Hi Ambigapathi,\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
-
-    // This form has no backend, so nothing is "sent" by the site itself.
-    // Two things happen instead:
-    //   1. the composed message is copied to the clipboard (reliable, and it
-    //      means the message is never lost even if the visitor dismisses the
-    //      mail client without sending), and
-    //   2. their default mail client is pre-filled via a mailto: link.
-    let copied = false;
     try {
-      await navigator.clipboard.writeText(`${subject}\n\n${body}`);
-      copied = true;
-    } catch {
-      // Clipboard blocked (insecure context / permission denied) - still fine,
-      // the mailto link below carries the full message.
-    }
+      const response = await fetch('https://formspree.io/f/mzeedzwo', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          _replyto: email,
+          _subject: formData.subject.trim() || `Portfolio enquiry from ${name}`,
+          message,
+        }),
+      });
 
-    setCopiedBody(copied ? `${subject}\n\n${body}` : '');
-    setIsSubmitting(false);
-    setSubmitted(true);
+      if (!response.ok) {
+        throw new Error(`Form submission failed with status ${response.status}`);
+      }
 
-    if (copied) {
+      const subject = formData.subject.trim() || `Portfolio enquiry from ${name}`;
+      const submittedMessage = `Subject: ${subject}\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
+      try {
+        if (!navigator.clipboard) throw new Error('Clipboard API unavailable');
+        await navigator.clipboard.writeText(submittedMessage);
+        setCopiedBody(submittedMessage);
+      } catch {
+        setCopiedBody('');
+        setCopyError('Your message was sent, but a clipboard backup could not be created.');
+      }
+
+      setSubmitted(true);
       try {
         confetti({
           particleCount: 50,
@@ -121,24 +120,23 @@ export const ContactSection: React.FC = () => {
           colors: ['#06b6d4', '#38bdf8', '#8b5cf6']
         });
       } catch {
-        // Safe fallback
+        // Keep the successful submission state if the optional animation fails.
       }
+    } catch (error) {
+      console.error('Contact form submission failed:', error);
+      setErrorMessage('Your message could not be sent. Please try again or email me directly.');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const mailtoUrl = `mailto:${PERSONAL_INFO.email}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-
-    window.location.href = mailtoUrl;
   };
 
   return (
-    <section id="contact" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-[#050505] border-t border-[#ffffff08] relative overflow-hidden">
+    <section id="contact" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-white dark:bg-[#060608] border-t border-slate-200 dark:border-[#ffffff08] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#111111] border border-[#ffffff15] text-cyan-400 text-[10px] font-mono tracking-[0.2em] mb-2.5">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-[#111111] border border-slate-300 dark:border-[#ffffff15] text-cyan-600 dark:text-cyan-400 text-[10px] font-mono tracking-[0.2em] mb-2.5">
             <Mail className="w-3 h-3" />
             <span>GET IN TOUCH</span>
           </div>
@@ -155,82 +153,53 @@ export const ContactSection: React.FC = () => {
           {/* Left Column: Direct Contact Details & Links */}
           <div className="lg:col-span-5 space-y-4">
             
-            <div className="p-5 rounded-xl bg-[#111111] border border-[#ffffff08] space-y-4">
+            <div className="p-5 rounded-xl bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-[#ffffff10] space-y-4 shadow-sm">
               <h3 className="text-sm font-bold text-white tracking-wide">
                 Direct Contact Channels
               </h3>
 
               <div className="space-y-2.5">
-                {/* Schedule a Call / Interview Feature Box */}
-                <div className="p-3.5 rounded-xl bg-gradient-to-br from-[#0c1624] via-[#09101a] to-[#060a12] border border-cyan-500/30 hover:border-cyan-400/60 transition-all shadow-md group">
-                  <div className="flex items-start justify-between gap-2 mb-2.5">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center text-cyan-300 shrink-0 group-hover:scale-105 transition-transform">
-                        <Calendar className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-semibold flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                          <span>Schedule an Intro Call</span>
-                        </div>
-                        <div className="text-xs font-bold text-white font-mono">
-                          15 / 30 Min Discussion
-                        </div>
-                      </div>
-                    </div>
+                {PERSONAL_INFO.googleCalendarUrl && (
+                  <a
+                    href={PERSONAL_INFO.googleCalendarUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackContactAction('click_google_calendar_booking')}
+                    className="group block rounded-xl bg-gradient-to-br from-cyan-700 to-blue-800 p-4 shadow-md shadow-cyan-950/20 transition-all hover:-translate-y-0.5 hover:from-cyan-600 hover:to-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#0f0f0f]"
+                    aria-label="Open Google Calendar and book a meeting"
+                  >
+                    <span className="flex items-center justify-between gap-3">
+                      <span className="flex items-center gap-3">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white">
+                          <Calendar className="h-5 w-5" />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block text-[10px] font-mono font-semibold uppercase tracking-wider text-cyan-100">
+                            Google Calendar
+                          </span>
+                          <span className="mt-0.5 block text-sm font-bold text-white">
+                            Book a 30-minute intro call
+                          </span>
+                          <span className="mt-0.5 block text-xs text-cyan-100/90">
+                            Choose a time; slots display in your local time zone.
+                          </span>
+                          <span className="mt-1 block text-[11px] leading-relaxed text-cyan-100/80">
+                            Discuss analytics, BI dashboards, machine learning, AI, or collaboration.
+                          </span>
+                        </span>
+                      </span>
+                      <ArrowRight className="h-5 w-5 shrink-0 text-white transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </a>
+                )}
 
-                    <button
-                      type="button"
-                      onClick={handleCopyScheduleLink}
-                      title="Copy Calendly booking link"
-                      className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] font-mono transition-all shrink-0 cursor-pointer ${
-                        copiedScheduleLink
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                          : 'bg-[#141e2e] hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
-                      }`}
-                    >
-                      {copiedScheduleLink ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                      <span>{copiedScheduleLink ? 'Copied' : 'Copy Link'}</span>
-                    </button>
-                  </div>
-
-                  <p className="text-[11px] text-[#A0AEC0] mb-3 leading-relaxed">
-                    Pick a convenient time directly on my calendar for project discovery, technical interviews, or recruitment calls.
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <a
-                      href={PERSONAL_INFO.scheduleCallUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={() => trackContactAction('click_calendly_booking')}
-                      className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs font-mono transition-all shadow-sm group/btn"
-                    >
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>Book on Calendly</span>
-                      <ExternalLink className="w-3 h-3 opacity-70 group-hover/btn:translate-x-0.5 transition-transform" />
-                    </a>
-
-                    <a
-                      href={PERSONAL_INFO.googleMeetUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={() => trackContactAction('click_google_meet')}
-                      className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-[#141e2e] hover:bg-[#1c2a3f] text-cyan-300 hover:text-white border border-cyan-500/30 text-xs font-semibold font-mono transition-all"
-                    >
-                      <Video className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Google Meet</span>
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-3 rounded-lg bg-[#0a0a0a] border border-[#ffffff08] hover:border-cyan-500/40 hover:bg-[#141414] transition-all group">
+                <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-[#ffffff08] hover:border-cyan-500/40 hover:bg-slate-100 dark:hover:bg-[#141414] transition-all group">
                   <a
                     href={`mailto:${PERSONAL_INFO.email}`}
                     onClick={() => trackContactAction('click_email_mailto', { email: PERSONAL_INFO.email })}
                     className="flex items-start gap-3 overflow-hidden flex-1 mr-2"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#181818] border border-[#ffffff0a] flex items-center justify-center text-cyan-400 shrink-0 group-hover:scale-105 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-white dark:bg-[#181818] border border-slate-200 dark:border-[#ffffff0a] flex items-center justify-center text-cyan-600 dark:text-cyan-400 shrink-0 group-hover:scale-105 transition-transform">
                       <Mail className="w-4 h-4" />
                     </div>
                     <div className="overflow-hidden">
@@ -275,9 +244,9 @@ export const ContactSection: React.FC = () => {
                 <a
                   href={`tel:${PERSONAL_INFO.phone}`}
                   onClick={() => trackContactAction('click_phone_call', { phone: PERSONAL_INFO.phone })}
-                  className="flex items-start gap-3 p-3 rounded-lg bg-[#0a0a0a] border border-[#ffffff08] hover:border-cyan-500/40 hover:bg-[#141414] transition-all group"
+                  className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-[#ffffff08] hover:border-cyan-500/40 hover:bg-slate-100 dark:hover:bg-[#141414] transition-all group"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-[#181818] border border-[#ffffff0a] flex items-center justify-center text-sky-400 shrink-0 group-hover:scale-105 transition-transform">
+                  <div className="w-8 h-8 rounded-lg bg-white dark:bg-[#181818] border border-slate-200 dark:border-[#ffffff0a] flex items-center justify-center text-sky-600 dark:text-sky-400 shrink-0 group-hover:scale-105 transition-transform">
                     <Phone className="w-4 h-4" />
                   </div>
                   <div>
@@ -332,35 +301,6 @@ export const ContactSection: React.FC = () => {
 
             </div>
 
-            {/* Recruiter Availability & Work Authorization Card */}
-            <div className="p-4 rounded-xl bg-gradient-to-br from-[#0c1618] to-[#071012] border border-emerald-500/30 shadow-md space-y-2.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-                  </span>
-                  <span className="text-xs font-bold font-mono text-emerald-300 uppercase tracking-wider">
-                    Available for Immediate Hire
-                  </span>
-                </div>
-                <span className="text-[10px] font-mono text-cyan-400/90 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-500/30">
-                  Full-Time / Contract
-                </span>
-              </div>
-
-              <div className="space-y-1.5 text-xs text-[#B0B0B0] leading-relaxed pt-1 border-t border-[#ffffff0a]">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                  <span><strong>Timezone:</strong> IST (UTC+5:30) • Comfortable with US/EU overlaps</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span><strong>Work Mode:</strong> Remote Worldwide • Open to Relocation</span>
-                </div>
-              </div>
-            </div>
-
           </div>
 
           {/* Right Column: Contact Form */}
@@ -370,9 +310,18 @@ export const ContactSection: React.FC = () => {
               <h3 className="text-base font-bold text-white mb-0.5">
                 Send a Direct Message
               </h3>
-<p className="text-[11px] text-[#777] mb-4">
-                  Fill this in and your email app opens with the message ready to send. A backup copy is kept on your clipboard.
+              <p className="text-[11px] text-[#777] mb-4">
+                Send your message directly through the secure contact form. I’ll follow up by email.
+              </p>
+              <p className="text-[10px] text-[#777] mb-4">
+                Messages are processed by Formspree for delivery. Please don’t include sensitive information.
+              </p>
+
+              {copyError && (
+                <p role="status" className="mb-3 text-xs text-amber-700 dark:text-amber-300">
+{copyError}
                 </p>
+              )}
 
               {errorMessage && (
                 <div className="mb-3 p-2.5 rounded-lg bg-red-950/40 border border-red-500/30 text-xs text-red-300 flex items-center gap-2">
@@ -386,11 +335,9 @@ export const ContactSection: React.FC = () => {
                   <div className="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mx-auto text-emerald-400">
                     <CheckCircle2 className="w-5 h-5" />
                   </div>
-                  <h4 className="text-base font-bold text-white">One Last Step - Press Send</h4>
+                  <h4 className="text-base font-bold text-white">Message sent successfully</h4>
                   <p className="text-xs text-[#A3A3A3] max-w-md mx-auto leading-relaxed">
-                    This site has no server, so your email app should now be opening with the
-                    message pre-filled. Hit <strong className="text-cyan-400">Send</strong> in
-                    that window to deliver it. Nothing has been sent yet.
+                    Your message has been delivered. I’ll get back to you at the email address you provided.
                   </p>
 
                   {copiedBody && (

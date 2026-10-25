@@ -102,12 +102,12 @@ export const AmbigapathiPortrait: React.FC<PortraitProps> = ({
         {/* Technical HUD Crosshairs / Data Coordinates */}
         <div className="absolute top-3 left-3 z-20 flex items-center gap-1 px-2 py-0.5 rounded bg-[#03060b]/85 backdrop-blur-md border border-cyan-500/30 text-[9px] font-mono text-cyan-300 pointer-events-none">
           <Activity className="w-3 h-3 text-emerald-400" />
-          <span>98.2% ACCURACY</span>
+          <span>DATA ANALYTICS</span>
         </div>
 
         <div className="absolute top-3 right-3 z-20 flex items-center gap-1 px-2 py-0.5 rounded bg-[#03060b]/85 backdrop-blur-md border border-violet-500/30 text-[9px] font-mono text-violet-300 pointer-events-none">
           <Database className="w-3 h-3 text-violet-400" />
-          <span>50K+ RECORDS</span>
+          <span>MACHINE LEARNING</span>
         </div>
       </div>
 
@@ -130,4 +130,3 @@ export const AmbigapathiPortrait: React.FC<PortraitProps> = ({
     </div>
   );
 };
-

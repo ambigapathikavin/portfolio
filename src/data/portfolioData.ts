@@ -1,4 +1,4 @@
-import { Project, SkillCategory, ExperienceItem, EducationItem, CertificationItem, StatItem, JourneyStage, Testimonial } from '../types';
+import { Project, SkillCategory, ExperienceItem, EducationItem, CertificationItem, JourneyStage, Testimonial } from '../types';
 
 export const PERSONAL_INFO = {
   name: 'Ambigapathi V',
@@ -12,13 +12,11 @@ export const PERSONAL_INFO = {
   github: 'https://github.com/ambigapathikavin',
   linkedin: 'https://www.linkedin.com/in/ambigapathi-v/',
   resumeAppUrl: 'https://linked-to-my-resume.lovable.app/',
-  scheduleCallUrl: 'https://calendly.com/ambigapathikavin2',
-  googleMeetUrl: 'https://meet.google.com/new',
+  googleCalendarUrl: 'https://calendar.app.google/pLRTaip8EUFD2S7L9',
   aboutText: [
-    'I am a Data Analyst and Data Scientist with a strong interest in transforming raw data into meaningful business insights and intelligent systems.',
-    'My analytics work includes SQL, Python, Excel, Power BI, Tableau, exploratory data analysis, data cleaning, statistical analysis, KPI reporting and dashboard development.',
-    'My data science and AI work extends into machine learning, NLP, deep learning, predictive analytics, Generative AI and MLOps.',
-    'I enjoy working on real-world problems where data analysis and machine learning can be combined to create practical, scalable solutions.'
+    'I am a Data Analyst and Data Scientist who turns raw data into clear analysis, useful dashboards, and practical machine-learning projects.',
+    'My work spans SQL, Python, Excel, Power BI, Tableau, exploratory data analysis, data cleaning, statistical analysis, and KPI reporting.',
+    'I also build machine-learning, NLP, deep-learning, Generative AI, and MLOps projects, with an emphasis on explaining the approach and its limitations.'
   ],
   lifecycle: [
     'DATA',
@@ -44,68 +42,10 @@ export const PERSONAL_INFO = {
       borderColor: 'border-violet-500/30',
       glow: 'rgba(139, 92, 246, 0.15)',
       flow: ['Data', 'ML', 'NLP', 'Deep Learning', 'AI', 'Deployment'],
-      description: 'Production-ready predictive modeling, NLP text extraction, neural architectures, and automated MLOps pipelines with scalable serving.'
+      description: 'Predictive modeling, NLP text extraction, neural architectures, and MLOps workflows demonstrated through hands-on projects.'
     }
   ]
 };
-
-export const QUICK_STATS: StatItem[] = [
-  {
-    id: 'stat-1',
-    value: '50K+',
-    numericTarget: 50,
-    suffix: 'K+',
-    label: 'Daily News Articles',
-    sublabel: 'Processed in real-time NLP pipeline',
-    icon: 'Newspaper'
-  },
-  {
-    id: 'stat-2',
-    value: '50K+',
-    numericTarget: 50,
-    suffix: 'K+',
-    label: 'Loan Records',
-    sublabel: 'Analyzed & preprocessed for ML',
-    icon: 'Database'
-  },
-  {
-    id: 'stat-3',
-    value: '98%',
-    numericTarget: 98,
-    suffix: '%',
-    label: 'News Classification Accuracy',
-    sublabel: 'Fine-tuned BERT multi-topic model',
-    icon: 'Target'
-  },
-  {
-    id: 'stat-4',
-    value: '40%',
-    numericTarget: 40,
-    suffix: '%',
-    label: 'Training Time Reduction',
-    sublabel: 'Through streamlined data pipelines',
-    icon: 'Zap'
-  },
-  {
-    id: 'stat-5',
-    value: '20%',
-    numericTarget: 20,
-    suffix: '%',
-    label: 'Classification Recall Improvement',
-    sublabel: 'Enhanced minority class capture',
-    icon: 'TrendingUp'
-  },
-  {
-    id: 'stat-6',
-    value: '3–4 hrs',
-    numericTarget: 4,
-    prefix: '3–',
-    suffix: ' hrs/day',
-    label: 'Reporting Time Saved',
-    sublabel: 'Automated Power BI HR dashboards',
-    icon: 'Clock'
-  }
-];
 
 export const SKILL_CATEGORIES: SkillCategory[] = [
   {
@@ -205,27 +145,14 @@ export const EXPERIENCES: ExperienceItem[] = [
       'Collaborated with international engineering teams on real-world socio-economic and healthcare access analytics initiatives.',
       'Reduced model deployment failures by 35% through containerized CI/CD integration.'
     ]
-  },
-  {
-    id: 'exp-3',
-    company: 'COGNIFYZ TECHNOLOGIES',
-    role: 'Data Science Intern',
-    period: 'Dec 2024 – Feb 2025',
-    location: 'Remote',
-    technologies: ['Python', 'Scikit-learn', 'Tableau', 'Supervised Learning', 'Feature Engineering'],
-    achievements: [
-      'Conducted rigorous Exploratory Data Analysis (EDA) and data cleaning across high-cardinality datasets.',
-      'Built supervised learning models focusing on regression and classification tasks.',
-      'Performed hyperparameter tuning with GridSearchCV and cross-validation for optimal F1-score.',
-      'Engineered domain-specific features and evaluated model performance using ROC-AUC and confusion matrices.',
-      'Created interactive Tableau dashboards and data visualizations to communicate model findings to stakeholders.'
-    ]
   }
 ];
 
 export const PROJECTS: Project[] = [
   {
     id: 'project-1',
+    featured: true,
+    priority: 1,
     title: 'Sales Insights – Brick & Mortar Business',
     category: 'Data Analytics / Business Intelligence',
     filterCategories: ['ALL', 'DATA ANALYTICS', 'POWER BI'],
@@ -233,7 +160,8 @@ export const PROJECTS: Project[] = [
     shortDescription: "Interactive Power BI dashboard analyzing AtliQ Hardware's multi-regional sales trends, customer profitability, and revenue leaks.",
     keyResult: 'Identified strategic sales gaps & actionable insights to increase next-quarter revenue by ~7%.',
     imageUrl: 'images/projects/project-01.jpg',
-    imageCaption: 'Power BI Retail & Hardware Sales Insights, Star-Schema ETL & Margin Waterfall Dashboard',
+    imageCaption: 'Shopper selecting groceries from a retail freezer aisle',
+    imageAttribution: { creator: 'Walmart Corporate', sourceUrl: 'https://www.flickr.com/photos/50128414@N05/5684321921', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'DATA_ANALYST',
     datasetStats: {
       rows: '150,000+ Transactions',
@@ -296,14 +224,17 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'project-2',
+    featured: true,
+    priority: 2,
     title: 'Kitwe News Aggregator & Classifier',
     category: 'Machine Learning / NLP / AI',
     filterCategories: ['ALL', 'MACHINE LEARNING', 'NLP', 'AI'],
     technology: ['Python', 'BERT', 'NLP', 'Transformers', 'PyTorch', 'FastAPI', 'MLflow', 'Docker'],
     shortDescription: 'AI-powered news classification system categorizing 50,000+ daily articles in real time with 98% accuracy.',
     keyResult: 'Achieved 98% classification accuracy on 50K+ daily articles with 40% reduction in training latency.',
-    imageUrl: 'images/projects/project-02.jpg',
-    imageCaption: 'BERT NLP Multi-Topic Real-Time News Stream Classification & Topic Modeling Engine',
+    imageUrl: 'images/projects/project-02-news.jpg',
+    imageCaption: 'Child standing in front of newspaper headlines',
+    imageAttribution: { creator: 'cogdogblog', sourceUrl: 'https://www.flickr.com/photos/37996646802@N01/3098651263', license: 'CC0 1.0', licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/' },
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
       rows: '50,000+ Daily Live Stream',
@@ -375,7 +306,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Data-driven cricket analytics engine identifying the optimal tournament-winning Playing 11 through ball-by-ball scraping.',
     keyResult: 'Engineered performance-weighted algorithms to select an optimal tournament-winning Playing 11.',
     imageUrl: 'images/projects/project-03.jpg',
-    imageCaption: 'T20 Cricket World Cup Match Analytics, Ball Tracking & ESPNcricinfo Scraping Dashboard',
+    imageCaption: 'T20 cricket match at Edgbaston stadium',
+    imageAttribution: { creator: "It's No Game", sourceUrl: 'https://www.flickr.com/photos/29057345@N04/21012398505', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'DATA_ANALYST',
     datasetStats: {
       rows: '10,000+ Ball-by-Ball Events',
@@ -446,7 +378,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Enterprise HR intelligence dashboard tracking workforce presence, absenteeism trends, overtime, and leave patterns.',
     keyResult: 'Streamlined recurring HR reporting and saved approximately 3–4 hours of manual administrative work per day.',
     imageUrl: 'images/projects/project-04.jpg',
-    imageCaption: 'Power BI Enterprise HR Attendance, WFH Remote Utilization & Absenteeism Analytics',
+    imageCaption: 'Employee working on a laptop during an online meeting',
+    imageAttribution: { creator: 'userpilot1', sourceUrl: 'https://www.flickr.com/photos/198537127@N06/52968586777', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'DATA_ANALYST',
     datasetStats: {
       rows: '25,000+ Attendance Logs',
@@ -515,7 +448,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Clinical NLP Named Entity Recognition model extracting drug names, dosage, frequency, and route from noisy doctor prescriptions.',
     keyResult: 'Automated entity extraction for drug names, dosage, frequency, and duration into standardized JSON records.',
     imageUrl: 'images/projects/project-05.jpg',
-    imageCaption: 'Clinical NER Medical Prescription Entity Extraction, EHR Pipeline & Dosage Normalization',
+    imageCaption: 'Prescription tablets and capsules',
+    imageAttribution: { creator: 'e-MagineArt.com', sourceUrl: 'https://www.flickr.com/photos/50382026@N06/4742089272', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
       rows: '15,000+ Prescription Texts',
@@ -585,7 +519,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Supervised ML model predicting subscriber churn probability with explainable SHAP feature attribution to prevent revenue leakage.',
     keyResult: 'Achieved 0.94 ROC-AUC score, identifying high-risk subscribers 60 days before contract termination.',
     imageUrl: 'images/projects/project-06.jpg',
-    imageCaption: 'XGBoost Customer Churn Predictive Classifier with SHAP Feature Attribution & Decile Lift',
+    imageCaption: 'Customer browsing fresh produce in a supermarket',
+    imageAttribution: { creator: 'Artem Beliaikin', sourceUrl: 'https://www.flickr.com/photos/157635012@N07/47809596741', license: 'CC0 1.0', licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/' },
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
       rows: '70,430 Customer Records',
@@ -649,6 +584,8 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'project-7',
+    featured: true,
+    priority: 3,
     title: 'Credit Risk Modelling & Loan Default Scoring Engine',
     category: 'Machine Learning / Financial Analytics',
     filterCategories: ['ALL', 'MACHINE LEARNING', 'AI', 'DATA ANALYTICS'],
@@ -656,7 +593,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Credit risk scoring engine calculating Probability of Default (PD), credit score mapping, and automated underwriting tiers.',
     keyResult: 'Engineered calibrated ML risk models achieving 0.892 ROC-AUC and deployed a live interactive Streamlit loan assessment app.',
     imageUrl: 'images/projects/project-07.jpg',
-    imageCaption: 'Credit Risk Modelling, WoE Scorecard, Probability of Default (PD) & Streamlit Scoring App',
+    imageCaption: 'Credit card representing consumer credit and loan risk',
+    imageAttribution: { creator: 'Aranami', sourceUrl: 'https://www.flickr.com/photos/51526368@N03/16108801487', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     githubUrl: 'https://github.com/ambigapathikavin/Credit-risk-modelling',
     liveDemoUrl: 'https://ambigapathi-credit-risk-modelling.streamlit.app/',
     roleType: 'DATA_SCIENTIST',
@@ -729,7 +667,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Multi-touch attribution, RFM customer segmentation, and cohort retention dashboard analyzing omnichannel sales.',
     keyResult: 'Optimized marketing channel spend to increase customer lifetime value (LTV) by 24%.',
     imageUrl: 'images/projects/project-08.jpg',
-    imageCaption: 'Omnichannel E-Commerce Cohort Retention Heatmap, RFM Segmentation & LTV Matrix',
+    imageCaption: 'Open cardboard shipping box for an online order',
+    imageAttribution: { creator: 'Fresh Materials', sourceUrl: 'https://www.flickr.com/photos/183107169@N08/48683808617', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'DATA_ANALYST',
     datasetStats: {
       rows: '320,000+ Orders',
@@ -799,8 +738,9 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Geopandas', 'GIS', 'Pandas', 'Folium', 'Seaborn', 'OpenStreetMap'],
     shortDescription: 'Geospatial and socio-economic analytics uncovering healthcare access inequalities and facility deserts in Sudan.',
     keyResult: 'Mapped 1,400+ medical facilities against population density to identify 3.2M residents living in acute medical deserts.',
-    imageUrl: 'images/projects/project-09.jpg',
-    imageCaption: 'Sudan GIS Healthcare Facility Buffer Analysis, Population Density & Spatial Deficit Map',
+    imageUrl: 'images/projects/project-09-clinic.jpg',
+    imageCaption: 'Community health outreach at a rural clinic',
+    imageAttribution: { creator: 'US Army Africa', sourceUrl: 'https://www.flickr.com/photos/36281822@N08/4036888986', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'BOTH',
     datasetStats: {
       rows: '1,400+ Health Facilities',
@@ -871,7 +811,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Supervised regression ML model estimating individualized health insurance premium prices based on clinical, demographic, and lifestyle risk factors.',
     keyResult: 'Built regression pipeline achieving R² score of 0.912 with optimized RMSE, deployed to a live interactive Streamlit application.',
     imageUrl: 'images/projects/project-10.jpg',
-    imageCaption: 'Insurance Premium Prediction, Actuarial Risk Modeling, Feature Impact & Streamlit Web App',
+    imageCaption: 'Healthcare professional reviewing a medical scan',
+    imageAttribution: { creator: 'US Army Africa', sourceUrl: 'https://www.flickr.com/photos/36281822@N08/13599298235', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     githubUrl: 'https://github.com/ambigapathikavin/ml-project-premium-prediction',
     liveDemoUrl: 'https://ml-project-premium-prediction-kyngwmqg9uu7agygo5qn36.streamlit.app/',
     roleType: 'DATA_SCIENTIST',
@@ -944,7 +885,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Collaborated with Omdena on using multi-spectral satellite imagery and machine learning to detect and map flood inundation across the Mekong River basin.',
     keyResult: 'Mapped flood boundaries across 2,400+ km² with 91.4% IoU accuracy, accelerating humanitarian evacuation planning.',
     imageUrl: 'images/projects/project-11.jpg',
-    imageCaption: 'Sentinel-2 Multi-Spectral Water Index (NDWI) & Deep Learning Flood Inundation Delineation',
+    imageCaption: 'Satellite image of river flooding',
+    imageAttribution: { creator: 'NASA Goddard Photo and Video', sourceUrl: 'https://www.flickr.com/photos/24662369@N07/4977062552', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
       rows: '18,500+ Satellite Tiles',
@@ -1011,7 +953,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Applied predictive models and epidemiological analysis to public healthcare data to identify socio-demographic drivers and geographic hotspots in chronic disease prevalence in San Jose.',
     keyResult: 'Identified top socio-demographic determinants across 42 census tracts, enabling targeted preventive care intervention.',
     imageUrl: 'images/projects/project-12.jpg',
-    imageCaption: 'San Jose Chronic Disease Epidemiological Prevalence Hotspot & Demographic Regression Model',
+    imageCaption: 'Blood pressure and weight monitoring equipment diagram',
+    imageAttribution: { creator: 'juhansonin', sourceUrl: 'https://www.flickr.com/photos/38869431@N00/4628459097', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'BOTH',
     datasetStats: {
       rows: '85,000+ Patient & Census Records',
@@ -1076,7 +1019,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'In-depth machine learning analysis of network packet flows, attack signatures, and server vulnerabilities with proactive real-time intrusion mitigation.',
     keyResult: 'Achieved 97.6% malicious traffic classification accuracy with < 0.8% false alarm rate on 100K+ packet captures.',
     imageUrl: 'images/projects/project-13.jpg',
-    imageCaption: 'Real-Time Network Intrusion Detection, Packet Vectorization & Anomaly Scoring Dashboard',
+    imageCaption: 'Hands typing on a laptop in a cybersecurity image',
+    imageAttribution: { creator: 'Visual Content', sourceUrl: 'https://www.flickr.com/photos/143601516@N03/29402709463', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
       rows: '125,000+ Network Packet Flows',
@@ -1142,7 +1086,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Interactive retrieval-augmented conversational chatbot built on modern large language models delivering context-grounded, citation-backed answers from custom document repositories.',
     keyResult: 'Delivered sub-800ms grounded answers with zero hallucination rate on domain-specific technical documentation.',
     imageUrl: 'images/projects/project-14.jpg',
-    imageCaption: 'Retrieval-Augmented Generation (RAG) Document Vector Search & Conversational QA Interface',
+    imageCaption: 'Laptop computer illustrating a document question-answering tool',
+    imageAttribution: { creator: 'Tauralbus', sourceUrl: 'https://www.flickr.com/photos/25507134@N00/14934460071', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
       rows: '1,200+ Knowledge Base Documents',
@@ -1208,7 +1153,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Multi-label NLP classification system identifying toxic, obscene, threatening, and abusive comments to protect online communities and communication platforms.',
     keyResult: 'Attained 96.2% ROC-AUC across 6 toxicity severity categories, enabling automated real-time message moderation.',
     imageUrl: 'images/projects/project-15.jpg',
-    imageCaption: 'Multi-Class Toxic & Abusive Text NLP Classifier with Severity Heatmap & Token Attribution',
+    imageCaption: 'Person using a smartphone in an urban setting',
+    imageAttribution: { creator: 'Artem Beliaikin', sourceUrl: 'https://www.flickr.com/photos/157635012@N07/40851099253', license: 'CC0 1.0', licenseUrl: 'https://creativecommons.org/publicdomain/zero/1.0/' },
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
       rows: '160,000+ Labeled Comments',
@@ -1273,7 +1219,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Fine-tuned abstractive transformer model condensing long-form articles, research papers, and technical reports into coherent, factual executive summaries.',
     keyResult: 'Attained ROUGE-1 score of 44.8 and ROUGE-L of 41.2 while reducing document reading time by 75%.',
     imageUrl: 'images/projects/project-16.jpg',
-    imageCaption: 'Abstractive Deep Learning Text Summarizer with Interactive Length & Compression Controls',
+    imageCaption: 'Open dictionary pages with printed text',
+    imageAttribution: { creator: 'greeblie', sourceUrl: 'https://www.flickr.com/photos/29598412@N00/3338710223', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'DATA_SCIENTIST',
     datasetStats: {
       rows: '28,000+ Long-form Articles & Digests',
@@ -1338,7 +1285,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Deep learning computer vision system classifying 3 core foliar diagnostic classes: Healthy foliage, Early Blight (Alternaria solani), and Late Blight (Phytophthora infestans) to assist farmers in immediate field-level pathology diagnosis.',
     keyResult: '98.4% diagnostic sensitivity across foliar specimens, reducing diagnosis turnaround from 3-5 days to instantaneous smartphone inference.',
     imageUrl: 'images/projects/project-17.jpg',
-    imageCaption: 'Agricultural Crop Foliar Diagnostic System & Foliage Pathology Inspection (PlantVillage Benchmark)',
+    imageCaption: 'Tomato plants and fruit showing hail damage',
+    imageAttribution: { creator: 'photofarmer', sourceUrl: 'https://www.flickr.com/photos/62528187@N00/2634477599', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     githubUrl: 'https://github.com/ambigapathikavin/Potato_Disease_Prediction/tree/main',
     liveDemoUrl: 'https://potato-disease-prediction-ambigapathikavin.streamlit.app/',
     roleType: 'DATA_SCIENTIST',
@@ -1404,8 +1352,9 @@ export const PROJECTS: Project[] = [
     technology: ['Power BI', 'DAX', 'SQL', 'Power Query', 'Hospitality KPIs (ADR, RevPAR, DSRN)', 'Data Modeling'],
     shortDescription: 'Comprehensive Power BI business intelligence dashboard uncovering booking trends, cancellation drivers, customer segments, and revenue leakage across luxury hotel chains.',
     keyResult: 'Identified key RevPAR leakage factors and weekend pricing opportunities to recapture 8.4% gross revenue.',
-    imageUrl: 'images/projects/project-18.jpg',
-    imageCaption: 'Power BI Hospitality Revenue Intelligence, RevPAR Waterfall & Booking Channel Attribution',
+    imageUrl: 'images/projects/project-18-hotel.jpg',
+    imageCaption: 'El Tovar Hotel at the Grand Canyon',
+    imageAttribution: { creator: 'Grand Canyon NPS', sourceUrl: 'https://www.flickr.com/photos/50693818@N08/4761903380', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'DATA_ANALYST',
     datasetStats: {
       rows: '135,000+ Hotel Bookings',
@@ -1470,8 +1419,9 @@ export const PROJECTS: Project[] = [
     technology: ['Python', 'Pandas', 'Matplotlib', 'Seaborn', 'Exploratory Data Analysis', 'Customer Demographics', 'Apriori Algorithm'],
     shortDescription: 'In-depth exploratory data analysis of high-volume Diwali festival consumer spending patterns uncovering buyer demographics, high-value product categories, and purchasing behavior.',
     keyResult: 'Revealed top 3 customer demographic personas contributing 68% of festive GMV, informing high-ROI inventory stockpiling.',
-    imageUrl: 'images/projects/project-19.jpg',
-    imageCaption: 'Diwali Retail Festive Sales Demographics, Basket Analysis & Purchasing Power Decomposition',
+    imageUrl: 'images/projects/project-19-diwali.jpg',
+    imageCaption: 'Traditional oil lamps lit for Diwali',
+    imageAttribution: { creator: 'Chobist', sourceUrl: 'https://www.flickr.com/photos/61676931@N04/8178980438', license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
     roleType: 'DATA_ANALYST',
     datasetStats: {
       rows: '11,250+ Transaction Records',
@@ -2008,7 +1958,7 @@ export const DATA_ANALYST_RESUME = {
   email: 'ambigapathikavin2@gmail.com',
   linkedin: 'https://www.linkedin.com/in/ambigapathi-v/',
   portfolio: 'https://linked-to-my-resume.lovable.app/',
-  summary: 'Data Analyst skilled in SQL, Python, Excel, Power BI, and Exploratory Data Analysis. Hands-on experience in data cleaning, data transformation, data validation, statistical analysis, data visualization, KPI reporting, and dashboard development. Analyzed 50,000+ loan records and 100,000+ news articles to identify trends, patterns, and actionable business insights. Strong analytical thinking, problem-solving, and communication skills focused on data-driven decision-making.',
+  summary: 'Data Analyst skilled in SQL, Python, Excel, Power BI, and exploratory data analysis. Hands-on project experience in data cleaning, data transformation, validation, statistical analysis, visualization, KPI reporting, and dashboard development. Focused on identifying trends and presenting clear, actionable insights for data-informed decisions.',
   technicalSkills: [
     { category: 'Data Analysis', skills: 'SQL, Python, Excel, EDA, Data Cleaning, Data Validation, Statistical Analysis' },
     { category: 'SQL', skills: 'JOINs, Subqueries, CTEs, GROUP BY, CASE Statements, Window Functions' },
@@ -2095,6 +2045,7 @@ export const DATA_SCIENTIST_RESUME = {
       role: 'Machine Learning Engineer',
       period: 'Sep 2024 – Present',
       location: 'Remote',
+      bullets: [],
       projects: [
         {
           name: 'Kitwe News Aggregator',
@@ -2116,18 +2067,6 @@ export const DATA_SCIENTIST_RESUME = {
         }
       ]
     },
-    {
-      company: 'Cognifyz Technologies',
-      role: 'Data Science Intern',
-      period: 'Dec 2024 – Feb 2025',
-      location: 'Remote',
-      bullets: [
-        'Conducted Exploratory Data Analysis (EDA) and Data Cleaning to ensure high-quality datasets for machine learning models.',
-        'Built and fine-tuned Supervised Learning models using Regression, Classification, and Hyperparameter Tuning.',
-        'Performed Feature Engineering and Model Evaluation to improve predictive performance and generate actionable data-driven insights.',
-        'Designed Tableau Dashboards and Data Visualizations to provide actionable business insights for data-driven decision-making.'
-      ]
-    }
   ],
   technicalSkills: [
     { category: 'Programming & Data Tools', skills: 'Python, SQL, Bash, Pandas, NumPy, FastAPI, Flask' },
@@ -2147,4 +2086,3 @@ export const DATA_SCIENTIST_RESUME = {
     'Mentored contributors, optimized cloud-based workflows, and ensured efficient model deployment.'
   ]
 };
-
