@@ -324,7 +324,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
           className="grid grid-cols-1 md:grid-cols-2 gap-5"
         >
           <AnimatePresence mode="popLayout">
-            {(showAllProjects ? filteredProjects : filteredProjects.slice(0, 5)).map((project, idx) => (
+            {(showAllProjects ? filteredProjects : filteredProjects.slice(0, 6)).map((project, idx) => (
               <motion.div
                 key={project.id}
                 layout
