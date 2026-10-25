@@ -62,27 +62,27 @@ export const EducationCertifications: React.FC = () => {
   };
 
   return (
-    <section id="certifications" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-[#050505] border-t border-[#ffffff08] relative">
+    <section id="certifications" className="scroll-mt-20 sm:scroll-mt-24 py-16 bg-slate-50 dark:bg-[#050505] border-t border-slate-200 dark:border-[#ffffff08] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
           
           {/* Left Column: Education */}
-          <div className="lg:col-span-5 space-y-4">
+          <div className="flex flex-col gap-4">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.4 }}
             >
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#111111] border border-[#ffffff15] text-cyan-400 text-[10px] font-mono tracking-[0.2em] mb-2.5">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white dark:bg-[#111111] border border-slate-300 dark:border-[#ffffff15] text-cyan-700 dark:text-cyan-400 text-[10px] font-mono tracking-[0.2em] mb-2.5">
                 <GraduationCap className="w-3 h-3" />
                 <span>ACADEMIC FOUNDATION</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                 Education
               </h2>
-              <p className="text-[#A3A3A3] text-xs sm:text-sm mt-1 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 text-sm mt-2 leading-relaxed">
                 Rigorous scientific and quantitative methodologies.
               </p>
             </motion.div>
@@ -92,13 +92,13 @@ export const EducationCertifications: React.FC = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-40px" }}
-              className="space-y-4"
+              className="flex-1 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:divide-white/10 dark:border-white/10 dark:bg-[#111111]"
             >
               {EDUCATION.map((edu, idx) => (
                 <motion.div
                   key={idx}
                   variants={itemVariants}
-                  className="p-5 rounded-xl bg-[#111111] border border-[#ffffff08] hover:border-cyan-500/30 transition-all shadow-sm relative overflow-hidden group"
+                  className="p-4 sm:p-5 transition-colors hover:bg-slate-50 dark:hover:bg-white/[0.03] group"
                 >
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-2.5">
@@ -106,28 +106,28 @@ export const EducationCertifications: React.FC = () => {
                         <GraduationCap className="w-4 h-4" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors">
+                        <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-cyan-300 transition-colors">
                           {edu.institution}
                         </h3>
-                        <div className="text-[11px] font-mono text-cyan-400 mt-0.5">
+                        <div className="text-sm font-medium text-cyan-800 dark:text-cyan-300 mt-1">
                           {edu.degree}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono text-[#777] mb-3 pb-3 border-b border-[#ffffff08]">
+                  <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-600 dark:text-slate-400 mb-3 pb-3 border-b border-slate-200 dark:border-white/10">
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-[#777]" />
+                      <Calendar className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                       {edu.period}
                     </span>
-                    <span className="flex items-center gap-1 text-[#777]">
-                      <MapPin className="w-3 h-3 text-[#777]" />
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                       {edu.location}
                     </span>
                   </div>
 
-                  <p className="text-xs text-[#A3A3A3] leading-relaxed">
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     {edu.description}
                   </p>
                 </motion.div>
@@ -136,21 +136,21 @@ export const EducationCertifications: React.FC = () => {
           </div>
 
           {/* Right Column: Certifications */}
-          <div className="lg:col-span-7 space-y-4">
+          <div className="flex flex-col gap-4">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.4 }}
             >
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#111111] border border-[#ffffff15] text-violet-400 text-[10px] font-mono tracking-[0.2em] mb-2.5">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white dark:bg-[#111111] border border-slate-300 dark:border-[#ffffff15] text-violet-700 dark:text-violet-400 text-[10px] font-mono tracking-[0.2em] mb-2.5">
                 <Award className="w-3 h-3" />
                 <span>PROFESSIONAL CREDENTIALS</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                 Certifications & Project Credentials
               </h2>
-              <p className="text-[#A3A3A3] text-xs sm:text-sm mt-1 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 text-sm mt-2 leading-relaxed">
                 Verified specialization in Machine Learning, NLP, and Data Science.
               </p>
             </motion.div>
@@ -160,14 +160,13 @@ export const EducationCertifications: React.FC = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-40px" }}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
+              className="flex-1 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:divide-white/10 dark:border-white/10 dark:bg-[#111111]"
             >
               {CERTIFICATIONS.map((cert) => (
                 <motion.div
                   key={cert.id}
                   variants={itemVariants}
-                  whileHover={{ y: -4, scale: 1.015, transition: { duration: 0.2, ease: "easeOut" } }}
-                  className="p-4 sm:p-5 rounded-xl bg-[#111111] border border-[#ffffff0e] hover:border-violet-500/50 hover:bg-[#141414] hover:shadow-[0_8px_24px_rgba(139,92,246,0.12)] transition-all flex flex-col justify-between group shadow-sm cursor-pointer relative"
+                  className="px-4 py-4 sm:px-5 sm:py-5 transition-colors hover:bg-slate-50 dark:hover:bg-white/[0.03] group"
                   onClick={() => {
                     trackEvent('view_certificate_modal', { 
                       cert_id: cert.id, 
@@ -180,38 +179,35 @@ export const EducationCertifications: React.FC = () => {
                   <div>
                     <div className="flex items-center justify-between mb-2.5">
                       <div className="flex items-center gap-1.5">
-                        <div className="w-7 h-7 rounded-lg bg-[#181818] border border-[#ffffff0a] flex items-center justify-center text-violet-400 group-hover:scale-110 group-hover:text-violet-300 transition-transform">
-                          <Award className="w-3.5 h-3.5" />
-                        </div>
                         {cert.badgeType && (
-                          <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-violet-500/15 text-violet-300 border border-violet-500/30 font-semibold">
+                          <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-violet-50 dark:bg-violet-500/15 text-violet-800 dark:text-violet-300 border border-violet-200 dark:border-violet-500/30 font-semibold">
                             {cert.badgeType}
                           </span>
                         )}
                       </div>
-                      <span className="text-[10px] font-mono text-[#888] bg-[#161616] px-2 py-0.5 rounded border border-[#ffffff08]">
+                      <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                         Issued {cert.date}
                       </span>
                     </div>
 
-                    <h3 className="text-sm font-bold text-white group-hover:text-violet-200 transition-colors mb-1.5 leading-snug">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-violet-800 dark:group-hover:text-violet-200 transition-colors mb-1 leading-snug">
                       {cert.title}
                     </h3>
                     
-                    <div className="text-[11px] font-mono text-cyan-400 font-medium mb-2.5">
+                    <div className="text-sm text-slate-600 dark:text-slate-300 font-medium mb-2.5">
                       {cert.issuer}
                     </div>
 
                     {cert.credentialId && (
-                      <div className="mb-3 flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0a0a0a] border border-[#ffffff12]">
-                        <span className="text-[9px] font-mono text-[#999] truncate max-w-[170px]">
-                          Credential ID: <span className="text-white font-mono font-semibold">{cert.credentialId}</span>
+                      <div className="mb-3 flex items-center justify-between gap-3 px-2.5 py-1.5 rounded bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10">
+                        <span className="text-xs font-mono text-slate-600 dark:text-slate-400 truncate">
+                          Credential ID: <span className="text-slate-900 dark:text-white font-semibold">{cert.credentialId}</span>
                         </span>
                         <button
                           type="button"
                           onClick={(e) => handleCopyId(cert.credentialId!, e)}
                           title="Copy Certificate ID"
-                          className="text-[9px] font-mono text-cyan-400 hover:text-cyan-200 flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-cyan-500/10 transition-colors"
+                          className="text-xs font-mono text-cyan-800 dark:text-cyan-300 hover:text-cyan-900 dark:hover:text-cyan-100 flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-cyan-500/10 transition-colors"
                         >
                           {copiedCertId === cert.credentialId ? (
                             <>
@@ -229,14 +225,14 @@ export const EducationCertifications: React.FC = () => {
                     )}
 
                     <div className="space-y-1 mb-3.5">
-                      <div className="text-[9px] font-mono uppercase text-[#777]">
+                      <div className="text-xs font-mono uppercase text-slate-600 dark:text-slate-400">
                         Verified Skills:
                       </div>
                       <div className="flex flex-wrap gap-1">
-                        {cert.skillsCovered.map(sc => (
+                        {cert.skillsCovered.slice(0, 3).map(sc => (
                           <span
                             key={sc}
-                            className="px-1.5 py-0.5 rounded bg-[#181818] border border-[#ffffff0a] text-[9px] font-mono text-[#b5b5b5]"
+                            className="px-2 py-1 rounded bg-slate-100 dark:bg-[#181818] border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-700 dark:text-slate-300"
                           >
                             {sc}
                           </span>
@@ -245,11 +241,15 @@ export const EducationCertifications: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-[#ffffff0e] flex items-center justify-between gap-2">
-                    <span className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 font-bold">
+                  <div className="pt-3 border-t border-slate-200 dark:border-white/10 flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCert(cert)}
+                      className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-violet-800 dark:hover:text-violet-200"
+                    >
                       <ShieldCheck className="w-3.5 h-3.5" />
-                      <span>Verified</span>
-                    </span>
+                      <span>View credential details</span>
+                    </button>
                     
                     {cert.credentialUrl && (
                       <a
@@ -260,7 +260,7 @@ export const EducationCertifications: React.FC = () => {
                           e.stopPropagation();
                           trackCertificateVerify(cert.title, cert.issuer, cert.credentialUrl);
                         }}
-                        className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold text-cyan-300 hover:text-white px-3 py-1 rounded-full bg-cyan-950/60 hover:bg-cyan-600 border border-cyan-500/50 hover:border-cyan-400 transition-all shadow-sm group/btn"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-800 dark:text-cyan-200 hover:text-cyan-950 dark:hover:text-white px-3 py-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/60 hover:bg-cyan-100 dark:hover:bg-cyan-600 border border-cyan-300 dark:border-cyan-500/50 hover:border-cyan-500 transition-colors group/btn"
                         title="Show credential in official portal"
                       >
                         <span>Show credential</span>

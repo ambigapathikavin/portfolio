@@ -87,32 +87,32 @@ export const Skills: React.FC<SkillsProps> = ({ roleMode = 'ALL' }) => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#111111] border border-[#ffffff15] text-cyan-400 text-[10px] font-mono tracking-[0.2em] mb-2.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-[#111111] border border-slate-300 dark:border-[#ffffff15] text-cyan-700 dark:text-cyan-400 text-[10px] font-mono tracking-[0.2em] mb-2.5">
               <Cpu className="w-3 h-3" />
               <span>TECHNICAL CAPABILITIES</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Skills & Technology Matrix
             </h2>
-            <p className="text-[#A3A3A3] text-xs sm:text-sm mt-1 max-w-xl leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-sm mt-2 max-w-xl leading-relaxed">
               Categorized toolsets across Data Analytics, Business Intelligence, Python Data Ecosystem, Machine Learning, and MLOps.
             </p>
           </div>
 
           {/* Search bar */}
           <div className="relative w-full md:w-64">
-            <Search className="w-3.5 h-3.5 text-[#666] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter skills (BERT, SQL, DAX)..."
-              className="w-full bg-[#111111] border border-[#ffffff10] focus:border-cyan-400 pl-8 pr-3 py-2 rounded-lg text-xs font-mono text-[#E0E0E0] placeholder-[#555] focus:outline-none transition-colors"
+              className="w-full bg-white dark:bg-[#111111] border border-slate-300 dark:border-[#ffffff10] focus:border-cyan-500 pl-8 pr-3 py-2 rounded-lg text-sm font-mono text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono text-[#888] hover:text-white"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] font-mono text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               >
                 Clear
               </button>
@@ -127,7 +127,7 @@ export const Skills: React.FC<SkillsProps> = ({ roleMode = 'ALL' }) => {
             className={`px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
               activeCategory === 'all'
                 ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                : 'bg-[#111111] text-[#888] hover:text-white border border-[#ffffff0a]'
+                : 'bg-white dark:bg-[#111111] text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border border-slate-300 dark:border-[#ffffff0a]'
             }`}
           >
             All Categories ({SKILL_CATEGORIES.reduce((acc, cat) => acc + cat.skills.length, 0)})
@@ -139,7 +139,7 @@ export const Skills: React.FC<SkillsProps> = ({ roleMode = 'ALL' }) => {
               className={`px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
                 activeCategory === cat.id
                   ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                  : 'bg-[#111111] text-[#888] hover:text-white border border-[#ffffff0a]'
+                  : 'bg-white dark:bg-[#111111] text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border border-slate-300 dark:border-[#ffffff0a]'
               }`}
             >
               {cat.title}
@@ -148,7 +148,7 @@ export const Skills: React.FC<SkillsProps> = ({ roleMode = 'ALL' }) => {
         </div>
 
         {/* Skill Category Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-white/10 dark:bg-[#111318] md:grid-cols-2 lg:grid-cols-3">
           {filteredCategories.map((category, idx) => (
             <motion.div
               key={category.id}
@@ -158,27 +158,27 @@ export const Skills: React.FC<SkillsProps> = ({ roleMode = 'ALL' }) => {
                 duration: 0.3, 
                 delay: (idx % 3) * 0.05 
               }}
-              className="p-4 rounded-xl bg-[#111111] border border-[#ffffff08] hover:border-cyan-500/35 hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between group shadow-sm"
+              className="flex min-h-full flex-col justify-between border-b border-slate-200 p-4 transition-colors hover:bg-slate-50 dark:border-white/10 dark:hover:bg-white/[0.03] group last:border-b-0 md:[&:nth-last-child(-n+2)]:border-b-0 lg:[&:nth-last-child(-n+3)]:border-b-0"
             >
               <div>
                 {/* Category Header */}
                 <div className="flex items-start justify-between mb-2.5">
                   <div className="flex items-center gap-2">
-                    <div className="p-2 rounded-lg bg-[#181818] border border-[#ffffff0a] group-hover:border-cyan-500/30 transition-colors">
+                    <div className="p-2 rounded-lg bg-slate-100 dark:bg-[#181818] border border-slate-200 dark:border-[#ffffff0a] group-hover:border-cyan-500/30 transition-colors">
                       {getCategoryIcon(category.icon)}
                     </div>
                     <div>
-                      <h3 className="text-xs font-bold text-white tracking-wide uppercase font-mono">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide uppercase font-mono">
                         {category.title}
                       </h3>
-                      <span className="text-[9px] text-[#666] font-mono">
+                      <span className="text-[11px] text-slate-600 dark:text-slate-400 font-mono">
                         {category.skills.length} core competencies
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-[11px] text-[#888] mb-3 leading-relaxed">
+                <p className="text-sm text-slate-600 dark:text-slate-300 mb-3 leading-relaxed">
                   {category.subtitle}
                 </p>
 
@@ -192,14 +192,14 @@ export const Skills: React.FC<SkillsProps> = ({ roleMode = 'ALL' }) => {
                         onClick={() => setSelectedSkill(isSelected ? null : skill.name)}
                         className={`group/skill relative px-2.5 py-1 rounded border text-[10px] font-mono transition-all duration-150 cursor-pointer select-none hover:scale-105 active:scale-95 ${
                           isSelected
-                            ? 'bg-cyan-500/20 text-cyan-200 border-cyan-400 shadow-sm'
-                            : 'bg-[#161616] hover:bg-[#1f1f1f] text-[#C0C0C0] hover:text-white border-[#ffffff0a] hover:border-[#ffffff15]'
+                            ? 'bg-cyan-100 dark:bg-cyan-500/20 text-cyan-900 dark:text-cyan-200 border-cyan-500 shadow-sm'
+                            : 'bg-slate-100 dark:bg-[#161616] hover:bg-slate-200 dark:hover:bg-[#1f1f1f] text-slate-800 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-slate-300 dark:border-[#ffffff0a] hover:border-slate-400 dark:hover:border-[#ffffff15]'
                         }`}
                       >
                         <div className="flex items-center gap-1">
                           <span>{skill.name}</span>
                           {skill.tags && skill.tags.length > 0 && (
-                            <span className="text-[8px] text-[#666] group-hover/skill:text-cyan-400 transition-colors">
+                            <span className="text-[10px] text-slate-600 dark:text-slate-400 group-hover/skill:text-cyan-700 dark:group-hover/skill:text-cyan-400 transition-colors">
                               •
                             </span>
                           )}
@@ -207,7 +207,7 @@ export const Skills: React.FC<SkillsProps> = ({ roleMode = 'ALL' }) => {
                         
                         {/* Sub-tags preview tooltip on active/hover */}
                         {skill.tags && skill.tags.length > 0 && (
-                          <div className="hidden group-hover/skill:flex absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-0.5 rounded bg-[#050505] border border-cyan-500/40 text-[9px] text-cyan-300 font-mono whitespace-nowrap z-30 shadow-xl pointer-events-none">
+                          <div className="hidden group-hover/skill:flex absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-0.5 rounded bg-white dark:bg-[#050505] border border-cyan-500/40 text-[10px] text-cyan-800 dark:text-cyan-300 font-mono whitespace-nowrap z-30 shadow-xl pointer-events-none">
                             {skill.tags.join(' | ')}
                           </div>
                         )}
@@ -218,7 +218,7 @@ export const Skills: React.FC<SkillsProps> = ({ roleMode = 'ALL' }) => {
               </div>
 
               {/* Bottom Note */}
-              <div className="pt-3 mt-3 border-t border-[#ffffff08] flex items-center justify-between text-[10px] font-mono text-[#666]">
+              <div className="pt-3 mt-3 border-t border-slate-200 dark:border-[#ffffff08] flex items-center justify-between text-[11px] font-mono text-slate-600 dark:text-slate-400">
                 <span className="flex items-center gap-1">
                   <Check className="w-3 h-3 text-cyan-400" />
                   <span>Production Tested</span>
@@ -230,11 +230,11 @@ export const Skills: React.FC<SkillsProps> = ({ roleMode = 'ALL' }) => {
         </div>
 
         {filteredCategories.length === 0 && (
-          <div className="text-center py-12 bg-[#111111] rounded-xl border border-dashed border-[#ffffff10]">
-            <p className="text-[#888] text-xs font-mono">No skills found matching "{searchQuery}".</p>
+          <div className="text-center py-12 bg-white dark:bg-[#111111] rounded-xl border border-dashed border-slate-300 dark:border-[#ffffff10]">
+            <p className="text-slate-700 dark:text-slate-300 text-sm font-mono">No skills found matching "{searchQuery}".</p>
             <button
               onClick={() => { setSearchQuery(''); setActiveCategory('all'); }}
-              className="mt-2 text-xs font-mono text-cyan-400 hover:underline cursor-pointer"
+              className="mt-2 text-sm font-mono text-cyan-800 dark:text-cyan-300 hover:underline cursor-pointer"
             >
               Reset filters
             </button>

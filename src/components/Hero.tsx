@@ -4,9 +4,6 @@ import {
   ArrowRight, 
   Download, 
   Mail, 
-  Database, 
-  TrendingUp, 
-  BarChart2,
   GitBranch
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
@@ -198,83 +195,20 @@ export const Hero: React.FC<HeroProps> = ({
 
           {/* Right Column: Professional Portrait Frame & Data Visual Elements */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end relative items-center">
-            <div className="relative w-full max-w-[290px] sm:max-w-[340px] lg:max-w-[360px] h-[380px] sm:h-[420px] lg:h-[450px] flex items-center justify-center">
+            <div className="relative w-full max-w-[280px] sm:max-w-[320px] lg:max-w-[360px] aspect-[4/5] flex items-center justify-center">
               
-              {/* Outer Decorative Ambient Glow & Orbit Grids with Breathing Glow */}
-              <motion.div 
-                animate={{
-                  scale: [0.96, 1.04, 0.96],
-                  opacity: [0.4, 0.75, 0.4],
-                }}
-                transition={{
-                  duration: 5.5,
-                  repeat: Infinity,
-                  ease: 'easeInOut'
-                }}
-                className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-cyan-500/15 via-transparent to-violet-500/20 blur-2xl pointer-events-none" 
-              />
-              <div className="absolute -inset-2 rounded-3xl border border-cyan-500/15 pointer-events-none" />
-              <div className="absolute -inset-6 rounded-full border border-cyan-500/10 border-dashed animate-[spin_80s_linear_infinite] pointer-events-none" />
+              <div className="absolute -inset-5 rounded-[2rem] bg-gradient-to-br from-cyan-500/15 via-transparent to-violet-500/15 blur-2xl pointer-events-none" />
 
-              {/* Main Portrait Frame - Floating & Breathing Animation */}
+              {/* Responsive portrait frame */}
               <motion.div 
-                animate={{
-                  y: [-6, 6, -6],
-                  scale: [1, 1.012, 1],
-                }}
-                transition={{
-                  duration: 5.5,
-                  repeat: Infinity,
-                  ease: 'easeInOut'
-                }}
-                className="relative z-10 w-full h-full rounded-2xl overflow-hidden p-1.5 bg-gradient-to-b from-[#1c2838] via-[#101722] to-[#0a0e17] shadow-2xl border border-cyan-500/35 hover:border-cyan-400/60 transition-colors duration-300 group"
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.12 }}
+                className="relative z-10 h-full w-full overflow-hidden rounded-[1.6rem] border border-slate-300/80 bg-slate-200 p-1 shadow-[0_24px_70px_-28px_rgba(8,145,178,0.45)] dark:border-white/15 dark:bg-[#111318]"
               >
-                <div className="w-full h-full rounded-[14px] overflow-hidden bg-white dark:bg-[#07090e] relative flex flex-col items-center justify-center">
-                  
-                  {/* High-Fidelity Studio Portrait Representation with Full Fill */}
+                <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[1.35rem] bg-slate-300 dark:bg-[#07090e]">
                   <AmbigapathiPortrait className="w-full h-full" />
-
                 </div>
-              </motion.div>
-
-              {/* Floating Analytical Metric 1: Top Right */}
-              <motion.div
-                animate={{ y: [-3, 3, -3] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -top-3 -right-3 z-30 px-3.5 py-2 rounded-xl bg-[#0a0f18]/95 backdrop-blur-md border border-cyan-500/40 shadow-2xl flex items-center gap-2.5"
-              >
-                <div className="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300">
-                  <BarChart2 className="w-4 h-4" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[9px] text-[#8899ac] font-mono uppercase tracking-wider">Model evaluation</span>
-                  <span className="text-xs font-bold text-white font-mono">Classification metrics</span>
-                </div>
-              </motion.div>
-
-              {/* Floating Analytical Metric 2: Bottom Left */}
-              <motion.div
-                animate={{ y: [3, -3, 3] }}
-                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -bottom-3 -left-3 z-30 px-3.5 py-2 rounded-xl bg-[#0a0f18]/95 backdrop-blur-md border border-violet-500/40 shadow-2xl flex items-center gap-2.5"
-              >
-                <div className="w-7 h-7 rounded-lg bg-violet-500/20 border border-violet-400/40 flex items-center justify-center text-violet-300">
-                  <Database className="w-4 h-4" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[9px] text-[#8899ac] font-mono uppercase tracking-wider">Data workflow</span>
-                  <span className="text-xs font-bold text-white font-mono">Ingestion & preparation</span>
-                </div>
-              </motion.div>
-
-              {/* Floating Analytical Metric 3: Center Left */}
-              <motion.div
-                animate={{ x: [-2, 2, -2] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="hidden sm:flex absolute top-1/2 -left-6 -translate-y-1/2 z-30 px-3 py-1.5 rounded-lg bg-[#0a0f18]/95 backdrop-blur-md border border-emerald-500/40 shadow-xl items-center gap-2"
-              >
-                <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-[11px] font-mono text-emerald-300 font-bold">Model monitoring</span>
               </motion.div>
 
             </div>

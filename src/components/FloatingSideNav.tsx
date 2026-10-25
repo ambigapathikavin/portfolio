@@ -39,7 +39,7 @@ export const FloatingSideNav: React.FC<FloatingSideNavProps> = ({
   onNavigate
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 

@@ -209,7 +209,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   <div className="px-2.5 py-1 text-[10px] text-slate-500 dark:text-[#666] uppercase tracking-wider border-b border-slate-100 dark:border-[#222] mb-1 flex items-center justify-between">
                     <span>Navigation</span>
-                    <span className="text-cyan-600 dark:text-cyan-400 font-bold">9 Sections</span>
+                    <span className="text-cyan-600 dark:text-cyan-400 font-bold">{navLinks.length} Sections</span>
                   </div>
 
                   {navLinks.map((link) => {

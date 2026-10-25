@@ -54,7 +54,7 @@ export const QuickStats: React.FC = () => (
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-white/10 dark:bg-[#111318] lg:grid-cols-4">
         {overviewItems.map((item, index) => {
           const Icon = item.icon;
 
@@ -65,10 +65,10 @@ export const QuickStats: React.FC = () => (
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.3, delay: index * 0.04 }}
-              className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#111318]"
+              className={`flex min-w-0 items-start gap-2.5 p-3 sm:gap-3 sm:p-4 ${index % 2 === 1 ? 'border-l border-slate-200 dark:border-white/10' : ''} ${index > 1 ? 'border-t border-slate-200 dark:border-white/10 lg:border-t-0' : ''} ${index > 0 && index % 2 === 0 ? 'sm:border-l sm:border-slate-200 sm:dark:border-white/10 lg:border-l' : ''}`}
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-white/5">
-                <Icon aria-hidden="true" className={`h-5 w-5 ${item.color}`} />
+              <span className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-white/5 sm:flex">
+                <Icon aria-hidden="true" className={`h-4 w-4 ${item.color}`} />
               </span>
               <span className="min-w-0">
                 <span className="block text-2xl font-bold leading-none tracking-tight text-slate-900 dark:text-white">{item.value}</span>

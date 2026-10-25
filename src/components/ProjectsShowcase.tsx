@@ -332,16 +332,16 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px', amount: 0.12 }}
                 exit={{ opacity: 0, scale: 0.94, y: 15, transition: { duration: 0.2 } }}
-                whileHover={{ y: -6, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
-                whileTap={{ scale: 0.985 }}
+                whileHover={{ y: -2, transition: { duration: 0.18 } }}
+                whileTap={{ scale: 0.995 }}
                 transition={{ 
                   duration: 0.5, 
                   ease: [0.22, 1, 0.36, 1],
                   delay: (idx % 3) * 0.09 
                 }}
-                className="group flex flex-col justify-between rounded-xl bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-cyan-950/20 transition-colors duration-200 relative"
+                className="group flex h-full flex-col rounded-xl bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-md transition-colors duration-200 relative"
               >
-                <div>
+                <div className="flex flex-1 flex-col">
                   {/* Project Visual Thumbnail / Screenshot.
                       A button, so the image is reachable by keyboard and
                       announced as clickable, rather than a bare div with onClick. */}
@@ -407,7 +407,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                   </button>
 
                   {/* Card Body */}
-                  <div className="p-4 sm:p-5">
+                  <div className="flex flex-1 flex-col p-4 sm:p-5">
                     {project.imageAttribution && (
                       <p className="mb-2 text-[10px] leading-snug text-slate-500 dark:text-slate-400">
                         Photo:{' '}
@@ -525,7 +525,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                        invalid semantics and unreachable for keyboard/AT users.
                        The title is a button and the thumbnail is a button, both
                        pointing at the case study. */}
-                    <h3 className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors tracking-tight mb-1.5 line-clamp-1">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-cyan-300 transition-colors tracking-tight mb-2 line-clamp-2 min-h-[3rem]">
                       <button
                         type="button"
                         onClick={() => handleProjectClick(project.id, idx, 'problem')}
@@ -548,7 +548,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                     )}
 
                     {/* Short Description */}
-                    <p className="text-[#A3A3A3] text-xs leading-relaxed mb-3.5 line-clamp-2">
+                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3.5 line-clamp-3 min-h-[4.5rem]">
                       {project.shortDescription}
                     </p>
 
@@ -558,37 +558,17 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                        and (b) duplicated the KPI panel already reachable from
                        the pill above. It is now a plain, always-visible
                        highlight - the single KPI disclosure is the pill. */}
-                    <div className="p-2.5 rounded-lg bg-[#080808] hover:bg-[#0c1017] border border-cyan-500/20 hover:border-cyan-500/40 mb-3 flex items-start gap-2 transition-all">
+                    <div className="mb-3 flex items-start gap-2 border-l-2 border-cyan-500 pl-3 py-1">
                       <TrendingUp className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
-                        <div className="text-[9px] font-mono text-cyan-400 uppercase font-semibold mb-0.5">
-                          Key Outcome & KPI Result
+                        <div className="text-[11px] font-semibold text-slate-700 dark:text-slate-200 mb-0.5">
+                          Key outcome
                         </div>
-                        <div className="text-xs text-[#E0E0E0] font-medium leading-snug line-clamp-2">
+                        <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2">
                           {project.keyResult}
                         </div>
-                        {project.kpis && project.kpis.length > 0 && (
-                          <div className="mt-1.5 pt-1.5 border-t border-[#ffffff0a] flex items-center justify-between gap-2 text-[9px] font-mono text-[#9CA3AF]">
-                            <span className="truncate">Primary KPI Lift:</span>
-                            <span className="text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/30 whitespace-nowrap">
-                              {project.kpis[0].title} ({project.kpis[0].improvement})
-                            </span>
-                          </div>
-                        )}
                       </div>
                     </div>
-
-                    {/* Quick 2-Column Metrics */}
-                    {project.metrics && (
-                      <div className="grid grid-cols-2 gap-1.5 mb-3">
-                        {project.metrics.slice(0, 2).map((m, mIdx) => (
-                          <div key={mIdx} className="p-2 rounded-lg bg-[#0a0a0a] border border-[#ffffff08] text-center">
-                            <div className="text-xs font-bold font-mono text-white">{m.value}</div>
-                            <div className="text-[9px] text-[#777] font-mono truncate">{m.label}</div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
 
                     {/* Technology Stack Chips */}
                     <div className="flex flex-wrap items-center gap-1">
@@ -610,7 +590,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                 </div>
 
                 {/* View Project Action Footer */}
-                <div className="p-4 sm:p-5 pt-0 space-y-2">
+                <div className="mt-auto p-4 sm:p-5 pt-0 space-y-2">
                   {(project.githubUrl || project.liveDemoUrl) && (
                     <div className="flex items-center gap-2 pt-1">
                       {project.githubUrl && (
