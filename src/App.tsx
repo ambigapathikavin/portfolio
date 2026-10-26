@@ -23,7 +23,7 @@ import {
   initSectionDwellTracking,
   trackRoleFilterChange
 } from './utils/analytics';
-import { PROJECTS } from './data/portfolioData';
+import { PERSONAL_INFO, PROJECTS } from './data/portfolioData';
 
 // Lazy load heavy components to drastically improve LCP and initial bundle size
 const ResumeModal = lazy(() => import('./components/ResumeModal').then(m => ({ default: m.ResumeModal })));
@@ -43,6 +43,38 @@ export default function App() {
   // Section requested by the launcher (card button / in-page prev-next link).
   // Consumed once by ProjectPage, then reset so a manual tab click sticks.
   const [pendingTab, setPendingTab] = useState<ProjectTab | undefined>(undefined);
+
+  useEffect(() => {
+    const project = activeProjectId
+      ? PROJECTS.find(item => item.id === activeProjectId)
+      : undefined;
+    const title = project
+      ? `${project.title} | ${PERSONAL_INFO.name} Portfolio`
+      : 'Ambigapathi V | Data Analyst & Data Scientist Portfolio';
+    const descriptionText = project?.shortDescription
+      ?? 'Ambigapathi V is a Data Analyst and Data Scientist specializing in Python, SQL, Power BI, Machine Learning, NLP and AI.';
+    const description = descriptionText.length > 160
+      ? `${descriptionText.slice(0, 157).trimEnd()}...`
+      : descriptionText;
+
+    document.title = title;
+    document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', description);
+    document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute('content', title);
+    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute('content', description);
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute('content', title);
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute('content', description);
+  }, [activeProjectId]);
+
+  useEffect(() => {
+    if (activeProjectId) return;
+    const sectionId = window.location.hash.slice(1);
+    if (!sectionId || sectionId.startsWith('project-')) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeProjectId]);
 
   // Initialize interaction tracking & sync browser back/forward and hash changes
   useEffect(() => {
@@ -68,9 +100,22 @@ export default function App() {
         trackProjectView(id, proj?.title || id, { roleTrack: proj?.roleType, category: proj?.category });
       } else if (hash === '' || hash === '#home' || hash === '#projects') {
         setActiveProjectId(null);
+        setPendingTab(undefined);
         trackPageView('/#projects', 'Ambigapathi V | Projects Showcase');
+        if (hash) {
+          window.setTimeout(() => {
+            document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
+          }, 50);
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       } else {
+        setActiveProjectId(null);
+        setPendingTab(undefined);
         trackSectionScroll(hash.replace('#', ''));
+        window.setTimeout(() => {
+          document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
+        }, 50);
       }
     };
 
@@ -110,14 +155,14 @@ export default function App() {
 
   const handleBackToOverview = () => {
     setActiveProjectId(null);
-    window.location.hash = 'projects';
-    trackPageView('/#projects', 'Ambigapathi V | Projects Showcase');
-    setTimeout(() => {
+    if (window.location.hash !== '#projects') {
+      window.location.hash = 'projects';
+    } else {
       const el = document.getElementById('projects');
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 50);
+    }
   };
 
   const scrollToSection = (id: string) => {

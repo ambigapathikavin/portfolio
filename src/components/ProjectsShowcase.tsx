@@ -13,10 +13,7 @@ import {
   Zap,
   Info,
   CheckCircle2,
-  Code2,
   Play,
-  ExternalLink,
-  Activity,
   Search,
   X,
   Star
@@ -28,8 +25,7 @@ import {
   trackRoleFilterChange, 
   trackCategoryFilterChange, 
   trackProjectSearch, 
-  trackProfileLink,
-  trackExternalLink 
+  trackProfileLink
 } from '../utils/analytics';
 import { resolveProjectImage, BROKEN_IMAGE_FALLBACK, projectImageAccent } from '../utils/assets';
 
@@ -41,6 +37,21 @@ const FILTER_OPTIONS: { label: string; value: ProjectCategory }[] = [
   { label: 'NLP', value: 'NLP' },
   { label: 'AI', value: 'AI' }
 ];
+
+const INITIAL_PROJECT_COUNT = 8;
+const INITIAL_PROJECT_IDS = [
+  'project-1',
+  'project-2',
+  'project-3',
+  'project-4',
+  'project-5',
+  'project-6',
+  'project-7',
+  'project-10',
+] as const;
+const INITIAL_PROJECT_ORDER = new Map<string, number>(
+  INITIAL_PROJECT_IDS.map((id, index) => [id, index])
+);
 
 const getTechBadgeStyle = (tech: string) => {
   const lower = tech.toLowerCase();
@@ -134,7 +145,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
         if (a.roleType === 'DATA_SCIENTIST' && b.roleType !== 'DATA_SCIENTIST') return -1;
         if (b.roleType === 'DATA_SCIENTIST' && a.roleType !== 'DATA_SCIENTIST') return 1;
       }
-      return 0;
+      return (INITIAL_PROJECT_ORDER.get(a.id) ?? Number.MAX_SAFE_INTEGER)
+        - (INITIAL_PROJECT_ORDER.get(b.id) ?? Number.MAX_SAFE_INTEGER);
     })
     .filter(project => {
       // Role filter
@@ -318,13 +330,13 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
           </div>
         </motion.div>
 
-        {/* Project Cards Grid with Visual Thumbnails */}
+        {/* Equal grid tracks keep every project card aligned and compact. */}
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 gap-5"
+          className="grid grid-cols-1 auto-rows-fr gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           <AnimatePresence mode="popLayout">
-            {(showAllProjects ? filteredProjects : filteredProjects.slice(0, 6)).map((project, idx) => (
+            {(showAllProjects ? filteredProjects : filteredProjects.slice(0, INITIAL_PROJECT_COUNT)).map((project, idx) => (
               <motion.div
                 key={project.id}
                 layout
@@ -339,7 +351,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                   ease: [0.22, 1, 0.36, 1],
                   delay: (idx % 3) * 0.09 
                 }}
-                className="group flex h-full flex-col rounded-xl bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-md transition-colors duration-200 relative"
+                className="group flex h-full min-w-0 flex-col rounded-xl bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-[#ffffff0e] hover:border-cyan-500/40 shadow-sm hover:shadow-md transition-colors duration-200 relative"
               >
                 <div className="flex flex-1 flex-col">
                   {/* Project Visual Thumbnail / Screenshot.
@@ -348,7 +360,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                   <button
                     type="button"
                     onClick={() => handleProjectClick(project.id, idx, 'problem')}
-                    className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-slate-100 dark:bg-[#181818] cursor-pointer group/img focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500/70"
+                    className="relative aspect-[2.2/1] w-full shrink-0 overflow-hidden rounded-t-xl bg-slate-100 dark:bg-[#181818] cursor-pointer group/img focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500/70"
                     aria-label={`Open case study: ${project.title}`}
                   >
                     {/* Fallback tile sits *behind* the image. If the file 404s
@@ -407,9 +419,9 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                   </button>
 
                   {/* Card Body */}
-                  <div className="flex flex-1 flex-col p-4 sm:p-5">
+                  <div className="flex flex-1 flex-col p-3">
                     {project.imageAttribution && (
-                      <p className="mb-2 text-[10px] leading-snug text-slate-500 dark:text-slate-400">
+                      <p className="mb-1 h-3 truncate whitespace-nowrap text-[9px] leading-3 text-slate-500 dark:text-slate-400">
                         Photo:{' '}
                         <a
                           href={project.imageAttribution.sourceUrl}
@@ -431,11 +443,19 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                         </a>
                       </p>
                     )}
+                    {!project.imageAttribution && <div aria-hidden="true" className="mb-1 h-3" />}
 
                     {/* Category & KPI Tooltip Trigger Pill */}
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <div className="text-[10px] font-mono text-cyan-400 truncate">
-                        {project.category}
+                    <div className="mb-1 flex h-5 min-w-0 items-center justify-between gap-1">
+                      <div className="flex min-w-0 flex-1 items-center gap-1.5">
+                        <div className="min-w-0 truncate text-[10px] font-mono text-cyan-400">
+                          {project.category}
+                        </div>
+                        {project.collaboration && (
+                          <span className="shrink-0 truncate rounded border border-orange-500/30 bg-orange-950/60 px-1 py-0.5 text-[8px] font-mono text-orange-200">
+                            Omdena · Volunteer
+                          </span>
+                        )}
                       </div>
 
                       {/* KPI tooltip.
@@ -475,7 +495,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                               <span>Key Performance Indicators</span>
                             </div>
                             <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                              Measured Lift
+                              Project comparisons
                             </span>
                           </div>
 
@@ -495,7 +515,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                           {project.kpis && project.kpis.length > 0 && (
                             <div className="space-y-1.5">
                               <div className="text-[9px] font-mono uppercase tracking-wider text-[#777]">
-                                Benchmarks & Optimization
+                                KPI comparisons
                               </div>
                               {project.kpis.slice(0, 2).map((kpi, kIdx) => (
                                 <div key={kIdx} className="p-1.5 rounded-lg bg-[#10141d] border border-[#ffffff08] text-[10px]">
@@ -506,8 +526,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                                     </span>
                                   </div>
                                   <div className="flex items-center justify-between text-[9px] font-mono text-[#888]">
-                                    <span>Base: <strong className="text-[#bbb]">{kpi.baseline}</strong></span>
-                                    <span>Achieved: <strong className="text-cyan-300">{kpi.current}</strong></span>
+                                    <span>Baseline: <strong className="text-[#bbb]">{kpi.baseline}</strong></span>
+                                    <span>Current: <strong className="text-cyan-300">{kpi.current}</strong></span>
                                   </div>
                                 </div>
                               ))}
@@ -525,7 +545,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                        invalid semantics and unreachable for keyboard/AT users.
                        The title is a button and the thumbnail is a button, both
                        pointing at the case study. */}
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-cyan-300 transition-colors tracking-tight mb-2 line-clamp-2 min-h-[3rem]">
+                    <h3 className="mb-1 h-10 min-h-10 overflow-hidden text-sm font-bold text-slate-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-cyan-300 transition-colors tracking-tight line-clamp-2">
                       <button
                         type="button"
                         onClick={() => handleProjectClick(project.id, idx, 'problem')}
@@ -536,19 +556,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                       </button>
                     </h3>
 
-                    {/* Dataset Scope Strip */}
-                    {project.datasetStats && (
-                      <div className="flex items-center gap-1.5 mb-2.5 px-2 py-0.5 rounded bg-[#090d14] border border-[#ffffff08] text-[9px] font-mono text-[#8899ac] overflow-hidden">
-                        <span className="text-cyan-300 font-semibold">{project.datasetStats.rows}</span>
-                        <span className="text-[#444]">•</span>
-                        <span className="truncate">{project.datasetStats.features}</span>
-                        <span className="text-[#444]">•</span>
-                        <span className="text-violet-300 truncate">{project.datasetStats.format.split(' ')[0]}</span>
-                      </div>
-                    )}
-
                     {/* Short Description */}
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3.5 line-clamp-3 min-h-[4.5rem]">
+                    <p className="mb-1.5 h-9 min-h-9 overflow-hidden text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2">
                       {project.shortDescription}
                     </p>
 
@@ -558,21 +567,18 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                        and (b) duplicated the KPI panel already reachable from
                        the pill above. It is now a plain, always-visible
                        highlight - the single KPI disclosure is the pill. */}
-                    <div className="mb-3 flex items-start gap-2 border-l-2 border-cyan-500 pl-3 py-1">
-                      <TrendingUp className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
+                    <div className="mb-1.5 flex h-8 min-h-8 items-start gap-1.5 overflow-hidden border-l-2 border-cyan-500 py-0.5 pl-2">
+                      <TrendingUp className="w-3 h-3 text-cyan-400 shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
-                        <div className="text-[11px] font-semibold text-slate-700 dark:text-slate-200 mb-0.5">
-                          Key outcome
-                        </div>
-                        <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2">
+                        <div className="text-[10px] text-slate-600 dark:text-slate-300 leading-tight line-clamp-2">
                           {project.keyResult}
                         </div>
                       </div>
                     </div>
 
                     {/* Technology Stack Chips */}
-                    <div className="flex flex-wrap items-center gap-1">
-                      {project.technology.slice(0, 3).map(tech => (
+                    <div className="flex min-h-5 flex-wrap content-start items-center gap-1 overflow-hidden">
+                      {project.technology.slice(0, 2).map(tech => (
                         <span
                           key={tech}
                           className={`px-2 py-0.5 rounded border text-[10px] font-mono font-medium transition-colors bg-slate-100 dark:bg-[#161616] ${getTechBadgeStyle(tech)}`}
@@ -580,83 +586,25 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                           {tech}
                         </span>
                       ))}
-                      {project.technology.length > 3 && (
+                      {project.technology.length > 2 && (
                         <span className="px-1.5 py-0.5 rounded bg-[#161616] border border-[#ffffff0a] text-[9px] font-mono text-[#777]">
-                          +{project.technology.length - 3}
+                          +{project.technology.length - 2}
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* View Project Action Footer */}
-                <div className="mt-auto p-4 sm:p-5 pt-0 space-y-2">
-                  {(project.githubUrl || project.liveDemoUrl) && (
-                    <div className="flex items-center gap-2 pt-1">
-                      {project.githubUrl && (
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            trackExternalLink('Card_GitHub', project.githubUrl!);
-                          }}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-slate-100 dark:bg-[#141414] hover:bg-slate-200 dark:hover:bg-[#1f1f1f] border border-slate-200 dark:border-[#ffffff15] hover:border-slate-300 dark:hover:border-[#ffffff30] text-[10px] font-mono text-slate-700 dark:text-[#d0d0d0] hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer shadow-sm group/git"
-                          title="View GitHub Repository"
-                        >
-                          <Code2 className="w-3 h-3 text-cyan-600 dark:text-cyan-400 group-hover/git:scale-110 transition-transform" />
-                          <span>GitHub</span>
-                          <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover/git:opacity-100 transition-opacity" />
-                        </a>
-                      )}
-                      {project.liveDemoUrl && (
-                        <a
-                          href={project.liveDemoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            trackExternalLink('Card_LiveDemo', project.liveDemoUrl!);
-                          }}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/80 border border-emerald-500/40 hover:border-emerald-500 text-[10px] font-mono text-emerald-800 dark:text-emerald-200 hover:text-emerald-950 dark:hover:text-emerald-100 font-semibold transition-all cursor-pointer shadow-sm group/live"
-                          title="Open Live Streamlit Application"
-                        >
-                          <span className="relative flex h-2 w-2 shrink-0">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                          </span>
-                          <span>Live Demo</span>
-                          <ExternalLink className="w-2.5 h-2.5 text-emerald-300 opacity-70 group-hover/live:opacity-100 transition-opacity" />
-                        </a>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={e => {
-                        e.stopPropagation();
-                        handleProjectClick(project.id, idx, 'dashboard');
-                      }}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/60 hover:bg-cyan-500 hover:text-black text-cyan-800 dark:text-cyan-300 text-[11px] font-semibold font-mono border border-cyan-500/30 dark:border-cyan-500/35 hover:border-cyan-400 transition-all duration-150 shadow-sm cursor-pointer group/simbtn"
-                      title="Open the interactive simulator and live KPI panel"
-                    >
-                      <Activity className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 group-hover/simbtn:text-black animate-pulse" />
-                      <span>Live Simulator</span>
-                    </button>
-                    <button
-                      onClick={e => {
-                        e.stopPropagation();
-                        handleProjectClick(project.id, idx, 'problem');
-                      }}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg bg-slate-100 dark:bg-[#181818] hover:bg-slate-200 dark:hover:bg-[#252525] text-slate-800 dark:text-[#e0e0e0] hover:text-slate-900 dark:hover:text-white text-[11px] font-semibold font-mono border border-slate-200 dark:border-[#ffffff0a] hover:border-slate-300 dark:hover:border-[#ffffff20] transition-all duration-150 shadow-sm cursor-pointer group/casebtn"
-                      title="Read the full architectural case study"
-                    >
-                      <span>Case Study</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-slate-500 dark:text-[#888] group-hover/casebtn:text-slate-900 dark:group-hover/casebtn:text-white group-hover/casebtn:translate-x-0.5 group-hover/casebtn:-translate-y-0.5 transition-transform" />
-                    </button>
-                  </div>
+                <div className="mt-auto px-3 pb-3">
+                  <button
+                    type="button"
+                    onClick={() => handleProjectClick(project.id, idx, 'problem')}
+                    className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-cyan-500/30 bg-cyan-50 px-2.5 py-1.5 text-[10px] font-mono font-semibold text-cyan-800 shadow-sm transition-all hover:border-cyan-400 hover:bg-cyan-500 hover:text-black dark:bg-cyan-950/60 dark:text-cyan-300"
+                    title="Read the full project case study"
+                  >
+                    <span>View project details</span>
+                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </button>
                 </div>
 
               </motion.div>

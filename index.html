@@ -39,13 +39,8 @@
     <meta name="theme-color" content="#080c14" />
     <meta name="color-scheme" content="dark light" />
 
-    <!-- Critical Preload for LCP (Hero Portrait Image).
-         imagesrcset/imagesizes make the preloaded candidate MATCH what the
-         <picture> in AmbigapathiPortrait.tsx will actually request, so mobile
-         stops downloading the 900w file it never uses. -->
-    <link rel="preload" as="image" href="./portfolio.webp" type="image/webp"
-          imagesrcset="./portfolio-450.webp 450w, ./portfolio.webp 900w"
-          imagesizes="(max-width: 640px) 360px, 450px" fetchpriority="high" />
+    <!-- Preload the hero portrait for faster Largest Contentful Paint. -->
+    <link rel="preload" as="image" href="./portfolio-profile-high-quality.webp" type="image/webp" fetchpriority="high" />
 
     <!-- Performance: DNS Prefetch & Preconnect for External Assets -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
