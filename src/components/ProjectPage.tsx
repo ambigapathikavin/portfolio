@@ -136,10 +136,11 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
         method: 'clipboard',
       });
       setTimeout(() => setCopiedLink(false), 2000);
-    } catch {
-      // AbortError = user dismissed the share sheet, which is not an error.
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') return;
+      console.error('Project sharing failed:', error);
       setShareFailed(true);
-      setTimeout(() => setShareFailed(false), 3000);
+      window.setTimeout(() => setShareFailed(false), 3000);
     }
   };
 
@@ -233,6 +234,21 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
               </a>
             )}
 
+            {project.externalLinks?.map(resource => (
+              <a
+                key={resource.url}
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackExternalLink('Project_Resource', resource.url)}
+                className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-violet-50 dark:bg-violet-950/50 hover:bg-violet-100 dark:hover:bg-violet-900/70 border border-violet-200 dark:border-violet-500/30 text-xs font-mono text-violet-800 dark:text-violet-200 transition-all shadow-sm"
+                title={resource.label}
+              >
+                <span>{resource.label}</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            ))}
+
             <button
               onClick={() => {
                 handleTabSwitch('dashboard');
@@ -258,6 +274,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
               className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#141414] hover:bg-slate-100 dark:hover:bg-[#202020] border border-slate-200 dark:border-[#ffffff15] text-xs font-mono text-slate-600 dark:text-[#aaa] hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
               title="Share this project link"
               aria-live="polite"
+              aria-label={shareFailed ? 'Sharing failed. Copy the page URL manually.' : copiedLink ? 'Project link copied to clipboard' : 'Share this project'}
             >
               <Share2 className="w-3 h-3" />
               <span className="hidden sm:inline">
@@ -307,9 +324,14 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                 <span className="px-2.5 py-1 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-[11px] font-mono font-semibold">
                   {project.category}
                 </span>
+                {project.collaboration && (
+                  <span className="px-2.5 py-1 rounded bg-orange-950/60 border border-orange-500/30 text-orange-200 text-[11px] font-mono font-semibold">
+                    {project.collaboration.organization} · {project.collaboration.role}
+                  </span>
+                )}
                 <span className="px-2 py-0.5 rounded bg-[#1c1c1c] border border-[#ffffff10] text-[10px] font-mono text-emerald-400 flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3" />
-                  <span>Production & Analytics Verified</span>
+                  <span>Project case study</span>
                 </span>
               </div>
               <span className="text-[11px] font-mono text-[#777]">
@@ -326,6 +348,12 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
             <p className="text-sm sm:text-base text-[#B0B0B0] leading-relaxed max-w-4xl mb-6">
               {project.overview}
             </p>
+            {project.collaboration?.contributionSummary && (
+              <p className="text-sm text-orange-100/90 leading-relaxed max-w-4xl mb-6 px-4 py-3 rounded-xl bg-orange-950/30 border border-orange-500/20">
+                <span className="font-semibold text-orange-200">Contribution: </span>
+                {project.collaboration.contributionSummary}
+              </p>
+            )}
 
             {/* Dataset Statistics Matrix */}
             {project.datasetStats && (
@@ -393,6 +421,21 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
                     <ExternalLink className="w-3 h-3 text-emerald-300 opacity-75 group-hover/live:opacity-100 transition-opacity" />
                   </a>
                 )}
+
+                {project.externalLinks?.map(resource => (
+                  <a
+                    key={resource.url}
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackExternalLink('Project_Resource', resource.url)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-950/50 hover:bg-violet-900/70 border border-violet-500/30 text-xs font-mono text-violet-200 transition-all cursor-pointer shadow-sm"
+                    title={resource.label}
+                  >
+                    <span>{resource.label}</span>
+                    <ExternalLink className="w-3 h-3 opacity-75" />
+                  </a>
+                ))}
 
                 {project.technology.map(tech => (
                   <span
@@ -533,35 +576,35 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
 
             {/* Performance KPIs Comparison Table */}
             {project.kpis && project.kpis.length > 0 && (
-              <div className="p-6 rounded-xl bg-[#0e0e0e] border border-[#ffffff10]">
+              <div className="p-5 sm:p-6 rounded-xl bg-white dark:bg-[#111111] border border-slate-200 dark:border-white/10 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-bold text-white font-mono flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
                     <TrendingUp className="w-4 h-4 text-cyan-400" />
-                    <span>Key Performance Indicators (Baseline vs Achieved)</span>
+                    <span>Key metrics: baseline and current</span>
                   </h3>
-                  <span className="text-[10px] font-mono text-[#888]">Rigorous benchmarking</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">Reported project comparisons</span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {project.kpis.map((kpi, idx) => (
-                    <div key={idx} className="p-4 rounded-lg bg-[#141414] border border-[#ffffff08]">
-                      <div className="text-xs font-bold text-white font-mono mb-2">{kpi.title}</div>
+                    <div key={idx} className="p-4 rounded-lg bg-slate-50 dark:bg-[#181818] border border-slate-200 dark:border-white/10">
+                      <div className="text-xs font-semibold text-slate-900 dark:text-white mb-2">{kpi.title}</div>
                       
                       <div className="flex items-baseline justify-between mb-2">
                         <div>
-                          <div className="text-[9px] font-mono text-[#777]">Current Model</div>
-                          <div className="text-lg font-bold font-mono text-emerald-400">{kpi.current}</div>
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400">Current</div>
+                          <div className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{kpi.current}</div>
                         </div>
                         <div className="text-right">
-                          <div className="text-[9px] font-mono text-[#777]">Legacy Baseline</div>
-                          <div className="text-xs font-mono text-[#888] line-through">{kpi.baseline}</div>
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400">Baseline</div>
+                          <div className="text-xs text-slate-600 dark:text-slate-400">{kpi.baseline}</div>
                         </div>
-                        <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold">
+                        <span className="px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 text-[10px] font-semibold">
                           {kpi.improvement}
                         </span>
                       </div>
 
-                      <p className="text-[11px] text-[#A0A0A0] leading-relaxed pt-2 border-t border-[#ffffff08]">
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pt-2 border-t border-slate-200 dark:border-white/10">
                         {kpi.description}
                       </p>
                     </div>
@@ -744,7 +787,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
               <div className="p-6 rounded-xl bg-[#0e0e0e] border border-[#ffffff10]">
                 <h3 className="text-sm font-bold text-white font-mono mb-4 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-emerald-400" />
-                  <span>Verified Business Outcomes & Impact</span>
+                  <span>Reported results & impact</span>
                 </h3>
                 <div className="space-y-3">
                   {project.results.map((r, i) => (

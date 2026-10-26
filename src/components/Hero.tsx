@@ -195,18 +195,19 @@ export const Hero: React.FC<HeroProps> = ({
 
           {/* Right Column: Professional Portrait Frame & Data Visual Elements */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end relative items-center">
-            <div className="relative w-full max-w-[280px] sm:max-w-[320px] lg:max-w-[360px] aspect-[4/5] flex items-center justify-center">
+            <div className="relative w-full max-w-[320px] sm:max-w-[360px] lg:max-w-[420px] aspect-[6/5] flex items-center justify-center">
               
-              <div className="absolute -inset-5 rounded-[2rem] bg-gradient-to-br from-cyan-500/15 via-transparent to-violet-500/15 blur-2xl pointer-events-none" />
+              <div className="absolute -inset-5 rounded-[2rem_5rem_2rem_2rem] bg-gradient-to-br from-cyan-500/15 via-transparent to-violet-500/15 blur-2xl pointer-events-none" />
+              <div className="absolute inset-2 translate-x-3 translate-y-3 rounded-[2rem_5rem_2rem_2rem] border border-cyan-500/30 dark:border-cyan-300/20 pointer-events-none" />
 
               {/* Responsive portrait frame */}
               <motion.div 
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.12 }}
-                className="relative z-10 h-full w-full overflow-hidden rounded-[1.6rem] border border-slate-300/80 bg-slate-200 p-1 shadow-[0_24px_70px_-28px_rgba(8,145,178,0.45)] dark:border-white/15 dark:bg-[#111318]"
+                className="relative z-10 h-full w-full overflow-hidden rounded-[1.8rem_4.8rem_1.8rem_1.8rem] border border-slate-300/80 bg-slate-200 p-1 shadow-[0_24px_70px_-28px_rgba(8,145,178,0.45)] dark:border-white/15 dark:bg-[#111318]"
               >
-                <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[1.35rem] bg-slate-300 dark:bg-[#07090e]">
+                <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[1.6rem_4.6rem_1.6rem_1.6rem] bg-slate-300 dark:bg-[#07090e]">
                   <AmbigapathiPortrait className="w-full h-full" />
                 </div>
               </motion.div>

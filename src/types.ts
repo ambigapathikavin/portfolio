@@ -35,6 +35,17 @@ export interface ImageAttribution {
   licenseUrl: string;
 }
 
+export interface ProjectExternalLink {
+  label: string;
+  url: string;
+}
+
+export interface ProjectCollaboration {
+  organization: string;
+  role: string;
+  contributionSummary?: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -48,6 +59,8 @@ export interface Project {
   imageAttribution?: ImageAttribution;
   githubUrl?: string;
   liveDemoUrl?: string;
+  externalLinks?: ProjectExternalLink[];
+  collaboration?: ProjectCollaboration;
   roleType?: 'DATA_ANALYST' | 'DATA_SCIENTIST' | 'BOTH';
   featured?: boolean;
   priority?: number;
