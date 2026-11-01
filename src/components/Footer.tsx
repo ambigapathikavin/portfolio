@@ -41,7 +41,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume }) => {
               {PERSONAL_INFO.titles}
             </p>
             <p className="text-[10px] text-[#666] mt-0.5">
-              Transforming complex data into predictive algorithms and business value.
+              Turning messy data into dashboards, predictions, and decisions that matter.
             </p>
           </div>
 

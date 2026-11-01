@@ -58,13 +58,11 @@ export const Hero: React.FC<HeroProps> = ({
 
             {/* Large Main Heading - Immediate LCP Paint */}
             <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.12] mb-5">
-              Turning Data Into <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-700 via-sky-700 to-violet-700 dark:from-cyan-400 dark:via-sky-300 dark:to-violet-400">
-                {roleMode === 'DATA_ANALYST' ? 'Actionable BI Insights' :
-                 roleMode === 'DATA_SCIENTIST' ? 'Machine Learning Projects' :
-                 'Insights, Predictions'}
+              I don't just analyze data. <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-700 via-sky-700 to-teal-700 dark:from-cyan-400 dark:via-sky-300 dark:to-teal-300">
+                I build the systems
               </span> <br />
-              & Intelligent Solutions.
+              that make it useful.
             </h1>
 
             {/* Dynamic Role Highlights Pills */}

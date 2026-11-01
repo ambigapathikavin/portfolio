@@ -27,14 +27,14 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
     let width = 0;
     let height = 0;
     let particles: Particle[] = [];
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let reduceMotion = motionPreference.matches;
     const mouse = { x: -1000, y: -1000, radius: 140 };
 
-    // Colors matching data science / cyber aesthetic: Cyan, Teal, Sky, Soft Violet
+    // Keep the decorative network within the portfolio's cyan/teal accent palette.
     const colors = [
-      'rgba(6, 182, 212,',   // Cyan
-      'rgba(56, 189, 248,',  // Sky
-      'rgba(139, 92, 246,',  // Violet
-      'rgba(45, 212, 191,',  // Teal
+      'rgba(6, 182, 212,',
+      'rgba(45, 212, 191,',
     ];
 
     let isVisible = true;
@@ -42,8 +42,8 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
       particles = [];
       const isMobile = width < 640;
       // Calculate particle density based on canvas area, mobile friendly
-      const maxCount = isMobile ? 32 : 65;
-      const count = Math.min(Math.floor((width * height) / 16000), maxCount);
+      const maxCount = isMobile ? 20 : 42;
+      const count = Math.min(Math.floor((width * height) / 24000), maxCount);
 
       for (let i = 0; i < count; i++) {
         const radius = Math.random() * 1.8 + 1.2;
@@ -51,13 +51,13 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.45,
-          vy: (Math.random() - 0.5) * 0.45,
+          vx: (Math.random() - 0.5) * 0.24,
+          vy: (Math.random() - 0.5) * 0.24,
           radius: radius,
           baseRadius: radius,
           color: color,
-          alpha: Math.random() * 0.45 + 0.2,
-          pulseSpeed: Math.random() * 0.02 + 0.01,
+          alpha: Math.random() * 0.28 + 0.12,
+          pulseSpeed: Math.random() * 0.012 + 0.006,
           pulseAngle: Math.random() * Math.PI * 2,
         });
       }
@@ -117,7 +117,7 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
         const p = particles[i];
 
         // Pulse animation
-        p.pulseAngle += p.pulseSpeed;
+        if (!reduceMotion) p.pulseAngle += p.pulseSpeed;
         const currentAlpha = p.alpha + Math.sin(p.pulseAngle) * 0.12;
 
         // Mouse interaction (gentle attraction / vector connect)
@@ -125,7 +125,7 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
         const dy = mouse.y - p.y;
         const mouseDist = Math.sqrt(dx * dx + dy * dy);
 
-        if (mouseDist < mouse.radius) {
+        if (!reduceMotion && mouseDist < mouse.radius) {
           const force = (1 - mouseDist / mouse.radius) * 1.5;
           const angle = Math.atan2(dy, dx);
           p.x += Math.cos(angle) * force * 0.6;
@@ -142,8 +142,10 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
         }
 
         // Movement
-        p.x += p.vx;
-        p.y += p.vy;
+        if (!reduceMotion) {
+          p.x += p.vx;
+          p.y += p.vy;
+        }
 
         // Wrap around boundaries
         if (p.x < -10) p.x = width + 10;
@@ -166,9 +168,15 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
         }
       }
 
-      if (isVisible) {
+      if (isVisible && !reduceMotion) {
         animationFrameId = requestAnimationFrame(render);
       }
+    };
+
+    const handleMotionPreferenceChange = (event: MediaQueryListEvent) => {
+      reduceMotion = event.matches;
+      cancelAnimationFrame(animationFrameId);
+      render();
     };
 
     // Initialize observer for responsive sizing
@@ -191,6 +199,7 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
 
     resizeObserver.observe(canvas);
     intersectionObserver.observe(canvas);
+    motionPreference.addEventListener('change', handleMotionPreferenceChange);
     resize();
     render();
 
@@ -204,6 +213,7 @@ export const DataParticleBackground: React.FC<{ className?: string }> = ({ class
       cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
+      motionPreference.removeEventListener('change', handleMotionPreferenceChange);
       if (parent) {
         parent.removeEventListener('mousemove', handleMouseMove);
         parent.removeEventListener('mouseleave', handleMouseLeave);
