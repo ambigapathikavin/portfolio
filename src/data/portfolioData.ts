@@ -3,7 +3,7 @@ import { Project, SkillCategory, ExperienceItem, EducationItem, CertificationIte
 export const PERSONAL_INFO = {
   name: 'Ambigapathi V',
   titles: 'Data Analyst | Data Scientist',
-  primaryHeadline: 'Turning Data Into Insights, Predictions & Intelligent Solutions.',
+  primaryHeadline: "I don't just analyze data. I build the systems that make it useful.",
   supportingText: 'I work across data analytics, machine learning, NLP and AI to transform raw data into meaningful insights, predictive solutions and data-driven decisions.',
   heroDescription: 'Data Analyst and Data Scientist with hands-on experience in data analysis, business intelligence, machine learning, NLP and AI.',
   location: 'Salem, Tamil Nadu, India',
@@ -14,10 +14,18 @@ export const PERSONAL_INFO = {
   resumeAppUrl: 'https://linked-to-my-resume.lovable.app/',
   googleCalendarUrl: 'https://calendar.app.google/pLRTaip8EUFD2S7L9',
   aboutText: [
-    'I am a Data Analyst and Data Scientist who turns raw data into clear analysis, useful dashboards, and practical machine-learning projects.',
-    'My work spans SQL, Python, Excel, Power BI, Tableau, exploratory data analysis, data cleaning, statistical analysis, and KPI reporting.',
-    'I also build machine-learning, NLP, deep-learning, Generative AI, and MLOps projects, with an emphasis on explaining the approach and its limitations.'
+    'Data Analyst and Data Scientist based in Salem, Tamil Nadu.',
+    'I turn raw, high-volume data into three things businesses actually need: clear dashboards, accurate predictions, and decisions backed by evidence.',
+    'At Omdena, I built an AI-powered news classifier using BERT that processes 50,000+ articles daily at 98% accuracy, reduced training time by 40%, and cut deployment failures by 35% through containerized CI/CD pipelines.'
   ],
+  aboutDeliverables: [
+    'Power BI and Tableau dashboards that surface revenue leaks and KPI trends',
+    'ML models with ROC-AUC scores up to 0.94 across churn prediction, credit risk, and insurance pricing',
+    'NLP pipelines for clinical NER, news classification, and text analysis',
+    'End-to-end MLOps workflows with Docker, MLflow, and FastAPI'
+  ],
+  aboutTools: ['Python', 'SQL', 'Power BI', 'Tableau', 'BERT', 'XGBoost', 'Streamlit', 'FastAPI', 'Docker', 'MLflow', 'DAX'],
+  aboutClosing: 'Open to Data Analyst and Data Scientist roles where the work is real, the data is messy, and the decisions matter.',
   lifecycle: [
     'DATA',
     'CLEANING',
@@ -132,14 +140,14 @@ export const EXPERIENCES: ExperienceItem[] = [
   {
     id: 'exp-1',
     company: 'OMDENA',
-    role: 'Machine Learning Engineer',
+    role: 'Machine Learning Engineer & Data Analyst',
     period: 'Sep 2024 – Present',
     location: 'Remote',
     project: 'Kitwe News Aggregator & Global AI Challenges',
     isCurrent: true,
     technologies: ['Python', 'BERT', 'NLP', 'Transformers', 'FastAPI', 'MLflow', 'Docker', 'MLOps', 'Pandas', 'EDA'],
     achievements: [
-      'Developed and deployed an AI-powered news classifier using BERT for multi-topic classification, achieving 98% accuracy.',
+      'Built and deployed production-grade ML and NLP systems processing 50K+ daily records, with measurable impact on accuracy, latency, and deployment reliability.',
       'Streamlined data pipelines and preprocessing, reducing training time by 40% and enabling real-time analysis of 50K+ daily news articles.',
       'Implemented scalable MLOps workflows with automated retraining triggers, model versioning, and containerized deployment.',
       'Collaborated with international engineering teams on real-world socio-economic and healthcare access analytics initiatives.',
@@ -2064,7 +2072,7 @@ export const DATA_SCIENTIST_RESUME = {
   experience: [
     {
       company: 'Omdena',
-      role: 'Machine Learning Engineer',
+      role: 'Machine Learning Engineer & Data Analyst',
       period: 'Sep 2024 – Present',
       location: 'Remote',
       bullets: [],

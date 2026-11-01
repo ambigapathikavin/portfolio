@@ -9,14 +9,13 @@ import {
   BrainCircuit,
   Eye,
   Layers,
-  Target,
-  Zap,
-  Info,
   CheckCircle2,
   Play,
   Search,
   X,
-  Star
+  Star,
+  Github,
+  ExternalLink
 } from 'lucide-react';
 import { PROJECTS } from '../data/portfolioData';
 import { Project, ProjectCategory, ProjectTab } from '../types';
@@ -25,7 +24,8 @@ import {
   trackRoleFilterChange, 
   trackCategoryFilterChange, 
   trackProjectSearch, 
-  trackProfileLink
+  trackProfileLink,
+  trackExternalLink
 } from '../utils/analytics';
 import { resolveProjectImage, BROKEN_IMAGE_FALLBACK, projectImageAccent } from '../utils/assets';
 
@@ -52,6 +52,7 @@ const INITIAL_PROJECT_IDS = [
 const INITIAL_PROJECT_ORDER = new Map<string, number>(
   INITIAL_PROJECT_IDS.map((id, index) => [id, index])
 );
+const PROJECTS_WITH_LINKS = PROJECTS.filter(project => project.githubUrl || project.liveDemoUrl);
 
 const getTechBadgeStyle = (tech: string) => {
   const lower = tech.toLowerCase();
@@ -85,27 +86,6 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
   const [roleFilter, setRoleFilter] = useState<'ALL' | 'DATA_ANALYST' | 'DATA_SCIENTIST'>(roleMode);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAllProjects, setShowAllProjects] = useState(false);
-  // Which project's KPI panel is open. Explicit state (rather than hover-only)
-  // so the panel is reachable on touch devices and via keyboard.
-  const [openKpiCard, setOpenKpiCard] = useState<string | null>(null);
-
-  // Dismiss an open KPI panel on Escape or an outside click.
-  React.useEffect(() => {
-    if (!openKpiCard) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpenKpiCard(null);
-    };
-    const onPointerDown = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (target && !target.closest('[data-kpi-trigger]')) setOpenKpiCard(null);
-    };
-    document.addEventListener('keydown', onKey);
-    document.addEventListener('mousedown', onPointerDown);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.removeEventListener('mousedown', onPointerDown);
-    };
-  }, [openKpiCard]);
 
   // Sync roleFilter with incoming roleMode prop changes
   React.useEffect(() => {
@@ -126,7 +106,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
     setSearchQuery(query);
     if (query.trim().length >= 2) {
       const q = query.trim().toLowerCase();
-      const matchCount = PROJECTS.filter(p => 
+      const matchCount = PROJECTS_WITH_LINKS.filter(p =>
         p.title.toLowerCase().includes(q) ||
         p.shortDescription.toLowerCase().includes(q) ||
         p.technology.some(t => t.toLowerCase().includes(q))
@@ -136,7 +116,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
   };
 
   // Re-order and filter projects dynamically
-  const filteredProjects = [...PROJECTS]
+  const filteredProjects = [...PROJECTS_WITH_LINKS]
     .sort((a, b) => {
       if (roleFilter === 'DATA_ANALYST') {
         if (a.roleType === 'DATA_ANALYST' && b.roleType !== 'DATA_ANALYST') return -1;
@@ -255,7 +235,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                     : 'text-slate-600 dark:text-[#888] hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                All ({PROJECTS.length})
+                All ({PROJECTS_WITH_LINKS.length})
               </button>
               <button
                 onClick={() => handleRoleFilterSelect('DATA_ANALYST')}
@@ -266,7 +246,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                 }`}
               >
                 <BarChart3 className="w-3 h-3 text-cyan-600 dark:text-cyan-400" />
-                <span>Analyst ({PROJECTS.filter(p => p.roleType === 'DATA_ANALYST' || p.roleType === 'BOTH').length})</span>
+                <span>Analyst ({PROJECTS_WITH_LINKS.filter(p => p.roleType === 'DATA_ANALYST' || p.roleType === 'BOTH').length})</span>
               </button>
               <button
                 onClick={() => handleRoleFilterSelect('DATA_SCIENTIST')}
@@ -277,7 +257,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                 }`}
               >
                 <BrainCircuit className="w-3 h-3 text-violet-600 dark:text-violet-400" />
-                <span>Scientist ({PROJECTS.filter(p => p.roleType === 'DATA_SCIENTIST' || p.roleType === 'BOTH').length})</span>
+                <span>Scientist ({PROJECTS_WITH_LINKS.filter(p => p.roleType === 'DATA_SCIENTIST' || p.roleType === 'BOTH').length})</span>
               </button>
             </div>
 
@@ -325,7 +305,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
             </div>
 
             <span className="text-[11px] font-mono text-slate-500 dark:text-[#777]">
-              Showing <strong className="text-cyan-600 dark:text-cyan-400">{filteredProjects.length}</strong> of {PROJECTS.length} projects
+              Showing <strong className="text-cyan-600 dark:text-cyan-400">{filteredProjects.length}</strong> of {PROJECTS_WITH_LINKS.length} linked projects
             </span>
           </div>
         </motion.div>
@@ -445,8 +425,8 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                     )}
                     {!project.imageAttribution && <div aria-hidden="true" className="mb-1 h-3" />}
 
-                    {/* Category & KPI Tooltip Trigger Pill */}
-                    <div className="mb-1 flex h-5 min-w-0 items-center justify-between gap-1">
+                    {/* Category */}
+                    <div className="mb-1 flex h-5 min-w-0 items-center">
                       <div className="flex min-w-0 flex-1 items-center gap-1.5">
                         <div className="min-w-0 truncate text-[10px] font-mono text-cyan-400">
                           {project.category}
@@ -456,87 +436,6 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                             Omdena · Volunteer
                           </span>
                         )}
-                      </div>
-
-                      {/* KPI tooltip.
-                          Hover alone left this unreachable on phones and
-                          tablets, where there is no pointer hover - the button
-                          simply did nothing. It is now an explicit
-                          open/close disclosure that also still opens on hover
-                          and on keyboard focus, and closes on Escape or an
-                          outside click. */}
-                      <div className="relative shrink-0 group/tooltip" data-kpi-trigger>
-                        <button
-                          type="button"
-                          onClick={() => setOpenKpiCard(openKpiCard === project.id ? null : project.id)}
-                          onMouseEnter={() => setOpenKpiCard(project.id)}
-                          aria-expanded={openKpiCard === project.id}
-                          aria-controls={`kpi-panel-${project.id}`}
-                          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-950/50 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-300 text-[9px] font-mono transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/60"
-                          aria-label={`${openKpiCard === project.id ? 'Hide' : 'View'} KPI metrics for ${project.title}`}
-                        >
-                          <Target className="w-2.5 h-2.5 text-cyan-400 shrink-0" />
-                          <span>KPIs</span>
-                          <Info className="w-2.5 h-2.5 opacity-70 shrink-0" />
-                        </button>
-
-                        {/* Floating Tooltip Card */}
-                        <div
-                          id={`kpi-panel-${project.id}`}
-                          role="tooltip"
-                          onMouseLeave={() => setOpenKpiCard(cur => (cur === project.id ? null : cur))}
-                          className={`absolute bottom-full right-0 mb-2.5 w-72 sm:w-80 p-3.5 rounded-xl bg-[#0c1017] border border-cyan-500/40 shadow-2xl shadow-black/90 backdrop-blur-xl transition-all duration-200 z-50 ${openKpiCard === project.id ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
-                        >
-                          
-                          {/* Tooltip Header */}
-                          <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-[#ffffff12]">
-                            <div className="flex items-center gap-1.5 text-xs font-bold text-white">
-                              <Zap className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                              <span>Key Performance Indicators</span>
-                            </div>
-                            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                              Project comparisons
-                            </span>
-                          </div>
-
-                          {/* Quick Metrics Grid in Tooltip */}
-                          {project.metrics && project.metrics.length > 0 && (
-                            <div className="grid grid-cols-2 gap-1.5 mb-2.5">
-                              {project.metrics.slice(0, 4).map((metric, mIdx) => (
-                                <div key={mIdx} className="p-1.5 rounded-lg bg-[#141924] border border-[#ffffff0a]">
-                                  <div className="text-[11px] font-bold font-mono text-cyan-300">{metric.value}</div>
-                                  <div className="text-[8px] text-[#888] font-mono truncate">{metric.label}</div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* KPI Deltas List */}
-                          {project.kpis && project.kpis.length > 0 && (
-                            <div className="space-y-1.5">
-                              <div className="text-[9px] font-mono uppercase tracking-wider text-[#777]">
-                                KPI comparisons
-                              </div>
-                              {project.kpis.slice(0, 2).map((kpi, kIdx) => (
-                                <div key={kIdx} className="p-1.5 rounded-lg bg-[#10141d] border border-[#ffffff08] text-[10px]">
-                                  <div className="flex items-center justify-between text-white font-medium mb-0.5">
-                                    <span className="truncate pr-1 text-[10px]">{kpi.title}</span>
-                                    <span className="font-mono text-[9px] font-bold px-1 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30 shrink-0">
-                                      {kpi.improvement}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center justify-between text-[9px] font-mono text-[#888]">
-                                    <span>Baseline: <strong className="text-[#bbb]">{kpi.baseline}</strong></span>
-                                    <span>Current: <strong className="text-cyan-300">{kpi.current}</strong></span>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* Tooltip Arrow Indicator */}
-                          <div className="absolute top-full right-4 -mt-1 border-4 border-transparent border-t-cyan-500/40" />
-                        </div>
                       </div>
                     </div>
 
@@ -596,6 +495,38 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
                 </div>
 
                 <div className="mt-auto px-3 pb-3">
+                  {(project.githubUrl || project.liveDemoUrl) && (
+                    <div className="mb-2 flex gap-1.5">
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => project.githubUrl && trackExternalLink('Project_GitHub', project.githubUrl)}
+                          className="inline-flex min-w-0 flex-1 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-[10px] font-mono font-semibold text-slate-700 transition-colors hover:border-slate-400 hover:bg-slate-50 hover:text-slate-900 dark:border-white/10 dark:bg-[#171717] dark:text-slate-300 dark:hover:border-white/20 dark:hover:bg-[#202020] dark:hover:text-white"
+                          aria-label={`View ${project.title} source code on GitHub`}
+                        >
+                          <Github className="h-3 w-3 shrink-0" />
+                          <span>GitHub</span>
+                          <ExternalLink className="h-2.5 w-2.5 shrink-0 opacity-60" />
+                        </a>
+                      )}
+                      {project.liveDemoUrl && (
+                        <a
+                          href={project.liveDemoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => project.liveDemoUrl && trackExternalLink('Project_LiveDemo', project.liveDemoUrl)}
+                          className="inline-flex min-w-0 flex-1 items-center justify-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-1.5 text-[10px] font-mono font-semibold text-emerald-800 transition-colors hover:border-emerald-400 hover:bg-emerald-100 dark:border-emerald-500/25 dark:bg-emerald-950/30 dark:text-emerald-300 dark:hover:border-emerald-500/40 dark:hover:bg-emerald-950/50"
+                          aria-label={`Open ${project.title} live app`}
+                        >
+                          <Play className="h-2.5 w-2.5 shrink-0" />
+                          <span>Live App</span>
+                          <ExternalLink className="h-2.5 w-2.5 shrink-0 opacity-60" />
+                        </a>
+                      )}
+                    </div>
+                  )}
                   <button
                     type="button"
                     onClick={() => handleProjectClick(project.id, idx, 'problem')}
